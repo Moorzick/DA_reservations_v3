@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="BICS" />
+        <module name="ICS" />
+        <module name="BICS_Ice_desc" />
+        <module name="Schneider_swagger" />
+        <module name="DA reservations" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
