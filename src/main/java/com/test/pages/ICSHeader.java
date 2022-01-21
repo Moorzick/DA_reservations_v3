@@ -15,10 +15,13 @@ public class ICSHeader extends BasePage {
     private static By contentSysFunc= By.xpath("//a[@data-iframe-height='System Functions']");
     private static By contentMisc= By.xpath("//a[@data-iframe-height='Misc']");
     private static By contentMainMenu= By.xpath("//a[@data-iframe-height='Main Menu']");
+    private static By contentHousekeeping = By.xpath("//a[@data-iframe-height='Housekeeping']");
 
     private static By droplistLang = By.xpath("//select[@id='ddLanguage']");
     private static By buttonContinueSection = By.xpath("//input[@id='Timeout1_btnContinue']");
     //private static By headerContent= By.xpath("//span[contains(text(),'Content')]");
+
+    private static By bannerSuccess = By.xpath("//span[text()='Saved Successfully']");
 
     public void navigateToStores (){
         hoverAbove(headerContent);
@@ -49,6 +52,15 @@ public class ICSHeader extends BasePage {
         return Pages.misc();
     }
 
+    public Housekeeping navigateToHousekeeping (){
+        switchOutOfFrame();
+        System.out.println("Clicking 'Content'");
+        click(headerContent);
+        System.out.println("Clicking 'Housekeeping'");
+        click(contentHousekeeping);
+        return Pages.housekeeping();
+    }
+
     public MainMenu navigateToMainMenu () throws InterruptedException {
         switchOutOfFrame();
         System.out.println("Clicking 'Content'");
@@ -65,6 +77,8 @@ public class ICSHeader extends BasePage {
         return Pages.icsWelcomeMenu();
     }
 
+
+
     public void check4Timeout (){
         switchOutOfFrame();
         System.out.println("Timeout?");
@@ -76,6 +90,14 @@ public class ICSHeader extends BasePage {
         else {
             System.out.println("No timeout!");
         }
+        switch2Frame(By.xpath("//iframe"));
+    }
+
+    public void successBannerCheck (){
+        switchOutOfFrame();
+        waitVisibility(bannerSuccess);
+        System.out.println("Saved");
+        waitForElementToDisappear(bannerSuccess);
         switch2Frame(By.xpath("//iframe"));
     }
 }

@@ -1,7 +1,5 @@
 package com.test.pages;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.test.base.BasePage;
 import org.json.JSONArray;
 import org.openqa.selenium.By;
@@ -50,7 +48,7 @@ public class MainMenu extends BasePage {
     private String getCardTitle (){
         waitVisibility(fieldItemTitle);
         System.out.println("Getting card title...");
-        String title = getFieldValue(fieldItemTitle);
+        String title = getElementValue(fieldItemTitle);
         System.out.println("Card title: "+title);
         return title;
     }
@@ -69,7 +67,7 @@ public class MainMenu extends BasePage {
         waitVisibility(checkboxCarousel);
         if (verifyIsChecked(checkboxCarousel)||verifyIsChecked(checkboxCheckerBoard)){
             System.out.println("Headline is visible");
-            headline = getFieldValue(fieldHeadline);
+            headline = getElementValue(fieldHeadline);
         }
         else {
             System.out.println("Carousel and chboard are not enabled");
@@ -84,7 +82,7 @@ public class MainMenu extends BasePage {
         waitVisibility(checkboxCheckerBoard);
         if (verifyIsChecked(checkboxCarousel)||verifyIsChecked(checkboxCheckerBoard)){
             System.out.println("Subtitle is visible");
-            subtitle = getFieldValue(fieldSubtitle);
+            subtitle = getElementValue(fieldSubtitle);
         }
         else {
             System.out.println("Carousel and chboard are not enabled");
@@ -96,11 +94,7 @@ public class MainMenu extends BasePage {
     private void saveChanges (){
         System.out.println("Saving...");
         click(buttonSaveCard);
-        switchOutOfFrame();
-        waitVisibility(bannerSuccess);
-        System.out.println("Saved");
-        waitForElementToDisappear(bannerSuccess);
-        switch2Frame();
+        Pages.icsHeader().successBannerCheck();
     }
 
     private void removeCard (){

@@ -4,7 +4,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class UnitTest {
     public static void main(String[] args) throws IOException, ParseException {
@@ -18,13 +20,40 @@ public class UnitTest {
         JSONArray newData = (JSONArray) parser.parse(new FileReader(directoryPath+newFile));
         JSONArray translatedData = (JSONArray) parser.parse(new FileReader(directoryPath+translatedFile));
 
+        System.out.println(newData.toString());
+        System.out.println(translatedData.toString());
+
         for (int iNew = 0; iNew <newData.size(); iNew++) {
             JSONObject newDataGroup = (JSONObject) newData.get(iNew);
-            String groupName = newDataGroup.get("group").toString();
+            System.out.println(newDataGroup.toString());
+            String groupName = newDataGroup.get("groupName").toString();
+            boolean notExists=true;
             for (int iTranslated=0; iTranslated<translatedData.size(); iTranslated++){
+                JSONObject tansGroup = (JSONObject) translatedData.get(iTranslated);
+                String tranGName = tansGroup.get("groupName").toString();
+                if (groupName.equals(tranGName)){
+                    notExists=false;
+                    JSONArray newNodes = (JSONArray) newDataGroup.get("nodes");
+                    JSONArray translatedNodes = (JSONArray) tansGroup.get("nodes");
+                    ArrayList <JSONObject> arrayTransNodes = new ArrayList<>();
+                    for (int iArray = 0; iArray<translatedNodes.size(); iArray++){
+                        arrayTransNodes.add ((JSONObject) translatedNodes.get(iArray));
+                    }
 
+                    for (int iNewNodes=0; iNewNodes<newNodes.size(); iNewNodes++){
+                        JSONObject newNode = (JSONObject) newNodes.get(iNewNodes);
+                        String subgroup = newNode.get("subGroup").toString();
+                        arrayTransNodes.get(iNewNodes).put("subGroup", subgroup);
+                    }
+                }
+            }
+            if (notExists){
+                translatedData.add(newDataGroup);
             }
         }
 
+        FileWriter fw = new FileWriter(directoryPath+"ICEDescriptionsMerged.json");
+        fw.write(translatedData.toString().toCharArray());
+        fw.close();
     }
 }

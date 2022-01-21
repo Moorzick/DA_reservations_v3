@@ -9,11 +9,9 @@ import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class ICEDesc extends BasePage {
     private final By descrIFrame = By.xpath("//iframe[@id='ifmain']");
@@ -60,8 +58,13 @@ public class ICEDesc extends BasePage {
         return getAText(By.xpath(nodeNameXPath));
     }
 
+    private By getNodeByNameAndSubGroup(String nodeName, String subGroup){
+        String groupXpath = String.format("//span[contains(@id, 'gvItems_lblSubGroup') and text()='%s']/parent::div/parent::td/following-sibling::td/div/a[contains(@id, 'gvItems_lblNode') and text()='%s']", subGroup, nodeName);
+        return By.xpath(groupXpath);
+    }
+
     private By getNodeByName(String nodeName){
-        String groupXpath = String.format("//a[contains(@id,'gvItems_lblNode') and text()='%s']", nodeName);
+        String groupXpath = String.format("//a[contains(@id, 'gvItems_lblNode') and text()='%s']", nodeName);
         return By.xpath(groupXpath);
     }
 
@@ -128,7 +131,7 @@ public class ICEDesc extends BasePage {
         System.out.println("Subgroup: "+subGroup);
         String nodeSize = getAText(getNodeSize(nodeName));
         System.out.println("Node size: "+nodeSize);
-        String nodeText = getFieldValue(getNodeTextField(nodeName));
+        String nodeText = getElementValue(getNodeTextField(nodeName));
         System.out.println("Node text: "+nodeText);
 
         node.put("name", nodeName);
@@ -154,10 +157,18 @@ public class ICEDesc extends BasePage {
                 JSONObject node = (JSONObject) nodes.get(i2);
                 String nodeName = node.get("name").toString();
                 String text = node.get("text").toString();
+                String subGroup;
+                if (node.get("subGroup")==null){
+                    subGroup="";
+                }
+                else {
+                    subGroup=node.get("subGroup").toString();
+                }
                 System.out.println("Group name: "+groupName);
+                System.out.println("SubGroup: "+subGroup);
                 System.out.println("Node name: "+nodeName);
                 System.out.println("Text: "+text);
-                fillDescription(nodeName,text);
+                fillDescription(subGroup, nodeName,text);
                 System.out.println("--------------------------------------------");
             }
             System.out.println("============================================");
@@ -165,14 +176,25 @@ public class ICEDesc extends BasePage {
         return Pages.iDesc();
     }
 
-    private void fillDescription(String nodeName, String text) throws InterruptedException {
-        if (verifyElementExist(getNodeByName(nodeName))){
+    private void fillDescription(String subGroup, String nodeName, String text) throws InterruptedException {
+        boolean nodeExists;
+        if (subGroup.equals("")){
+            System.out.print("Node has no subGroup specified. nodeExist? ");
+            nodeExists=verifyElementExist(getNodeByName(nodeName));
+            System.out.println(nodeExists);
+        }
+        else {
+            System.out.print("Node has subGroup specified: "+subGroup+" nodeExist? ");
+            nodeExists=verifyElementExist(getNodeByNameAndSubGroup(nodeName, subGroup));
+            System.out.println(nodeExists);
+        }
+        if (nodeExists){
             System.out.println("Node "+nodeName+" exists, processing");
             By textField = getNodeTextField(nodeName);
             click(textField);
-            String initialValue = getFieldValue(textField);
+            String initialValue = getElementValue(textField);
             System.out.println("Initial value: "+initialValue);
-            if (getFieldValue(textField).equals("")){
+            if (getElementValue(textField).equals("")){
                 System.out.println("Description is empty, filling with: "+text);
                 writeText(textField, text);
                 click(fieldSearch);

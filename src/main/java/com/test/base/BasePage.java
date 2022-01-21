@@ -153,7 +153,7 @@ public class BasePage {
         return BaseTest.driver.findElements(by).size();
     }
 
-    public String getFieldValue (By by){
+    public String getElementValue(By by){
         String value;
         String retrievedValue = BaseTest.driver.findElement(by).getAttribute("value");
         if (retrievedValue!=null){
