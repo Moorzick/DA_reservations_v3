@@ -17,6 +17,8 @@ public class ICSHeader extends BasePage {
     private static By contentMisc= By.xpath("//a[@data-iframe-height='Misc']");
     private static By contentMainMenu= By.xpath("//a[@data-iframe-height='Main Menu']");
     private static By contentHousekeeping = contentMenuItem("Housekeeping");
+    private static By contentMediaLibrary = contentMenuItem("Media Library");
+
 
     private static By droplistLang = By.xpath("//select[@id='ddLanguage']");
     private static By buttonContinueSection = By.xpath("//input[@id='Timeout1_btnContinue']");
@@ -43,6 +45,16 @@ public class ICSHeader extends BasePage {
         System.out.println("Clicking 'SysFunc'");
         click(contentSysFunc);
         return Pages.systemFunctions();
+    }
+
+    public MediaLibrary navigateToMediaLibrary () throws InterruptedException {
+        switchOutOfFrame();
+        System.out.println("Clicking 'Content'");
+        click(headerContent);
+        Thread.sleep(2000);
+        System.out.println("Clicking 'MediaLib'");
+        click(contentMediaLibrary);
+        return Pages.mediaLibrary();
     }
 
     public Misc navigateToMisc () throws InterruptedException {

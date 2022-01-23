@@ -171,4 +171,8 @@ public class BasePage {
         String xpath = String.format("//select[@id='%s']/option[@selected='selected']", selectId);
         return getAText(By.xpath(xpath));
     }
+
+    public void sendKeys (By elementBy, String charSequence){
+        BaseTest.driver.findElement(elementBy).sendKeys(charSequence);
+    }
 }

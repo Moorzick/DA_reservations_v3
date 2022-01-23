@@ -32,4 +32,8 @@ public class Tools {
         }
         return ja;
     }
+
+    public static By aFromHref (String href){
+        return byFromPropertyAndValue("a", "href", href);
+    }
 }

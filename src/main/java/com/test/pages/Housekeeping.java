@@ -21,6 +21,7 @@ public class Housekeeping extends BasePage {
     private static By fieldSearh = Tools.inputFromId("tbFilterKey");
     private static By buttonSearch = Tools.inputFromId("imgQuery");
     private static By fieldCardTitle = Tools.inputFromId("tbSectionTitle");
+    private static By fieldLink = Tools.inputFromId("txtLink");
     private static By selectSysFunc = Tools.byFromId("select", "ddlSectionList");
     private static By selectNotifGroup = Tools.byFromId("select", "ddlGroup");
     private static By buttonSaveCard = Tools.aFromId("lbAddSection");
@@ -52,7 +53,13 @@ public class Housekeeping extends BasePage {
             String title = card.get("title").toString();
             System.out.println("Working on: "+title);
             editCard(Integer.valueOf(card.get("index").toString()));
-            localizeCard(title);
+            if (card.get("sysFunc").toString().contains("Link\n")){
+                String link = card.get("linkURL").toString();
+                localizeCard(title, link);
+            }
+            else {
+                localizeCard(title);
+            }
             System.out.println("-------------");
         }
         return Pages.housekeeping();
@@ -124,11 +131,14 @@ public class Housekeeping extends BasePage {
             System.out.println("No notification group needed");
             card.put("notify", "null");
         }
-        card.put("sysFunc", getAText(selectSysFunc));
-        try{saveCard();}
-        catch (Exception e){
-            System.out.println("Caught exception");
+        String sysFunc = getAText(selectSysFunc);
+        if (sysFunc.contains("Link") && !sysFunc.contains("Links Menu")){
+            System.out.println("Link card detected!");
+            card.put("linkURL", getFieldValue(fieldLink));
+            System.out.println("Link: "+getFieldValue(fieldLink));
         }
+        card.put("sysFunc", getAText(selectSysFunc));
+        saveCard();
         return card;
     }
 
@@ -143,8 +153,7 @@ public class Housekeeping extends BasePage {
     }
 
     private void saveCard () throws InterruptedException {
-        //BaseTest.driver.findElement(buttonSaveCard)
-        BaseTest.driver.switchTo().activeElement().findElement(buttonSaveCard);
+        //BaseTest.driver.switchTo().activeElement().findElement(buttonSaveCard);
         Thread.sleep(1000);
         click(buttonSaveCard);
         Pages.icsHeader().checkForSuccess();
@@ -172,6 +181,16 @@ public class Housekeeping extends BasePage {
 
     private void localizeCard (String title) throws InterruptedException {
         writeText(fieldCardTitle, title);
+        saveCard();
+    }
+
+    private void localizeCard (String title, String link) throws InterruptedException {
+        System.out.println("Filling title");
+        writeText(fieldCardTitle, title);
+        System.out.println("Filling link");
+        writeText(fieldLink, link);
+        System.out.println("Saving the card");
+        click(fieldSearh);
         saveCard();
     }
 
