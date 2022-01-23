@@ -1,5 +1,7 @@
 package com.test.tools;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.openqa.selenium.By;
 
 public class Tools {
@@ -19,5 +21,15 @@ public class Tools {
 
     public static By aFromId (String id){
         return byFromId("a", id);
+    }
+
+    public static JSONArray jsonArrayClearNulls (JSONArray ja){
+        for (int i=0; i<ja.toList().size(); i++) {
+            Object obj = ja.get(i);
+            if (obj.equals(null)){
+                ja.remove(i);
+            }
+        }
+        return ja;
     }
 }

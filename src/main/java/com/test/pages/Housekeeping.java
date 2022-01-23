@@ -5,8 +5,12 @@ import com.test.base.BaseTest;
 import com.test.tools.Tools;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -35,8 +39,22 @@ public class Housekeeping extends BasePage {
             System.out.println("======================");
         }
         FileWriter fw = new FileWriter(file);
-        fw.write(housekeepingCards.toString().toCharArray());
+        fw.write(Tools.jsonArrayClearNulls(housekeepingCards).toString().toCharArray());
         fw.close();
+        return Pages.housekeeping();
+    }
+
+    public Housekeeping localizeCards (String file) throws IOException, ParseException, InterruptedException {
+        Pages.icsHeader().check4Frame();
+        org.json.simple.JSONArray cards = (org.json.simple.JSONArray) new JSONParser ().parse(new FileReader(file));
+        for (int i=0; i<cards.size(); i++){
+            org.json.simple.JSONObject card = (org.json.simple.JSONObject) cards.get(i);
+            String title = card.get("title").toString();
+            System.out.println("Working on: "+title);
+            editCard(Integer.valueOf(card.get("index").toString()));
+            localizeCard(title);
+            System.out.println("-------------");
+        }
         return Pages.housekeeping();
     }
 
@@ -92,7 +110,7 @@ public class Housekeeping extends BasePage {
         return Pages.housekeeping();
     }
 
-    private JSONObject scrapCard (int index){
+    private JSONObject scrapCard (int index) throws InterruptedException {
         JSONObject card = new JSONObject();
         String title = getFieldValue(fieldCardTitle);
         System.out.println("Card title: "+title);
@@ -101,14 +119,16 @@ public class Housekeeping extends BasePage {
         if (verifyElementExist(selectNotifGroup)){
             System.out.println("Notification select exist, getting active value...");
             card.put("notify", getActiveOptionText("ddlGroup"));
-
         }
         else {
             System.out.println("No notification group needed");
             card.put("notify", "null");
         }
         card.put("sysFunc", getAText(selectSysFunc));
-        saveCard();
+        try{saveCard();}
+        catch (Exception e){
+            System.out.println("Caught exception");
+        }
         return card;
     }
 
@@ -122,7 +142,10 @@ public class Housekeeping extends BasePage {
         return getAText(By.xpath(String.format("(//tr[contains(@id, 'rgSections_ctl00')]/td[3]/a)[%d]", index)));
     }
 
-    private void saveCard (){
+    private void saveCard () throws InterruptedException {
+        //BaseTest.driver.findElement(buttonSaveCard)
+        BaseTest.driver.switchTo().activeElement().findElement(buttonSaveCard);
+        Thread.sleep(1000);
         click(buttonSaveCard);
         Pages.icsHeader().checkForSuccess();
     }
@@ -147,6 +170,13 @@ public class Housekeeping extends BasePage {
         return By.xpath(xpath);
     }
 
+    private void localizeCard (String title) throws InterruptedException {
+        writeText(fieldCardTitle, title);
+        saveCard();
+    }
 
+    private void editCard (int index){
+        click(getEditByIndex(index));
+    }
 
 }

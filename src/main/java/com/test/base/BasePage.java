@@ -28,7 +28,8 @@ public class BasePage {
     //Click Method
     public void click (By elementBy) {
         waitVisibility(elementBy);
-        BaseTest.getDriver().findElement(elementBy).click();
+        new Actions(BaseTest.driver).moveToElement(BaseTest.driver.findElement(elementBy)).click().perform();
+        //BaseTest.getDriver().findElement(elementBy).click();
     }
 
     public void rightClick (By elementBy){
