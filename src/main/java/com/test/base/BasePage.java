@@ -154,6 +154,7 @@ public class BasePage {
     }
 
     public String getFieldValue (By by){
+        waitVisibility(by);
         String value;
         String retrievedValue = BaseTest.driver.findElement(by).getAttribute("value");
         if (retrievedValue!=null){
@@ -163,5 +164,10 @@ public class BasePage {
             value="";
         }
         return value;
+    }
+
+    public String getActiveOptionText (String selectId){
+        String xpath = String.format("//select[@id='%s']/option[@selected='selected']", selectId);
+        return getAText(By.xpath(xpath));
     }
 }

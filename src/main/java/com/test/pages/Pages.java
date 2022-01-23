@@ -19,6 +19,7 @@ public class Pages extends BasePage {
     private static Language lang;
     private static MainMenu mMenu;
     private static ICEDesc iDesc;
+    private static Housekeeping housekeeping;
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
         if (icsAdvancedConfigs==null){
@@ -124,5 +125,13 @@ public class Pages extends BasePage {
         }
         return iDesc;
     }
+
+    public static Housekeeping housekeeping(){
+        if (housekeeping==null){
+            housekeeping=new Housekeeping();
+        }
+        return housekeeping;
+    }
+
 
 }
