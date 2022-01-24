@@ -20,6 +20,9 @@ public class Pages extends BasePage {
     private static MainMenu mMenu;
     private static ICEDesc iDesc;
     private static Housekeeping housekeeping;
+    private static MediaLibrary mediaLibrary;
+    private static ImageLibrary imageLibrary;
+    private static ImageLibraryAdd imageLibraryAdd;
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
         if (icsAdvancedConfigs==null){
@@ -126,10 +129,32 @@ public class Pages extends BasePage {
         return iDesc;
     }
 
-    public static Housekeeping housekeeping() {
-        if (housekeeping == null){
+    public static Housekeeping housekeeping(){
+        if (housekeeping==null){
             housekeeping=new Housekeeping();
         }
         return housekeeping;
     }
+
+    public static MediaLibrary mediaLibrary(){
+        if (mediaLibrary==null){
+            mediaLibrary=new MediaLibrary();
+        }
+        return mediaLibrary;
+    }
+
+    public static ImageLibrary imageLibrary(){
+        if (imageLibrary==null){
+            imageLibrary=new ImageLibrary();
+        }
+        return imageLibrary;
+    }
+
+    public static ImageLibraryAdd imageLibraryAdd(){
+        if (imageLibraryAdd==null){
+            imageLibraryAdd=new ImageLibraryAdd();
+        }
+        return imageLibraryAdd;
+    }
+
 }

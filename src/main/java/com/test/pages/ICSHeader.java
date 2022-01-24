@@ -2,6 +2,7 @@ package com.test.pages;
 
 import com.test.base.BasePage;
 import org.openqa.selenium.By;
+import com.test.tools.Tools;
 
 public class ICSHeader extends BasePage {
     private static By headerContent= By.xpath("//span[contains(text(),'Content')]");
@@ -15,13 +16,16 @@ public class ICSHeader extends BasePage {
     private static By contentSysFunc= By.xpath("//a[@data-iframe-height='System Functions']");
     private static By contentMisc= By.xpath("//a[@data-iframe-height='Misc']");
     private static By contentMainMenu= By.xpath("//a[@data-iframe-height='Main Menu']");
-    private static By contentHousekeeping = By.xpath("//a[@data-iframe-height='Housekeeping']");
+    private static By contentHousekeeping = contentMenuItem("Housekeeping");
+    private static By contentMediaLibrary = contentMenuItem("Media Library");
+
 
     private static By droplistLang = By.xpath("//select[@id='ddLanguage']");
     private static By buttonContinueSection = By.xpath("//input[@id='Timeout1_btnContinue']");
     //private static By headerContent= By.xpath("//span[contains(text(),'Content')]");
 
-    private static By bannerSuccess = By.xpath("//span[text()='Saved Successfully']");
+    private static By bannerSuccess = By.xpath("//span[contains(text(),'Successfully')]");
+    public final By iframe = By.xpath("//iframe");
 
     public void navigateToStores (){
         hoverAbove(headerContent);
@@ -43,6 +47,16 @@ public class ICSHeader extends BasePage {
         return Pages.systemFunctions();
     }
 
+    public MediaLibrary navigateToMediaLibrary () throws InterruptedException {
+        switchOutOfFrame();
+        System.out.println("Clicking 'Content'");
+        click(headerContent);
+        Thread.sleep(2000);
+        System.out.println("Clicking 'MediaLib'");
+        click(contentMediaLibrary);
+        return Pages.mediaLibrary();
+    }
+
     public Misc navigateToMisc () throws InterruptedException {
         switchOutOfFrame();
         System.out.println("Clicking 'Content'");
@@ -50,15 +64,6 @@ public class ICSHeader extends BasePage {
         System.out.println("Clicking 'Misc'");
         click(contentMisc);
         return Pages.misc();
-    }
-
-    public Housekeeping navigateToHousekeeping (){
-        switchOutOfFrame();
-        System.out.println("Clicking 'Content'");
-        click(headerContent);
-        System.out.println("Clicking 'Housekeeping'");
-        click(contentHousekeeping);
-        return Pages.housekeeping();
     }
 
     public MainMenu navigateToMainMenu () throws InterruptedException {
@@ -77,8 +82,6 @@ public class ICSHeader extends BasePage {
         return Pages.icsWelcomeMenu();
     }
 
-
-
     public void check4Timeout (){
         switchOutOfFrame();
         System.out.println("Timeout?");
@@ -93,11 +96,35 @@ public class ICSHeader extends BasePage {
         switch2Frame(By.xpath("//iframe"));
     }
 
-    public void successBannerCheck (){
+    public Housekeeping navigateToHousekeeping (){
+        switchOutOfFrame();
+        System.out.println("Clicking 'Content'");
+        click(headerContent);
+        System.out.println("Clicking 'Housekeeping'");
+        click(contentHousekeeping);
+        return Pages.housekeeping();
+    }
+
+    private static By contentMenuItem(String value){
+        By menuItem = Tools.byFromPropertyAndValue("a","data-iframe-height", value);
+        return menuItem;
+    }
+
+    public void checkForSuccess(){
         switchOutOfFrame();
         waitVisibility(bannerSuccess);
         System.out.println("Saved");
         waitForElementToDisappear(bannerSuccess);
-        switch2Frame(By.xpath("//iframe"));
+        switch2Frame(iframe);
+    }
+
+    private void switch2Frame (){
+        switch2Frame(iframe);
+    }
+
+    public void check4Frame (){
+        if (verifyElementExist(iframe)){
+            Pages.icsHeader().switch2Frame();
+        }
     }
 }

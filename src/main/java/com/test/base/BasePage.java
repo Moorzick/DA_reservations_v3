@@ -28,7 +28,8 @@ public class BasePage {
     //Click Method
     public void click (By elementBy) {
         waitVisibility(elementBy);
-        BaseTest.getDriver().findElement(elementBy).click();
+        new Actions(BaseTest.driver).moveToElement(BaseTest.driver.findElement(elementBy)).click().perform();
+        //BaseTest.getDriver().findElement(elementBy).click();
     }
 
     public void rightClick (By elementBy){
@@ -153,7 +154,8 @@ public class BasePage {
         return BaseTest.driver.findElements(by).size();
     }
 
-    public String getElementValue(By by){
+    public String getFieldValue (By by){
+        waitVisibility(by);
         String value;
         String retrievedValue = BaseTest.driver.findElement(by).getAttribute("value");
         if (retrievedValue!=null){
@@ -163,5 +165,14 @@ public class BasePage {
             value="";
         }
         return value;
+    }
+
+    public String getActiveOptionText (String selectId){
+        String xpath = String.format("//select[@id='%s']/option[@selected='selected']", selectId);
+        return getAText(By.xpath(xpath));
+    }
+
+    public void sendKeys (By elementBy, String charSequence){
+        BaseTest.driver.findElement(elementBy).sendKeys(charSequence);
     }
 }
