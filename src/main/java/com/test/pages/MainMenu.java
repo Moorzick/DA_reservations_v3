@@ -48,7 +48,7 @@ public class MainMenu extends BasePage {
     private String getCardTitle (){
         waitVisibility(fieldItemTitle);
         System.out.println("Getting card title...");
-        String title = getElementValue(fieldItemTitle);
+        String title = getFieldValue(fieldItemTitle);
         System.out.println("Card title: "+title);
         return title;
     }
@@ -67,7 +67,7 @@ public class MainMenu extends BasePage {
         waitVisibility(checkboxCarousel);
         if (verifyIsChecked(checkboxCarousel)||verifyIsChecked(checkboxCheckerBoard)){
             System.out.println("Headline is visible");
-            headline = getElementValue(fieldHeadline);
+            headline = getFieldValue(fieldHeadline);
         }
         else {
             System.out.println("Carousel and chboard are not enabled");
@@ -82,7 +82,7 @@ public class MainMenu extends BasePage {
         waitVisibility(checkboxCheckerBoard);
         if (verifyIsChecked(checkboxCarousel)||verifyIsChecked(checkboxCheckerBoard)){
             System.out.println("Subtitle is visible");
-            subtitle = getElementValue(fieldSubtitle);
+            subtitle = getFieldValue(fieldSubtitle);
         }
         else {
             System.out.println("Carousel and chboard are not enabled");
@@ -94,7 +94,7 @@ public class MainMenu extends BasePage {
     private void saveChanges (){
         System.out.println("Saving...");
         click(buttonSaveCard);
-        Pages.icsHeader().successBannerCheck();
+        Pages.icsHeader().checkForSuccess();
     }
 
     private void removeCard (){

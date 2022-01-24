@@ -23,6 +23,8 @@ public class Pages extends BasePage {
     private static MediaLibrary mediaLibrary;
     private static ImageLibrary imageLibrary;
     private static ImageLibraryAdd imageLibraryAdd;
+    private static Stores stores;
+    private static ICSDiningStore diningStore;
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
         if (icsAdvancedConfigs==null){
@@ -155,6 +157,20 @@ public class Pages extends BasePage {
             imageLibraryAdd=new ImageLibraryAdd();
         }
         return imageLibraryAdd;
+    }
+
+    public static Stores stores(){
+        if (stores==null){
+            stores=new Stores();
+        }
+        return stores;
+    }
+
+    public static ICSDiningStore diningStore(){
+        if (diningStore==null){
+            diningStore=new ICSDiningStore();
+        }
+        return diningStore;
     }
 
 }

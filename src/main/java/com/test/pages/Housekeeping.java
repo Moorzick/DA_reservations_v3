@@ -25,6 +25,7 @@ public class Housekeeping extends BasePage {
     private static By selectSysFunc = Tools.byFromId("select", "ddlSectionList");
     private static By selectNotifGroup = Tools.byFromId("select", "ddlGroup");
     private static By buttonSaveCard = Tools.aFromId("lbAddSection");
+    private static By buttonImage = Tools.inputFromId("imgbtnSelectImage");
 
     public Housekeeping scrapCards (String file) throws InterruptedException, IOException {
         Pages.icsHeader().check4Frame();
@@ -142,6 +143,42 @@ public class Housekeeping extends BasePage {
         return card;
     }
 
+    public Housekeeping addLinkCard (String cardTitle, String url, String imageName){
+        Pages.icsHeader().check4Frame();
+        System.out.println("Clicking add button");
+        click(buttonAddCard);
+        System.out.println("Assigning the image...");
+        addImage(imageName);
+        System.out.println("Selecting function");
+        droplistSelectByName(selectSysFunc, "Link");
+        waitVisibility(fieldLink);
+        writeText(fieldCardTitle, cardTitle);
+        writeText(fieldLink, url);
+        click(buttonSaveCard);
+        return Pages.housekeeping();
+    }
+
+    public Housekeeping addCustomCard (String cardTitle, String imageName){
+        Pages.icsHeader().check4Frame();
+        System.out.println("Clicking add button");
+        click(buttonAddCard);
+        System.out.println("Assigning the image...");
+        addImage(imageName);
+        System.out.println("Selecting function");
+        droplistSelectByName(selectSysFunc, "Custom");
+        writeText(fieldCardTitle, cardTitle);
+
+        click(buttonSaveCard);
+
+        return Pages.housekeeping();
+    }
+
+
+
+    private void addImage (String imageName){
+        click(buttonImage);
+        Pages.imageLibrary().assignImage (imageName);
+    }
 
     private By getEditByIndex (int index){
         String xpath = String.format("(//a[@itemstyle-cssclass='lnkEdit'])[%d]", index);

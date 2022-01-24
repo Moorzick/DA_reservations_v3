@@ -23,6 +23,10 @@ public class Tools {
         return byFromId("a", id);
     }
 
+    public static By selectFromId (String id){
+        return byFromId("select", id);
+    }
+
     public static JSONArray jsonArrayClearNulls (JSONArray ja){
         for (int i=0; i<ja.toList().size(); i++) {
             Object obj = ja.get(i);

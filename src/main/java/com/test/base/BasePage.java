@@ -1,6 +1,7 @@
 package com.test.base;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -131,6 +132,7 @@ public class BasePage {
     }
 
     public void droplistSelectByName (By droplistBy, String optionName){
+        waitVisibility(droplistBy);
         Select droplist = new Select(BaseTest.driver.findElement(droplistBy));
         droplist.selectByVisibleText(optionName);
     }
@@ -174,5 +176,35 @@ public class BasePage {
 
     public void sendKeys (By elementBy, String charSequence){
         BaseTest.driver.findElement(elementBy).sendKeys(charSequence);
+    }
+
+    public void dragNdrop (By source, By target){
+        WebElement elementSource = BaseTest.driver.findElement(source);
+        WebElement elementTarget = BaseTest.driver.findElement(target);
+        new Actions(BaseTest.driver).dragAndDrop(elementSource, elementTarget).perform();
+    }
+
+    public void dragNdropWShifting (By source, By target){
+        WebElement elementSource = BaseTest.driver.findElement(source);
+        WebElement elementTarget = BaseTest.driver.findElement(target);
+        Point sourcePoint = elementSource.getLocation();
+        System.out.println("sourceX: "+sourcePoint.getX());
+        System.out.println("sourceY: "+sourcePoint.getY());
+        Point targetPoint = elementTarget.getLocation();
+        int targetX = targetPoint.getX();
+        int targetY = targetPoint.getY();
+        System.out.println("targetX: "+targetX);
+        System.out.println("targetY: "+targetY);
+        int shiftX = 0;
+        int shiftY = 0;
+        int newX = targetX+shiftX;
+        int newY = targetY+shiftY;
+        System.out.println("dnd");
+        new Actions(BaseTest.driver).dragAndDropBy(elementSource, newX, newY).perform();
+    }
+
+    public Point getCoordinates (By by){
+        WebElement element = BaseTest.driver.findElement(by);
+        return element.getLocation();
     }
 }

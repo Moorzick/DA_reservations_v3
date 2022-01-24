@@ -26,4 +26,14 @@ public class ICSDiningStore extends BasePage {
         return Pages.addItemPage();
     }
 
+    private String getItemNameByIndex (int index){
+        String itemNameXpath = String.format("//table[@id='main_gvItems']//tr[%d]/td[2]", index+1);
+        return getAText(By.xpath(itemNameXpath));
+    }
+
+    private String getItemDescr (int index){
+        String itemDescXpath = String.format("//table[@id='main_gvItems']//tr[%d]/td[3]/span", index+1);
+        return getAText(By.xpath(itemDescXpath));
+    }
+
 }

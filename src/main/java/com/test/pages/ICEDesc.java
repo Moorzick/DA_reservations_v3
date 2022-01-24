@@ -131,7 +131,7 @@ public class ICEDesc extends BasePage {
         System.out.println("Subgroup: "+subGroup);
         String nodeSize = getAText(getNodeSize(nodeName));
         System.out.println("Node size: "+nodeSize);
-        String nodeText = getElementValue(getNodeTextField(nodeName));
+        String nodeText = getFieldValue(getNodeTextField(nodeName));
         System.out.println("Node text: "+nodeText);
 
         node.put("name", nodeName);
@@ -192,9 +192,9 @@ public class ICEDesc extends BasePage {
             System.out.println("Node "+nodeName+" exists, processing");
             By textField = getNodeTextField(nodeName);
             click(textField);
-            String initialValue = getElementValue(textField);
+            String initialValue = getFieldValue(textField);
             System.out.println("Initial value: "+initialValue);
-            if (getElementValue(textField).equals("")){
+            if (getFieldValue(textField).equals("")){
                 System.out.println("Description is empty, filling with: "+text);
                 writeText(textField, text);
                 click(fieldSearch);
