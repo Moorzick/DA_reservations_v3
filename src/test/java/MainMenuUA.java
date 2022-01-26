@@ -16,8 +16,8 @@ public class MainMenuUA extends BaseTest {
     private final String password = "Barsick5120";
     private final String ics = "4.28.0";
 
-    private final String language2add="Ukrainian2";
-    private final String cultCode = "ua-UA";
+    private final String language2add="English2";
+    private final String cultCode = "en-UZ";
 
     String icsURL = String.format("https://qaweb.icemain.com/ICS/QA/%s", ics);
 
@@ -31,7 +31,7 @@ public class MainMenuUA extends BaseTest {
                 .goToLang()
                 .addLang(language2add, cultCode);
         Pages.icsHeader().navigateToMisc().gotoLanguage().activateLang(language2add);
-        Pages.icsHeader().switchLang(language2add);
+        /*Pages.icsHeader().switchLang(language2add);
         Pages.icsWelcomeMenu().gotoContent().switch2Frame();
         JSONParser parser = new JSONParser();
         JSONArray data = (JSONArray) parser.parse(new FileReader("C:\\Users\\user\\Desktop\\mainMenuCards.json"));
@@ -40,7 +40,7 @@ public class MainMenuUA extends BaseTest {
             int index = Integer.valueOf(json.get("index").toString());
             Pages.mMenu().selectCard(index).fillCard(json);
         }
-        //Pages.icsHeader().navigateToMainMenu()
+        //Pages.icsHeader().navigateToMainMenu()*/
         Thread.sleep(5000);
     }
 }

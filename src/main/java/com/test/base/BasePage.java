@@ -29,7 +29,7 @@ public class BasePage {
     //Click Method
     public void click (By elementBy) {
         waitVisibility(elementBy);
-        new Actions(BaseTest.driver).moveToElement(BaseTest.driver.findElement(elementBy)).click().perform();
+        new Actions(BaseTest.driver).moveToElement(BaseTest.driver.findElement(elementBy)).click().build().perform();
         //BaseTest.getDriver().findElement(elementBy).click();
     }
 
@@ -138,6 +138,7 @@ public class BasePage {
     }
 
     public void droplistSelectByIndex (By droplistBy, int index){
+        waitVisibility(droplistBy);
         Select droplist = new Select(BaseTest.driver.findElement(droplistBy));
         droplist.selectByIndex(index);
     }

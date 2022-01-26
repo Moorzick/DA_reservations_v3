@@ -34,6 +34,7 @@ public class Stores extends BasePage {
     }
 
     public ICSDiningStore gotoDiningStore(String storeName){
+        Pages.icsHeader().check4Frame();
         click(getTargetStoreBy(storeName));
         return Pages.diningStore();
     }

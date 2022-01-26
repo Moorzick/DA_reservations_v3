@@ -9,7 +9,7 @@ public class Pages extends BasePage {
     private static ICSWelcomeMenu icsWelcomeMenu;
     private static LoginPage loginPage;
     private static MainICSPage mainPage;
-    private static ICSAddItemPage addItemPage;
+    private static DiningItemAdd addItemPage;
     private static ICSMessaging messaging;
     private static ICSMessageDetails msgDetails;
     private static ICSHeader icsHeader;
@@ -25,6 +25,11 @@ public class Pages extends BasePage {
     private static ImageLibraryAdd imageLibraryAdd;
     private static Stores stores;
     private static ICSDiningStore diningStore;
+    private static DiningItemAdd diningStoreAdd;
+    private static DiningCategories diningCategories;
+    private static DiningMenu diningMenu;
+    private static DiningSubmenu diningSubmenu;
+    private static DiningMenuManager diningMenuManager;
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
         if (icsAdvancedConfigs==null){
@@ -61,9 +66,9 @@ public class Pages extends BasePage {
         return mainPage;
     }
 
-    public static ICSAddItemPage addItemPage(){
+    public static DiningItemAdd addItemPage(){
         if (addItemPage==null){
-            addItemPage=new ICSAddItemPage();
+            addItemPage=new DiningItemAdd();
         }
         return addItemPage;
     }
@@ -171,6 +176,41 @@ public class Pages extends BasePage {
             diningStore=new ICSDiningStore();
         }
         return diningStore;
+    }
+
+    public static DiningItemAdd diningStoreAdd(){
+        if (diningStoreAdd==null){
+            diningStoreAdd=new DiningItemAdd();
+        }
+        return diningStoreAdd;
+    }
+
+    public static DiningCategories diningCategories(){
+        if (diningCategories==null){
+            diningCategories=new DiningCategories();
+        }
+        return diningCategories;
+    }
+
+    public static DiningMenu diningMenu(){
+        if (diningMenu==null){
+            diningMenu=new DiningMenu();
+        }
+        return diningMenu;
+    }
+
+    public static DiningSubmenu diningSubmenu(){
+        if (diningSubmenu ==null){
+            diningSubmenu =new DiningSubmenu();
+        }
+        return diningSubmenu;
+    }
+
+    public static DiningMenuManager diningMenuManager(){
+        if(diningMenuManager==null){
+            diningMenuManager=new DiningMenuManager();
+        }
+        return diningMenuManager;
     }
 
 }

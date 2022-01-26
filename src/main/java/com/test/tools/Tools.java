@@ -11,6 +11,11 @@ public class Tools {
         return By.xpath(xpath);
     }
 
+    public static By byContainsPropertyWithValue (String item, String property, String value){
+        String xpath = String.format("//%s[contains(%s, '%s')]", item, property, value);
+        return By.xpath(xpath);
+    }
+
     public static By byFromId (String item, String value){
         return byFromPropertyAndValue(item, "id", value);
     }
@@ -40,4 +45,9 @@ public class Tools {
     public static By aFromHref (String href){
         return byFromPropertyAndValue("a", "href", href);
     }
+
+    public static By aContains (String property, String value){
+        return byContainsPropertyWithValue("a", property, value);
+    }
+
 }
