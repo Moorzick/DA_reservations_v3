@@ -11,7 +11,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-public class MainMenuUA extends BaseTest {
+public class MainICSStoreMenuUA extends BaseTest {
     private final String login = "dmytro.lichman@intelity.com";
     private final String password = "Barsick5120";
     private final String ics = "4.28.0";

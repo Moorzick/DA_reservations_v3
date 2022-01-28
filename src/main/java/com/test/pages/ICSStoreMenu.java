@@ -4,7 +4,7 @@ import com.test.base.BasePage;
 import com.test.tools.Tools;
 import org.openqa.selenium.By;
 
-public class DiningMenu extends BasePage {
+public class ICSStoreMenu extends BasePage {
     private static By fieldTitle = Tools.inputFromId("main_txtEditName");
     private static By buttonAddImage = Tools.inputFromId("main_imgbtnSelectImage");
     private static By buttonSaveSection = Tools.aFromId("main_lbApply");
@@ -67,7 +67,7 @@ public class DiningMenu extends BasePage {
         Pages.icsHeader().checkForSuccess();
     }
 
-    public DiningMenu addDailySchedule (String sectionName){
+    public ICSStoreMenu addDailySchedule (String sectionName){
         click(getEdit(sectionName));
         if (verifyElementExist(optionPeriodDaily)){
             System.out.println("Setting daily period");
@@ -79,7 +79,7 @@ public class DiningMenu extends BasePage {
         return Pages.diningMenu();
     }
 
-    public DiningMenu addDailySchedule (String sectionName, int sHrs, int sMins, String sAMPM, int eHrs, int eMins, String eAMPM ){
+    public ICSStoreMenu addDailySchedule (String sectionName, int sHrs, int sMins, String sAMPM, int eHrs, int eMins, String eAMPM ){
         click(getEdit(sectionName));
         if (verifyElementExist(optionPeriodDaily)){
             System.out.println("Setting daily period");
@@ -91,7 +91,7 @@ public class DiningMenu extends BasePage {
         return Pages.diningMenu();
     }
 
-    public DiningMenu addSection (String sectionName, String  imageName){
+    public ICSStoreMenu addSection (String sectionName, String  imageName){
         Pages.icsHeader().check4Frame();
         System.out.println("Checking if this menu exists");
         if (!verifyElementExist(getSectionByName(sectionName))){
@@ -109,7 +109,7 @@ public class DiningMenu extends BasePage {
         return Pages.diningMenu();
     }
 
-    public DiningSubmenu gotoMenu (String sectionName){
+    public ICSStoreSubmenu gotoMenu (String sectionName){
         Pages.icsHeader().check4Frame();
         click(getSectionByName(sectionName));
         return Pages.diningSubmenu();

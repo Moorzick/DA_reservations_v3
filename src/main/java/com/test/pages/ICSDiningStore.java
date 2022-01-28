@@ -11,13 +11,13 @@ public class ICSDiningStore extends BasePage {
     private static By managerOptions = By.xpath("//a[contains(@href, 'DiningOptionSetsManager')]");
     private static By addItem = By.xpath("//a[@id='main_btnAddItem']");
 
-    public DiningMenu gotoMenuManager (){
+    public ICSStoreMenu gotoMenuManager (){
         Pages.icsHeader().check4Frame();
         click(managerMenu);
         return Pages.diningMenu();
     }
 
-    public DiningCategories gotoCategoryManager (){
+    public ICSStoreCategories gotoCategoryManager (){
         Pages.icsHeader().check4Frame();
         click(managerCategory);
         return Pages.diningCategories();

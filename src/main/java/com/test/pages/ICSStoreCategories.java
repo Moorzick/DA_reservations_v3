@@ -4,7 +4,7 @@ import com.test.base.BasePage;
 import com.test.tools.Tools;
 import org.openqa.selenium.By;
 
-public class DiningCategories extends BasePage {
+public class ICSStoreCategories extends BasePage {
     private static By buttonAddCategory = Tools.aFromId("main_btnAddSection");
     private static By buttonRemoveCat = Tools.aFromId("main_btnRemoveSection");
     private static By edits = Tools.aContains("@id", "main_rgSections");
@@ -49,7 +49,7 @@ public class DiningCategories extends BasePage {
         return Pages.diningStore();
     }
 
-    public DiningCategories addCat (String title, String imageName){
+    public ICSStoreCategories addCat (String title, String imageName){
         Pages.icsHeader().check4Frame();
         waitVisibility(edits);
         System.out.println("Checking for category...");
@@ -67,7 +67,7 @@ public class DiningCategories extends BasePage {
         return Pages.diningCategories();
     }
 
-    public DiningCategories makeUpsell (String catName){
+    public ICSStoreCategories makeUpsell (String catName){
         System.out.println("Verifying if it is upsell");
         waitVisibility(edits);
         if (!verifyIsChecked(getUpsell(catName))){
@@ -80,7 +80,7 @@ public class DiningCategories extends BasePage {
         return Pages.diningCategories();
     }
 
-    public DiningCategories unUpsell (String catName){
+    public ICSStoreCategories unUpsell (String catName){
         System.out.println("Verifying if it is upsell");
         if (!verifyIsChecked(getUpsell(catName))){
             System.out.println("It's not, checking");

@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 
 
-public class HousekeepingMenuScrap extends BaseTest {
+public class HousekeepingICSStoreMenuScrap extends BaseTest {
     private final String login = "dmytro.lichman@intelity.com";
     private final String password = "Barsick5120";
     private final String ics = "4.28.0";

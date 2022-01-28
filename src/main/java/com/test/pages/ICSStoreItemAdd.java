@@ -4,7 +4,7 @@ import com.test.base.BasePage;
 import com.test.tools.Tools;
 import org.openqa.selenium.By;
 
-public class DiningItemAdd extends BasePage {
+public class ICSStoreItemAdd extends BasePage {
     private static By fieldItemName = Tools.inputFromId("main_tbName");
     private static By fieldPrice = Tools.inputFromId("main_tbPrice");
     private static By selectPrLevel = Tools.selectFromId("main_ddlPriceLevel");

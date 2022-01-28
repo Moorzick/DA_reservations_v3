@@ -3,7 +3,7 @@ package com.test.pages;
 import com.test.tools.Tools;
 import org.openqa.selenium.By;
 
-public class DiningMenuManager extends DiningMenu {
+public class ICSStoreMenuManager extends ICSStoreMenu {
     private static By selectMenus = Tools.selectFromId("main_ddlMenu");
     private static By selectSubmenus = Tools.selectFromId("main_ddlSubMenu");
 
@@ -15,7 +15,7 @@ public class DiningMenuManager extends DiningMenu {
         return By.xpath(xp);
     }
 
-    public DiningMenuManager addItem(String itemName){
+    public ICSStoreMenuManager addItem(String itemName){
         Pages.icsHeader().check4Frame();
         click(getSelectorToAdd(itemName));
         click(buttonAddItems);
@@ -23,7 +23,7 @@ public class DiningMenuManager extends DiningMenu {
         return Pages.diningMenuManager();
     }
 
-    public DiningMenuManager addItems(String[] items){
+    public ICSStoreMenuManager addItems(String[] items){
         Pages.icsHeader().check4Frame();
         for (String i:items){
             click(getSelectorToAdd(i));

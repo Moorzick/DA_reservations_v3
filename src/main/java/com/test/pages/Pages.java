@@ -9,7 +9,7 @@ public class Pages extends BasePage {
     private static ICSWelcomeMenu icsWelcomeMenu;
     private static LoginPage loginPage;
     private static MainICSPage mainPage;
-    private static DiningItemAdd addItemPage;
+    private static ICSStoreItemAdd addItemPage;
     private static ICSMessaging messaging;
     private static ICSMessageDetails msgDetails;
     private static ICSHeader icsHeader;
@@ -25,11 +25,11 @@ public class Pages extends BasePage {
     private static ImageLibraryAdd imageLibraryAdd;
     private static Stores stores;
     private static ICSDiningStore diningStore;
-    private static DiningItemAdd diningStoreAdd;
-    private static DiningCategories diningCategories;
-    private static DiningMenu diningMenu;
-    private static DiningSubmenu diningSubmenu;
-    private static DiningMenuManager diningMenuManager;
+    private static ICSStoreItemAdd diningStoreAdd;
+    private static ICSStoreCategories ICSStoreCategories;
+    private static ICSStoreMenu ICSStoreMenu;
+    private static ICSStoreSubmenu diningICSStoreSubmenu;
+    private static ICSStoreMenuManager diningMenuManager;
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
         if (icsAdvancedConfigs==null){
@@ -66,9 +66,9 @@ public class Pages extends BasePage {
         return mainPage;
     }
 
-    public static DiningItemAdd addItemPage(){
+    public static ICSStoreItemAdd addItemPage(){
         if (addItemPage==null){
-            addItemPage=new DiningItemAdd();
+            addItemPage=new ICSStoreItemAdd();
         }
         return addItemPage;
     }
@@ -178,37 +178,37 @@ public class Pages extends BasePage {
         return diningStore;
     }
 
-    public static DiningItemAdd diningStoreAdd(){
+    public static ICSStoreItemAdd diningStoreAdd(){
         if (diningStoreAdd==null){
-            diningStoreAdd=new DiningItemAdd();
+            diningStoreAdd=new ICSStoreItemAdd();
         }
         return diningStoreAdd;
     }
 
-    public static DiningCategories diningCategories(){
-        if (diningCategories==null){
-            diningCategories=new DiningCategories();
+    public static ICSStoreCategories diningCategories(){
+        if (ICSStoreCategories ==null){
+            ICSStoreCategories =new ICSStoreCategories();
         }
-        return diningCategories;
+        return ICSStoreCategories;
     }
 
-    public static DiningMenu diningMenu(){
-        if (diningMenu==null){
-            diningMenu=new DiningMenu();
+    public static ICSStoreMenu diningMenu(){
+        if (ICSStoreMenu ==null){
+            ICSStoreMenu =new ICSStoreMenu();
         }
-        return diningMenu;
+        return ICSStoreMenu;
     }
 
-    public static DiningSubmenu diningSubmenu(){
-        if (diningSubmenu ==null){
-            diningSubmenu =new DiningSubmenu();
+    public static ICSStoreSubmenu diningSubmenu(){
+        if (diningICSStoreSubmenu ==null){
+            diningICSStoreSubmenu =new ICSStoreSubmenu();
         }
-        return diningSubmenu;
+        return diningICSStoreSubmenu;
     }
 
-    public static DiningMenuManager diningMenuManager(){
+    public static ICSStoreMenuManager diningMenuManager(){
         if(diningMenuManager==null){
-            diningMenuManager=new DiningMenuManager();
+            diningMenuManager=new ICSStoreMenuManager();
         }
         return diningMenuManager;
     }

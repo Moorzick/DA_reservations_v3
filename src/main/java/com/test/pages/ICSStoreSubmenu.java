@@ -1,10 +1,9 @@
 package com.test.pages;
 
-import com.test.base.BasePage;
 import com.test.tools.Tools;
 import org.openqa.selenium.By;
 
-public class DiningSubmenu extends DiningMenu {
+public class ICSStoreSubmenu extends ICSStoreMenu {
     private static By buttonAddSubMenu = Tools.aFromId("main_btnAddSection");
     private static By buttonRemoveSubMenu = Tools.aFromId("main_lbRemove");
 
@@ -15,7 +14,7 @@ public class DiningSubmenu extends DiningMenu {
     private static By linkBackToDining = Tools.byFromPropertyAndValue("a", "class", "link-back");
 
 
-    public DiningSubmenu addSubMenu (String sectionName, String  imageName){
+    public ICSStoreSubmenu addSubMenu (String sectionName, String  imageName){
         Pages.icsHeader().check4Frame();
         System.out.println("Checking for submenu");
         if (!verifyElementExist(getSectionByName(sectionName))){
@@ -33,13 +32,13 @@ public class DiningSubmenu extends DiningMenu {
         return Pages.diningSubmenu();
     }
 
-    public DiningMenu goBackToDiningMenu(){
+    public ICSStoreMenu goBackToDiningMenu(){
         Pages.icsHeader().check4Frame();
         click(linkBackToDining);
         return Pages.diningMenu();
     }
 
-    public DiningMenuManager gotoSubmenu(String menuName){
+    public ICSStoreMenuManager gotoSubmenu(String menuName){
         gotoMenu(menuName);
         return Pages.diningMenuManager();
     }
