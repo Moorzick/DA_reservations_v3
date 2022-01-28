@@ -3,6 +3,8 @@ package com.test.pages;
 import com.test.base.BasePage;
 import org.openqa.selenium.By;
 
+import java.util.Random;
+
 public class ICSDiningStore extends BasePage {
     private static By managerMenu = By.xpath("//div[@class='ics six wide column panel']//a[@class='manager button item']");
     private static By managerCategory = By.xpath("//a[contains(@href, 'DiningCategory')]");
@@ -37,6 +39,25 @@ public class ICSDiningStore extends BasePage {
             System.out.println("Yes, skipping");
         }
 
+        return Pages.diningStore();
+    }
+
+    public ICSDiningStore addItems (String[] names, String price, String category, String tax, String image){
+        Random rand = new Random();
+        int bound = Integer.valueOf(price);
+        Pages.icsHeader().check4Frame();
+        for (String name:
+             names) {
+            System.out.println("Does item "+name+ "exist?");
+            if (!verifyElementExist(getItem(name))){
+                System.out.println("No, creating...");
+                click(addItem);
+                Pages.addItemPage().addItem(name, String.valueOf(rand.nextInt(bound)),category,tax,image);
+            }
+            else {
+                System.out.println("Yes, skipping");
+            }
+        }
         return Pages.diningStore();
     }
 

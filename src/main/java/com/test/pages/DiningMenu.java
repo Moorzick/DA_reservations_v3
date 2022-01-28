@@ -7,7 +7,7 @@ import org.openqa.selenium.By;
 public class DiningMenu extends BasePage {
     private static By fieldTitle = Tools.inputFromId("main_txtEditName");
     private static By buttonAddImage = Tools.inputFromId("main_imgbtnSelectImage");
-    private static By buttonSaveSection = Tools.inputFromId("main_lbApply");
+    private static By buttonSaveSection = Tools.aFromId("main_lbApply");
     private static By buttonAddSchedule = Tools.aFromId("main_imgbtnAddPeriod");
     private static By buttonRemoveScedule = Tools.aFromId("main_btnRemovePeriod");
     private static By selectPeriod = Tools.selectFromId("main_ddlPeriod");
@@ -23,6 +23,8 @@ public class DiningMenu extends BasePage {
     private static By buttonRemoveMenu = Tools.aFromId("main_lbRemove");
 
     private static By linkBack = Tools.byFromPropertyAndValue("a", "class", "link-back");
+
+    private static By optionPeriodDaily = Tools.byFromPropertyAndValue("option", "value", "DAILY");
 
 
     public By getSectionByName (String name){
@@ -48,10 +50,10 @@ public class DiningMenu extends BasePage {
     private void setSchedule (String period, int sHrs, int sMins, String sAMPM, int eHrs, int eMins, String eAMPM){
         click(buttonAddSchedule);
         droplistSelectByName(selectPeriod, period);
-        droplistSelectByIndex(selectHoursStart, sHrs);
+        droplistSelectByIndex(selectHoursStart, sHrs-1);
         droplistSelectByIndex(selectMinsStart, sMins);
         droplistSelectByName(selectAMPMStart, sAMPM);
-        droplistSelectByIndex(selectHoursEnd, eHrs);
+        droplistSelectByIndex(selectHoursEnd, eHrs-1);
         droplistSelectByIndex(selectMinsEnd, eMins);
         droplistSelectByName(selectAMPMEnd, eAMPM);
         click(buttonSaveSchedule);
@@ -62,20 +64,48 @@ public class DiningMenu extends BasePage {
         click(getEdit(sectionName));
         setSchedule(period, sHrs, sMins, sAMPM, eHrs, eMins, eAMPM);
         click(buttonSaveSection);
+        Pages.icsHeader().checkForSuccess();
     }
 
     public DiningMenu addDailySchedule (String sectionName){
-        addSchedule(sectionName, "DAILY", 12, 00, "AM", 11, 59, "PM");
+        click(getEdit(sectionName));
+        if (verifyElementExist(optionPeriodDaily)){
+            System.out.println("Setting daily period");
+            setSchedule("DAILY", 12, 0, "AM", 11, 59, "PM");
+        }
+        else {
+            System.out.println("Already has daily period");
+        }
+        return Pages.diningMenu();
+    }
+
+    public DiningMenu addDailySchedule (String sectionName, int sHrs, int sMins, String sAMPM, int eHrs, int eMins, String eAMPM ){
+        click(getEdit(sectionName));
+        if (verifyElementExist(optionPeriodDaily)){
+            System.out.println("Setting daily period");
+            setSchedule("DAILY", sHrs, sMins, sAMPM, eHrs, eMins, eAMPM);
+        }
+        else {
+            System.out.println("Already has daily period");
+        }
         return Pages.diningMenu();
     }
 
     public DiningMenu addSection (String sectionName, String  imageName){
         Pages.icsHeader().check4Frame();
-
-        click(buttonAddImage);
-        Pages.imageLibrary().assignImage(imageName);
-        writeText(fieldTitle, sectionName);
-        click(buttonSaveSection);
+        System.out.println("Checking if this menu exists");
+        if (!verifyElementExist(getSectionByName(sectionName))){
+            System.out.println("Its not, creating...");
+            click(buttonAddMenu);
+            click(buttonAddImage);
+            Pages.imageLibrary().assignImage(imageName);
+            writeText(fieldTitle, sectionName);
+            click(buttonSaveSection);
+            System.out.println("Saved!");
+        }
+        else {
+            System.out.println("It exists, skipping");
+        }
         return Pages.diningMenu();
     }
 

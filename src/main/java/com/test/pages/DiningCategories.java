@@ -59,6 +59,7 @@ public class DiningCategories extends BasePage {
             assignImage(imageName);
             writeText(fieldTitle, title);
             click(buttonSaveCat);
+            System.out.println("Categoty saved!");
         }
         else {
             System.out.println("Exists, skipping");
@@ -68,6 +69,7 @@ public class DiningCategories extends BasePage {
 
     public DiningCategories makeUpsell (String catName){
         System.out.println("Verifying if it is upsell");
+        waitVisibility(edits);
         if (!verifyIsChecked(getUpsell(catName))){
             System.out.println("It's not, checking");
             click(getUpsell(catName));

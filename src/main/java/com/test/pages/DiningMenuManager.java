@@ -15,19 +15,21 @@ public class DiningMenuManager extends DiningMenu {
         return By.xpath(xp);
     }
 
-    public DiningMenuManager selectItems(String itemName){
+    public DiningMenuManager addItem(String itemName){
         Pages.icsHeader().check4Frame();
         click(getSelectorToAdd(itemName));
         click(buttonAddItems);
+        Pages.icsHeader().checkForSuccess();
         return Pages.diningMenuManager();
     }
 
-    public DiningMenuManager selectItems(String[] items){
+    public DiningMenuManager addItems(String[] items){
         Pages.icsHeader().check4Frame();
         for (String i:items){
             click(getSelectorToAdd(i));
         }
         click(buttonAddItems);
+        Pages.icsHeader().checkForSuccess();
         return Pages.diningMenuManager();
     }
 }

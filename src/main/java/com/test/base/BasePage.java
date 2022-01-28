@@ -208,4 +208,5 @@ public class BasePage {
         WebElement element = BaseTest.driver.findElement(by);
         return element.getLocation();
     }
+
 }

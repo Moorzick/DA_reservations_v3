@@ -10,7 +10,7 @@ public class DiningSubmenu extends DiningMenu {
 
     private static By fieldTitle = Tools.inputFromId("main_txtEditName");
     private static By buttonAddImage = Tools.inputFromId("main_imgbtnSelectImage");
-    private static By buttonSaveSection = Tools.inputFromId("main_lbApply");
+    private static By buttonSaveSection = Tools.aFromId("main_lbApply");
 
     private static By linkBackToDining = Tools.byFromPropertyAndValue("a", "class", "link-back");
 
