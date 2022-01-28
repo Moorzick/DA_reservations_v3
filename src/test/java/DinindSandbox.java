@@ -3,9 +3,7 @@ import com.test.pages.Pages;
 import org.json.simple.parser.ParseException;
 import org.testng.annotations.Test;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class DinindSandbox extends BaseTest {
@@ -47,7 +45,7 @@ public class DinindSandbox extends BaseTest {
         Pages.icsHeader().switchLang(lang).gotoContent();
         Pages.icsHeader().navigateToStores().gotoDiningStore("Dining").gotoCategoryManager()
                 .addCat(categoryName, imageName).makeUpsell(categoryName)
-                .backToDining().addItems(items, "12", categoryName, "Exclusive - 10 %", imageName)
+                .backToStore().addItems(items, "12", categoryName, "Exclusive - 10 %", imageName)
                 .gotoMenuManager().addSection(menuName, imageName).addDailySchedule(menuName, 4, 00, "AM", 10, 00, "AM")
                 .gotoMenu(menuName).addSubMenu(subMenuName, imageName)
                 .gotoSubmenu(subMenuName).addItems(items);

@@ -30,6 +30,7 @@ public class Pages extends BasePage {
     private static ICSStoreMenu ICSStoreMenu;
     private static ICSStoreSubmenu diningICSStoreSubmenu;
     private static ICSStoreMenuManager diningMenuManager;
+    private static ICSLaundryStore laundryStore;
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
         if (icsAdvancedConfigs==null){
@@ -211,6 +212,13 @@ public class Pages extends BasePage {
             diningMenuManager=new ICSStoreMenuManager();
         }
         return diningMenuManager;
+    }
+
+    public static ICSLaundryStore laundryStore(){
+        if(laundryStore==null){
+            laundryStore=new ICSLaundryStore();
+        }
+        return laundryStore;
     }
 
 }

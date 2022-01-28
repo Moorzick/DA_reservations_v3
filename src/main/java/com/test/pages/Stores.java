@@ -39,6 +39,12 @@ public class Stores extends BasePage {
         return Pages.diningStore();
     }
 
+    public ICSLaundryStore gotoLaundryStore (String storeName){
+        Pages.icsHeader().check4Frame();
+        click(getTargetStoreBy(storeName));
+        return Pages.laundryStore();
+    }
+
     public Stores editStore (String storeName){
         Pages.icsHeader().check4Frame();
         click(getStoreEditByName(storeName));

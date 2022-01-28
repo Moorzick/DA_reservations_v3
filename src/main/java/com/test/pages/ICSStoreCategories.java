@@ -43,7 +43,7 @@ public class ICSStoreCategories extends BasePage {
         return By.xpath(xp);
     }
 
-    public ICSDiningStore backToDining (){
+    public ICSDiningStore backToStore(){
         Pages.icsHeader().check4Frame();
         click(linkBackToDining);
         return Pages.diningStore();

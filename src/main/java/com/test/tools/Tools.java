@@ -12,7 +12,7 @@ public class Tools {
     }
 
     public static By byContainsPropertyWithValue (String item, String property, String value){
-        String xpath = String.format("//%s[contains(%s, '%s')]", item, property, value);
+        String xpath = String.format("//%s[contains(@%s, '%s')]", item, property, value);
         return By.xpath(xpath);
     }
 
