@@ -76,4 +76,13 @@ public class ICSDiningStore extends BasePage {
         return getAText(By.xpath(itemDescXpath));
     }
 
+    public ICSStoreMenuManager editDiningMenu (String menuName){
+        editMenu(menuName);
+        return Pages.diningMenuManager();
+    }
+
+    protected void editMenu (String menuName){
+        String editMenulinkXp=String.format("//span[contains(@id,'gvMenu') and text='%s']/parent::td/following-sibling::td/a", menuName);
+        click(By.xpath(editMenulinkXp));
+    }
 }

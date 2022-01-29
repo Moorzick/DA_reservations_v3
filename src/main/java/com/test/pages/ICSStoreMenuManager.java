@@ -7,7 +7,7 @@ public class ICSStoreMenuManager extends ICSStoreMenu {
     private static By selectMenus = Tools.selectFromId("main_ddlMenu");
     private static By selectSubmenus = Tools.selectFromId("main_ddlSubMenu");
 
-    private static By buttonAddItems = Tools.aFromId("main_lbtnApply");
+    protected static By buttonAddItems = Tools.aFromId("main_lbtnApply");
 
 
     private By getSelectorToAdd (String itemName){

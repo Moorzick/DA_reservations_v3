@@ -6,30 +6,26 @@ import org.openqa.selenium.By;
 import java.util.Random;
 
 public class ICSLaundryStore extends ICSDiningStore{
-    static {
-        managerCategory = Tools.aFromHref("LaundryCategoryManager.aspx");
-        managerMenu = Tools.aFromHref("LaundryMenuEdit.aspx");
-        managerOptions = Tools.aFromHref("LaundryOptionSetsManager.aspx");
-        addItem = By.xpath("//a[@id='btnAddItem']");
-    }
+    private static By managerCategory = Tools.aFromHref("LaundryCategoryManager.aspx");
+    private static By managerMenu = Tools.aFromHref("LaundryMenuEdit.aspx");
+    private static By managerOptionSets = Tools.aFromHref("LaundryOptionSetsManager.aspx");
+    private static By addItem = Tools.inputFromId("btnAddItem");
 
-
-    public ICSDiningStore addItem (String title, String price, String category, String tax, String image){
+    public ICSLaundryStore addItem (String title, String price, String category, String image){
         Pages.icsHeader().check4Frame();
         System.out.println("Does item "+title+ "exist?");
         if (!verifyElementExist(getItem(title))){
             System.out.println("No, creating...");
             click(addItem);
-            Pages.addItemPage().addItem(title, price,category,tax,image);
+            Pages.laundryAdd().addItem(title, price,category,image);
         }
         else {
             System.out.println("Yes, skipping");
         }
-
-        return Pages.diningStore();
+        return Pages.laundryStore();
     }
 
-    public ICSDiningStore addItems (String[] names, String price, String category, String tax, String image){
+    public ICSLaundryStore addItems (String[] names, String price, String category, String image){
         Random rand = new Random();
         int bound = Integer.valueOf(price);
         Pages.icsHeader().check4Frame();
@@ -39,12 +35,39 @@ public class ICSLaundryStore extends ICSDiningStore{
             if (!verifyElementExist(getItem(name))){
                 System.out.println("No, creating...");
                 click(addItem);
-                Pages.addItemPage().addItem(name, String.valueOf(rand.nextInt(bound)),category,tax,image);
+                Pages.laundryAdd().addItem(name, String.valueOf(rand.nextInt(bound)),category,image);
             }
             else {
                 System.out.println("Yes, skipping");
             }
         }
-        return Pages.diningStore();
+        return Pages.laundryStore();
     }
+
+    @Override
+    public LaundryCategories gotoCategoryManager (){
+        Pages.icsHeader().check4Frame();
+        click(managerCategory);
+        return Pages.laundryCategories();
+    }
+
+    @Override
+    public LaundryMenu gotoMenuManager (){
+        Pages.icsHeader().check4Frame();
+        click(managerMenu);
+        return Pages.laundryMenu();
+    }
+
+    protected By getItem(String name){
+        String itemXpath = String.format("//span[contains(@id, 'gvItems') and contains(text(), '%s')]", name);
+        return By.xpath(itemXpath);
+    }
+
+    public LaundryMenuManager editLaundryMenu (String menuName){
+        String editMenulinkXp=String.format("//table[@id='gvMenu']//td[text()='%s']/following-sibling::td/a", menuName);
+        click(By.xpath(editMenulinkXp));
+        return Pages.laundryMenuManager();
+    }
+
+
 }

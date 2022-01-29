@@ -31,6 +31,12 @@ public class Pages extends BasePage {
     private static ICSStoreSubmenu diningICSStoreSubmenu;
     private static ICSStoreMenuManager diningMenuManager;
     private static ICSLaundryStore laundryStore;
+    private static LaundryCategories laundryCategories;
+    private static LaundryAdd laundryAdd;
+    private static LaundryMenu laundryMenu;
+    private static LaundrySubMenu laundrySubmenu;
+    private static LaundryMenuManager laundryMenuManager;
+
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
         if (icsAdvancedConfigs==null){
@@ -221,4 +227,38 @@ public class Pages extends BasePage {
         return laundryStore;
     }
 
+    public static LaundryCategories laundryCategories(){
+        if(laundryCategories==null){
+            laundryCategories=new LaundryCategories();
+        }
+        return laundryCategories;
+    }
+
+    public static LaundryAdd laundryAdd(){
+        if (laundryAdd==null){
+            laundryAdd=new LaundryAdd();
+        }
+        return laundryAdd;
+    }
+
+    public static LaundryMenu laundryMenu(){
+        if (laundryMenu==null){
+            laundryMenu=new LaundryMenu();
+        }
+        return laundryMenu;
+    }
+
+    public static LaundrySubMenu laundrySubmenu(){
+        if (laundrySubmenu==null){
+            laundrySubmenu=new LaundrySubMenu();
+        }
+        return laundrySubmenu;
+    }
+
+    public static LaundryMenuManager laundryMenuManager(){
+        if (laundryMenuManager==null){
+            laundryMenuManager=new LaundryMenuManager();
+        }
+        return laundryMenuManager;
+    }
 }

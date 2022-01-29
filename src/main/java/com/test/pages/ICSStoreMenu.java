@@ -5,9 +5,9 @@ import com.test.tools.Tools;
 import org.openqa.selenium.By;
 
 public class ICSStoreMenu extends BasePage {
-    private static By fieldTitle = Tools.inputFromId("main_txtEditName");
-    private static By buttonAddImage = Tools.inputFromId("main_imgbtnSelectImage");
-    private static By buttonSaveSection = Tools.aFromId("main_lbApply");
+    protected static By fieldTitle = Tools.inputFromId("main_txtEditName");
+    protected static By buttonAddImage = Tools.inputFromId("main_imgbtnSelectImage");
+    protected static By buttonSaveSection = Tools.aFromId("main_lbApply");
     private static By buttonAddSchedule = Tools.aFromId("main_imgbtnAddPeriod");
     private static By buttonRemoveScedule = Tools.aFromId("main_btnRemovePeriod");
     private static By selectPeriod = Tools.selectFromId("main_ddlPeriod");
@@ -19,31 +19,31 @@ public class ICSStoreMenu extends BasePage {
     private static By selectAMPMEnd = Tools.selectFromId("main_ddlEndAMPM");
     private static By buttonSaveSchedule = Tools.aFromId("main_lbtApplyPeriod");
 
-    private static By buttonAddMenu = Tools.aFromId("main_btnAddSection");
-    private static By buttonRemoveMenu = Tools.aFromId("main_lbRemove");
+    protected static By buttonAddMenu = Tools.aFromId("main_btnAddSection");
+    protected static By buttonRemoveMenu = Tools.aFromId("main_lbRemove");
 
-    private static By linkBack = Tools.byFromPropertyAndValue("a", "class", "link-back");
+    protected static By linkBack = Tools.byFromPropertyAndValue("a", "class", "link-back");
 
     private static By optionPeriodDaily = Tools.byFromPropertyAndValue("option", "value", "DAILY");
 
 
     public By getSectionByName (String name){
-        String xp = String.format("//a[contains(@id, 'main_rgSections') and text()='%s']", name);
+        String xp = String.format("//a[contains(@id, 'rgSections') and text()='%s']", name);
         return By.xpath(xp);
     }
 
     private By getSelector (String sectionName){
-        String xp = String.format("//a[contains(@id, 'main_rgSections') and text()='%s']/parent::td/preceding-sibling::td/input[@type='checkbox']", sectionName);
+        String xp = String.format("//a[contains(@id, 'rgSections') and text()='%s']/parent::td/preceding-sibling::td/input[@type='checkbox']", sectionName);
         return By.xpath(xp);
     }
 
     private By getActivator (String sectionName){
-        String xp = String.format("//a[contains(@id, 'main_rgSections') and text()='%s']/parent::td/following-sibling::td/input[@type='checkbox']", sectionName);
+        String xp = String.format("//a[contains(@id, 'rgSections') and text()='%s']/parent::td/following-sibling::td/input[@type='checkbox']", sectionName);
         return By.xpath(sectionName);
     }
 
     private By getEdit (String sectionName){
-        String xp = String.format("//a[contains(@id, 'main_rgSections') and text()='%s']/parent::td/following-sibling::td/a", sectionName);
+        String xp = String.format("//a[contains(@id, 'rgSections') and text()='%s']/parent::td/following-sibling::td/a", sectionName);
         return By.xpath(xp);
     }
 
@@ -91,10 +91,15 @@ public class ICSStoreMenu extends BasePage {
         return Pages.diningMenu();
     }
 
-    public ICSStoreMenu addSection (String sectionName, String  imageName){
+    public ICSStoreMenu addDiningSection(String sectionName, String  imageName){
+        addSection(sectionName,imageName);
+        return Pages.diningMenu();
+    }
+
+    protected void addSection (String sectionName, String  imageName) {
         Pages.icsHeader().check4Frame();
         System.out.println("Checking if this menu exists");
-        if (!verifyElementExist(getSectionByName(sectionName))){
+        if (!verifyElementExist(getSectionByName(sectionName))) {
             System.out.println("Its not, creating...");
             click(buttonAddMenu);
             click(buttonAddImage);
@@ -102,23 +107,29 @@ public class ICSStoreMenu extends BasePage {
             writeText(fieldTitle, sectionName);
             click(buttonSaveSection);
             System.out.println("Saved!");
-        }
-        else {
+        } else {
             System.out.println("It exists, skipping");
         }
-        return Pages.diningMenu();
     }
 
-    public ICSStoreSubmenu gotoMenu (String sectionName){
-        Pages.icsHeader().check4Frame();
-        click(getSectionByName(sectionName));
+    public ICSStoreSubmenu gotoDiningMenu (String sectionName){
+        gotoMenu(sectionName);
         return Pages.diningSubmenu();
     }
 
+    protected void gotoMenu (String sectionName){
+        Pages.icsHeader().check4Frame();
+        click(getSectionByName(sectionName));
+    }
+
     public ICSDiningStore backToDiningStore (){
+        backToStore();
+        return Pages.diningStore();
+    }
+
+    protected void backToStore(){
         Pages.icsHeader().check4Frame();
         click(linkBack);
-        return Pages.diningStore();
     }
 
 }

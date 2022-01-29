@@ -5,24 +5,24 @@ import com.test.tools.Tools;
 import org.openqa.selenium.By;
 
 public class ICSStoreItemAdd extends BasePage {
-    private static By fieldItemName = Tools.inputFromId("main_tbName");
-    private static By fieldPrice = Tools.inputFromId("main_tbPrice");
+    protected static By fieldItemName = Tools.inputFromId("main_tbName");
+    protected static By fieldPrice = Tools.inputFromId("main_tbPrice");
     private static By selectPrLevel = Tools.selectFromId("main_ddlPriceLevel");
     private static By selectTax=Tools.selectFromId("main_ddlTaxes");
-    private static By selectCategory = Tools.selectFromId("main_ddlCategory");
+    protected static By selectCategory = Tools.selectFromId("main_ddlCategory");
     private static By fieldLeadTime = Tools.inputFromId("main_tbLeadTime");
     private static By fieldDescription=Tools.byFromPropertyAndValue("textarea", "id", "main_tbDescription");
-    private static By buttonAssignImage=Tools.inputFromId("main_imgbtnSelectImage");
+    protected static By buttonAssignImage=Tools.inputFromId("main_imgbtnSelectImage");
     private static By selectOptionSets=Tools.selectFromId("main_ddlOptionSets");
     private static By buttonAddOptionSet = Tools.inputFromId("main_imgbtnAddOptionSet");
-    private static By buttonSaveItem=Tools.inputFromId("main_uiSaveButton");
+    protected static By buttonSaveItem=Tools.inputFromId("main_uiSaveButton");
     private static By buttonSaveAndAdd=Tools.inputFromId("main_uiSaveAndAddButton");
 
-    private void fillTitle (String title){
+    protected void fillTitle (String title){
         writeText(fieldItemName, title);
     }
 
-    private void fillPrice (String price){
+    protected void fillPrice (String price){
         writeText(fieldPrice, price);
     }
 
@@ -30,16 +30,16 @@ public class ICSStoreItemAdd extends BasePage {
         droplistSelectByName(selectTax, tax);
     }
 
-    private void selectCat (String cat){
+    protected void selectCat (String cat){
         droplistSelectByName(selectCategory, cat);
     }
 
-    private void assignImage (String imageName){
+    protected void assignImage (String imageName){
         click(buttonAssignImage);
         Pages.imageLibrary().assignImage(imageName);
     }
 
-    private void chooseOptionSet (String optionSet){
+    protected void chooseOptionSet (String optionSet){
         droplistSelectByName(selectOptionSets, optionSet);
         click(buttonAddOptionSet);
     }

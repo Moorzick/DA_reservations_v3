@@ -5,15 +5,15 @@ import com.test.tools.Tools;
 import org.openqa.selenium.By;
 
 public class ICSStoreCategories extends BasePage {
-    private static By buttonAddCategory = Tools.aFromId("main_btnAddSection");
-    private static By buttonRemoveCat = Tools.aFromId("main_btnRemoveSection");
-    private static By edits = Tools.aContains("@id", "main_rgSections");
-    private static By fieldTitle = Tools.inputFromId("main_tbSectionTitle");
-    private static By buttonAddImage = Tools.inputFromId("main_imgbtnSelectImage");
-    private static By buttonSaveCat = Tools.aFromId("main_lbtnApply");
-    private static By linkBackToDining = Tools.byFromPropertyAndValue("a", "class", "link-back");
+    protected static By buttonAddCategory = Tools.aFromId("main_btnAddSection");
+    protected static By buttonRemoveCat = Tools.aFromId("main_btnRemoveSection");
+    private static By edits = Tools.aContains("id", "main_rgSections");
+    protected static By fieldTitle = Tools.inputFromId("main_tbSectionTitle");
+    protected static By buttonAddImage = Tools.inputFromId("main_imgbtnSelectImage");
+    protected static By buttonSaveCat = Tools.aFromId("main_lbtnApply");
+    protected static By linkBack = Tools.byFromPropertyAndValue("a", "class", "link-back");
 
-    private void assignImage (String imageName){
+    protected void assignImage(String imageName){
         click(buttonAddImage);
         Pages.imageLibrary().assignImage(imageName);
     }
@@ -38,16 +38,21 @@ public class ICSStoreCategories extends BasePage {
         return By.xpath(xp);
     }
 
-    private By getCategory(String catName){
+    protected By getCategory(String catName){
         String xp=String.format("//span[contains(@id, 'CategoryName') and text()='%s']", catName);
         return By.xpath(xp);
     }
 
-    public ICSDiningStore backToStore(){
-        Pages.icsHeader().check4Frame();
-        click(linkBackToDining);
+    public ICSDiningStore backToDiningStore(){
+        backToStore();
         return Pages.diningStore();
     }
+
+    protected void backToStore (){
+        Pages.icsHeader().check4Frame();
+        click(linkBack);
+    }
+
 
     public ICSStoreCategories addCat (String title, String imageName){
         Pages.icsHeader().check4Frame();

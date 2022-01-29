@@ -45,10 +45,10 @@ public class DinindSandbox extends BaseTest {
         Pages.icsHeader().switchLang(lang).gotoContent();
         Pages.icsHeader().navigateToStores().gotoDiningStore("Dining").gotoCategoryManager()
                 .addCat(categoryName, imageName).makeUpsell(categoryName)
-                .backToStore().addItems(items, "12", categoryName, "Exclusive - 10 %", imageName)
-                .gotoMenuManager().addSection(menuName, imageName).addDailySchedule(menuName, 4, 00, "AM", 10, 00, "AM")
-                .gotoMenu(menuName).addSubMenu(subMenuName, imageName)
-                .gotoSubmenu(subMenuName).addItems(items);
+                .backToDiningStore().addItems(items, "12", categoryName, "Exclusive - 10 %", imageName)
+                .gotoMenuManager().addDiningSection(menuName, imageName).addDailySchedule(menuName, 4, 00, "AM", 10, 00, "AM")
+                .gotoDiningMenu(menuName).addDiningSubmenu(subMenuName, imageName)
+                .gotoDiningSubmenu(subMenuName).addItems(items);
 
 
         Thread.sleep(10000);

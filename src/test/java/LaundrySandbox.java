@@ -22,8 +22,8 @@ public class LaundrySandbox extends BaseTest {
         private String imageName = "cat_question";
         private String itemName = "НявПрання";
         private int itemsNumber = 6;
-        private String categoryName = "НявКатегорія002";
-        private String menuName="НявМеню002";
+        private String categoryName = "НявКатегорія001";
+        private String menuName="НявМеню001";
         private String subMenuName = "НявСубМеню001";
         private ArrayList<String> itemNames = new ArrayList<>();
 
@@ -44,11 +44,13 @@ public class LaundrySandbox extends BaseTest {
             Pages.icsWelcomeMenu().gotoContent();
             Pages.icsHeader().switchLang(lang).gotoContent();
             Pages.icsHeader().navigateToStores().gotoLaundryStore("Laundry Valet").gotoCategoryManager()
-                    .addCat(categoryName, imageName)//.makeUpsell(categoryName)
-                    //.backToStore().addItems(items, "20", categoryName, "Exclusive - 10 %", imageName)
-                    //.gotoMenuManager().addSection(menuName, imageName).addDailySchedule(menuName, 4, 00, "AM", 10, 00, "AM")
-                    //.gotoMenu(menuName).addSubMenu(subMenuName, imageName)
-                    //.gotoSubmenu(subMenuName).addItems(items)
+                    .addLaundryCat(categoryName, imageName)//.makeUpsell(categoryName)
+                    .backToLaundryStore().addItems(items, "20", categoryName, imageName)
+                    .gotoMenuManager().addLaundrySection(menuName, imageName)
+                    .gotoLaundryMenu(menuName).addLaundrySubmenu(subMenuName, imageName)
+                    .goBackToLaundryMenu()
+                    .goBackToLaundryStore().editLaundryMenu(menuName)
+                    .addItems(items)
             ;
 
 
