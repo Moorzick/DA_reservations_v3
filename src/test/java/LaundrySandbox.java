@@ -50,7 +50,7 @@ public class LaundrySandbox extends BaseTest {
                     .gotoLaundryMenu(menuName).addLaundrySubmenu(subMenuName, imageName)
                     .goBackToLaundryMenu()
                     .goBackToLaundryStore().editLaundryMenu(menuName)
-                    .addItems(items)
+                    .addLaundryItems(items)
             ;
 
 

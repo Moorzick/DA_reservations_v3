@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 
 import java.util.Random;
 
-public class ICSCustomStore extends ICSDiningStore{
+public class ICSCustomStore extends ICSStore{
     static {
         managerMenu = By.xpath("//span[@id='Label1']/parent::a");
         managerCategory = By.xpath("//span[@id='ItemCategoryManagerLabel']/parent::a");
@@ -46,4 +46,16 @@ public class ICSCustomStore extends ICSDiningStore{
         }
         return Pages.customStore();
     }
+
+    public CustomMenuManager editCustomMenu (String menuName){
+        Pages.icsHeader().check4Frame();
+        click(getMenuEdit(menuName));
+        return Pages.customMenuManager();
+    }
+
+    private By getMenuEdit (String menuName){
+        String xp = String.format("//td[text()='%s']/following-sibling::td/a", menuName);
+        return By.xpath(xp);
+    }
+
 }

@@ -48,7 +48,7 @@ public class DinindSandbox extends BaseTest {
                 .backToDiningStore().addItems(items, "12", categoryName, "Exclusive - 10 %", imageName)
                 .gotoDiningMenuManager().addDiningSection(menuName, imageName).addDailySchedule(menuName, 4, 00, "AM", 10, 00, "AM")
                 .gotoDiningMenu(menuName).addDiningSubmenu(subMenuName, imageName)
-                .gotoDiningSubmenu(subMenuName).addItems(items);
+                .gotoDiningSubmenu(subMenuName).addDiningItems(items);
 
 
         Thread.sleep(10000);

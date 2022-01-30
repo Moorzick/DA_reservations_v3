@@ -209,4 +209,24 @@ public class BasePage {
         return element.getLocation();
     }
 
+    public void check (By checkbox){
+        if (!verifyIsChecked(checkbox)){
+            System.out.println("Checkbox is not checked, checking");
+            click(checkbox);
+        }
+        else {
+            System.out.println("Checkbox is already checked, skipping");
+        }
+    }
+
+    public void uncheck (By checkbox){
+        if (verifyIsChecked(checkbox)){
+            System.out.println("Checkbox is not checked, unchecking");
+            click(checkbox);
+        }
+        else {
+            System.out.println("Checkbox is already unchecked, skipping");
+        }
+    }
+
 }

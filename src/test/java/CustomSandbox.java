@@ -49,8 +49,8 @@ public class CustomSandbox extends BaseTest {
                 .gotoCustomMenuManager().addCustomMenu(menuName, imageName)
                 .gotoCustomMenu(menuName).addCustomSubmenu(subMenuName, imageName)
                 .goBackToCustomMenu()
-                .backToCustomStore()//.editLaundryMenu(menuName)
-                //.addItems(items)
+                .backToCustomStore().editCustomMenu(menuName)
+                .addItemsToMenu(items)
         ;
 
 

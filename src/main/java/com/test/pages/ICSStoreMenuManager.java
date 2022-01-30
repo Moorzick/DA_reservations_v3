@@ -4,32 +4,41 @@ import com.test.tools.Tools;
 import org.openqa.selenium.By;
 
 public class ICSStoreMenuManager extends ICSStoreMenu {
-    private static By selectMenus = Tools.selectFromId("main_ddlMenu");
-    private static By selectSubmenus = Tools.selectFromId("main_ddlSubMenu");
+    private static By selectMenus = Tools.selectFromId("ddlMenu");
+    private static By selectSubmenus = Tools.selectFromId("ddlSubMenu");
+    protected static By buttonAddItems = Tools.aFromId("lbtnApply");
+    protected static String itemSelector = "//td[@class='pretty-wrap-please' and text()='%s']/preceding-sibling::td/input";
 
-    protected static By buttonAddItems = Tools.aFromId("main_lbtnApply");
 
-
-    private By getSelectorToAdd (String itemName){
-        String xp=String.format("//td[@class='pretty-wrap-please' and text()='%s']/preceding-sibling::td/input", itemName);
+    protected By getSelectorToAdd (String itemName){
+        String xp=String.format(itemSelector, itemName);
         return By.xpath(xp);
     }
 
-    public ICSStoreMenuManager addItem(String itemName){
+    protected void addItem (String itemName){
         Pages.icsHeader().check4Frame();
-        click(getSelectorToAdd(itemName));
+        check(getSelectorToAdd(itemName));
         click(buttonAddItems);
         Pages.icsHeader().checkForSuccess();
-        return Pages.diningMenuManager();
     }
 
-    public ICSStoreMenuManager addItems(String[] items){
+    protected void addItems (String[] items){
         Pages.icsHeader().check4Frame();
         for (String i:items){
-            click(getSelectorToAdd(i));
+            System.out.println("Adding: "+i);
+            check(getSelectorToAdd(i));
         }
         click(buttonAddItems);
         Pages.icsHeader().checkForSuccess();
+    }
+
+    public ICSStoreMenuManager addDiningItem(String itemName){
+        addItem(itemName);
+        return Pages.diningMenuManager();
+    }
+
+    public ICSStoreMenuManager addDiningItems(String[] items){
+        addItems(items);
         return Pages.diningMenuManager();
     }
 }

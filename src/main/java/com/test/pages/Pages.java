@@ -41,6 +41,7 @@ public class Pages extends BasePage {
     private static CustomAdd customAdd;
     private static CustomMenu customMenu;
     private static CustomSubmenu customSubmenu;
+    private static CustomMenuManager customMenuManager;
 
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
@@ -300,5 +301,12 @@ public class Pages extends BasePage {
             customSubmenu=new CustomSubmenu();
         }
         return customSubmenu;
+    }
+
+    public static CustomMenuManager customMenuManager(){
+        if (customMenuManager==null){
+            customMenuManager=new CustomMenuManager();
+        }
+        return customMenuManager;
     }
 }
