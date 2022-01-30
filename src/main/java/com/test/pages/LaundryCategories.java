@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 
 public class LaundryCategories extends ICSStoreCategories{
 
-    private static By edits = Tools.byFromPropertyAndValue("a", "itemstyle-cssclass", "lnkEdit");
+    protected static By edits = Tools.byFromPropertyAndValue("a", "itemstyle-cssclass", "lnkEdit");
 
     static {
         buttonAddCategory = Tools.inputFromId("btnAddSection");
@@ -13,6 +13,7 @@ public class LaundryCategories extends ICSStoreCategories{
         fieldTitle = Tools.inputFromId("tbSectionTitle");
         buttonAddImage = Tools.inputFromId("imgbtnSelectImage");
         buttonSaveCat = Tools.aFromId("lbtnApply");
+        edits = Tools.aContains("id", "rgSections");
 
         linkBack = Tools.aFromHref("LaundryDefault.aspx");
     }
@@ -23,20 +24,7 @@ public class LaundryCategories extends ICSStoreCategories{
     }
 
     public LaundryCategories addLaundryCat (String title, String imageName){
-        Pages.icsHeader().check4Frame();
-        waitVisibility(edits);
-        System.out.println("Checking for category...");
-        if (!verifyElementExist(getCategory(title))){
-            System.out.println("Not detected, creating...");
-            click(buttonAddCategory);
-            assignImage(imageName);
-            writeText(fieldTitle, title);
-            click(buttonSaveCat);
-            System.out.println("Category saved!");
-        }
-        else {
-            System.out.println("Exists, skipping");
-        }
+        addCat(title, imageName);
         return Pages.laundryCategories();
     }
 }

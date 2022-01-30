@@ -4,20 +4,14 @@ import com.test.tools.Tools;
 import org.openqa.selenium.By;
 
 public class ICSStoreSubmenu extends ICSStoreMenu {
-    protected static By buttonAddSubMenu = Tools.aFromId("main_btnAddSection");
-    protected static By buttonRemoveSubMenu = Tools.aFromId("main_lbRemove");
+    protected static By buttonAddSubMenu = Tools.inputFromId("btnAddSection");
+    protected static By buttonRemoveSubMenu = Tools.inputFromId("lbRemove");
 
-    protected static By fieldTitle = Tools.inputFromId("main_txtEditName");
-    protected static By buttonAddImage = Tools.inputFromId("main_imgbtnSelectImage");
-    protected static By buttonSaveSection = Tools.aFromId("main_lbApply");
+    protected static By fieldTitle = Tools.inputFromId("txtEditName");
+    protected static By buttonAddImage = Tools.inputFromId("imgbtnSelectImage");
+    protected static By buttonSaveSection = Tools.aFromId("lbApply");
 
-    protected static By linkBack = Tools.byFromPropertyAndValue("a", "class", "link-back");
-
-
-    public ICSStoreSubmenu addDiningSubmenu(String sectionName, String imageName){
-        addSubMenu(sectionName, imageName);
-        return Pages.diningSubmenu();
-    }
+    protected static By linkBack = By.xpath("//span[@id='BackLabel']/parent::a");
 
     protected void addSubMenu (String sectionName, String  imageName) {
         Pages.icsHeader().check4Frame();
@@ -35,15 +29,9 @@ public class ICSStoreSubmenu extends ICSStoreMenu {
         }
     }
 
-    public ICSStoreMenu goBacktoMenu(){
+    protected void goBackToMenu(){
         Pages.icsHeader().check4Frame();
         click(linkBack);
-        return Pages.diningMenu();
-    }
-
-    public ICSStoreMenuManager gotoDiningSubmenu(String menuName){
-        gotoMenu(menuName);
-        return Pages.diningMenuManager();
     }
 
 }

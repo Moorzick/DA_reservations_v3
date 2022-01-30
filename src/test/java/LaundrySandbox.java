@@ -43,10 +43,10 @@ public class LaundrySandbox extends BaseTest {
             Pages.loginPage().authorization(login, password);
             Pages.icsWelcomeMenu().gotoContent();
             Pages.icsHeader().switchLang(lang).gotoContent();
-            Pages.icsHeader().navigateToStores().gotoLaundryStore("Laundry Valet").gotoCategoryManager()
+            Pages.icsHeader().navigateToStores().gotoLaundryStore("Laundry Valet").gotoLaundryCategoryManager()
                     .addLaundryCat(categoryName, imageName)//.makeUpsell(categoryName)
                     .backToLaundryStore().addItems(items, "20", categoryName, imageName)
-                    .gotoMenuManager().addLaundrySection(menuName, imageName)
+                    .gotoLaundryMenuManager().addLaundrySection(menuName, imageName)
                     .gotoLaundryMenu(menuName).addLaundrySubmenu(subMenuName, imageName)
                     .goBackToLaundryMenu()
                     .goBackToLaundryStore().editLaundryMenu(menuName)

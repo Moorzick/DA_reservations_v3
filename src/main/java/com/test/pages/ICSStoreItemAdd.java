@@ -5,18 +5,32 @@ import com.test.tools.Tools;
 import org.openqa.selenium.By;
 
 public class ICSStoreItemAdd extends BasePage {
-    protected static By fieldItemName = Tools.inputFromId("main_tbName");
-    protected static By fieldPrice = Tools.inputFromId("main_tbPrice");
-    private static By selectPrLevel = Tools.selectFromId("main_ddlPriceLevel");
-    private static By selectTax=Tools.selectFromId("main_ddlTaxes");
-    protected static By selectCategory = Tools.selectFromId("main_ddlCategory");
-    private static By fieldLeadTime = Tools.inputFromId("main_tbLeadTime");
-    private static By fieldDescription=Tools.byFromPropertyAndValue("textarea", "id", "main_tbDescription");
-    protected static By buttonAssignImage=Tools.inputFromId("main_imgbtnSelectImage");
-    private static By selectOptionSets=Tools.selectFromId("main_ddlOptionSets");
-    private static By buttonAddOptionSet = Tools.inputFromId("main_imgbtnAddOptionSet");
-    protected static By buttonSaveItem=Tools.inputFromId("main_uiSaveButton");
-    private static By buttonSaveAndAdd=Tools.inputFromId("main_uiSaveAndAddButton");
+    protected static By fieldItemName = Tools.inputFromId("tbName");
+    protected static By fieldPrice = Tools.inputFromId("tbPrice");
+
+    protected static By selectCategory = Tools.selectFromId("ddlCategory");
+    protected static By fieldLeadTime = Tools.inputFromId("tbLeadTime");
+    protected static By fieldDescription=Tools.byFromPropertyAndValue("textarea", "id", "tbDescription");
+    protected static By buttonAssignImage=Tools.inputFromId("imgbtnSelectImage");
+    protected static By selectOptionSets=Tools.selectFromId("ddlOptionSets");
+    protected static By buttonAddOptionSet = Tools.inputFromId("imgbtnAddOptionSet");
+    protected static By buttonSaveItem=Tools.aFromId("lbtnApply");
+
+    protected static By radiobuttonTaxDefault = Tools.inputFromId("rbTaxDefault");
+    protected static By radiobuttonTaxCustom = Tools.inputFromId("rbTaxCustom");
+    protected static By checkboxTaxable = Tools.inputFromId("cbTaxable");
+
+    private static By radiobutton24HRSYes = Tools.inputFromId("rbAllDayYes");
+    private static By radiobutton24HRSNo = Tools.inputFromId("rbAllDayNo");
+    private static By fieldLead = Tools.inputFromId("tbLeadTime");
+
+    protected static By selectStartHRS= Tools.selectFromId("ddlStartHour");
+    protected static By selectStartMINS=Tools.selectFromId("ddlStartMinute");
+    protected static By selectStAMPM=Tools.selectFromId("ddlStartAMPM");
+    protected static By selectEndHRS=Tools.selectFromId("ddlEndHour");
+    protected static By selectEndMINS= Tools.selectFromId("ddlEndMinute");
+    protected static By selectEndAMPM=Tools.selectFromId("ddlEndAMPM");
+
 
     protected void fillTitle (String title){
         writeText(fieldItemName, title);
@@ -24,10 +38,6 @@ public class ICSStoreItemAdd extends BasePage {
 
     protected void fillPrice (String price){
         writeText(fieldPrice, price);
-    }
-
-    private void selectTax (String tax){
-        droplistSelectByName(selectTax, tax);
     }
 
     protected void selectCat (String cat){
@@ -44,13 +54,45 @@ public class ICSStoreItemAdd extends BasePage {
         click(buttonAddOptionSet);
     }
 
-    public ICSDiningStore addItem (String title, String price, String category, String tax, String image){
+    protected void addSimple(String title, String image, String price, String category){
         assignImage(image);
         fillTitle(title);
         fillPrice(price);
         selectCat(category);
-        selectTax(tax);
+        setDefaultTax();
+        set24HRSAvailable();
         click(buttonSaveItem);
-        return Pages.diningStore();
     }
+
+    private void setDefaultTax (){
+        click(radiobuttonTaxDefault);
+    }
+
+    private void set24HRSAvailable (){
+        click(radiobutton24HRSYes);
+    }
+
+    protected void setTaxable (){
+        System.out.println("Is taxable?");
+        if(!verifyIsChecked(checkboxTaxable)){
+            System.out.println("No, checking");
+            click(checkboxTaxable);
+        }
+        else {
+            System.out.println("It is already");
+        }
+    }
+
+    protected void setUnTaxable (){
+        System.out.println("Is taxable?");
+        if (verifyIsChecked(checkboxTaxable)){
+            System.out.println("yes, unchecking");
+            click(checkboxTaxable);
+        }
+        else {
+            System.out.println("No, skipping");
+        }
+    }
+
+
 }

@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class DinindSandbox extends BaseTest {
+public class CustomSandbox extends BaseTest {
 
     private final String login = "dmytro.lichman@intelity.com";
     private final String password = "Barsick5120";
@@ -20,17 +20,17 @@ public class DinindSandbox extends BaseTest {
     private String image = "cat_question.jpg";
 
     private String imageName = "cat_question";
-    private String itemName = "НявАпсел";
+    private String itemName = "НявКастом";
     private int itemsNumber = 6;
-    private String categoryName = "НявКатегорія002";
-    private String menuName="НявМеню002";
+    private String categoryName = "НявКатегорія001";
+    private String menuName="НявМеню001";
     private String subMenuName = "НявСубМеню001";
     private ArrayList<String> itemNames = new ArrayList<>();
 
     private final String lang = "Ukrainian2";
 
     @Test(description = "Fill the descriptions")
-    public void diningStuff() throws InterruptedException, IOException, ParseException {
+    public void customStuff() throws InterruptedException, IOException, ParseException {
         for (int i=0; i<itemsNumber; i++){
             if (0<=i && i<100){
                 itemNames.add(itemName+"00"+(i+1));
@@ -43,12 +43,15 @@ public class DinindSandbox extends BaseTest {
         Pages.loginPage().authorization(login, password);
         Pages.icsWelcomeMenu().gotoContent();
         Pages.icsHeader().switchLang(lang).gotoContent();
-        Pages.icsHeader().navigateToStores().gotoDiningStore("Dining").gotoDiningCategoryManager()
-                .addDiningCat(categoryName, imageName).makeDiningUpsell(categoryName)
-                .backToDiningStore().addItems(items, "12", categoryName, "Exclusive - 10 %", imageName)
-                .gotoDiningMenuManager().addDiningSection(menuName, imageName).addDailySchedule(menuName, 4, 00, "AM", 10, 00, "AM")
-                .gotoDiningMenu(menuName).addDiningSubmenu(subMenuName, imageName)
-                .gotoDiningSubmenu(subMenuName).addItems(items);
+        Pages.icsHeader().navigateToStores().gotoCustomStore("Mini Bar").gotoCustomCategories()
+                .addCustomCat(categoryName, imageName)//.makeUpsell(categoryName)
+                .backToCustomStore().addItems(items, "20", categoryName, imageName)
+                .gotoCustomMenuManager().addCustomMenu(menuName, imageName)
+                .gotoCustomMenu(menuName).addCustomSubmenu(subMenuName, imageName)
+                .goBackToCustomMenu()
+                .backToCustomStore()//.editLaundryMenu(menuName)
+                //.addItems(items)
+        ;
 
 
         Thread.sleep(10000);

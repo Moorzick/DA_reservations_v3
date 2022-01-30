@@ -5,11 +5,13 @@ import org.openqa.selenium.By;
 
 import java.util.Random;
 
-public class ICSLaundryStore extends ICSDiningStore{
-    private static By managerCategory = Tools.aFromHref("LaundryCategoryManager.aspx");
-    private static By managerMenu = Tools.aFromHref("LaundryMenuEdit.aspx");
-    private static By managerOptionSets = Tools.aFromHref("LaundryOptionSetsManager.aspx");
-    private static By addItem = Tools.inputFromId("btnAddItem");
+public class ICSLaundryStore extends ICSStore{
+    static {
+    managerCategory = Tools.aFromHref("LaundryCategoryManager.aspx");
+    managerMenu = Tools.aFromHref("LaundryMenuEdit.aspx");
+    managerOptions = Tools.aFromHref("LaundryOptionSetsManager.aspx");
+    addItem = Tools.inputFromId("btnAddItem");
+    }
 
     public ICSLaundryStore addItem (String title, String price, String category, String image){
         Pages.icsHeader().check4Frame();
@@ -17,7 +19,7 @@ public class ICSLaundryStore extends ICSDiningStore{
         if (!verifyElementExist(getItem(title))){
             System.out.println("No, creating...");
             click(addItem);
-            Pages.laundryAdd().addItem(title, price,category,image);
+            Pages.laundryAdd().addLaundryItem(title, price,category,image);
         }
         else {
             System.out.println("Yes, skipping");
@@ -35,7 +37,7 @@ public class ICSLaundryStore extends ICSDiningStore{
             if (!verifyElementExist(getItem(name))){
                 System.out.println("No, creating...");
                 click(addItem);
-                Pages.laundryAdd().addItem(name, String.valueOf(rand.nextInt(bound)),category,image);
+                Pages.laundryAdd().addLaundryItem(name, String.valueOf(rand.nextInt(bound)),category,image);
             }
             else {
                 System.out.println("Yes, skipping");
@@ -44,15 +46,15 @@ public class ICSLaundryStore extends ICSDiningStore{
         return Pages.laundryStore();
     }
 
-    @Override
-    public LaundryCategories gotoCategoryManager (){
+
+    public LaundryCategories gotoLaundryCategoryManager(){
         Pages.icsHeader().check4Frame();
         click(managerCategory);
         return Pages.laundryCategories();
     }
 
-    @Override
-    public LaundryMenu gotoMenuManager (){
+
+    public LaundryMenu gotoLaundryMenuManager (){
         Pages.icsHeader().check4Frame();
         click(managerMenu);
         return Pages.laundryMenu();
@@ -68,6 +70,4 @@ public class ICSLaundryStore extends ICSDiningStore{
         click(By.xpath(editMenulinkXp));
         return Pages.laundryMenuManager();
     }
-
-
 }

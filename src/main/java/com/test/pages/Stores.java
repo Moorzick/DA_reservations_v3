@@ -45,6 +45,12 @@ public class Stores extends BasePage {
         return Pages.laundryStore();
     }
 
+    public ICSCustomStore gotoCustomStore (String storeName){
+        Pages.icsHeader().check4Frame();
+        click(getTargetStoreBy(storeName));
+        return Pages.customStore();
+    }
+
     public Stores editStore (String storeName){
         Pages.icsHeader().check4Frame();
         click(getStoreEditByName(storeName));

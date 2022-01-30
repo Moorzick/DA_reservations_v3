@@ -5,13 +5,13 @@ import com.test.tools.Tools;
 import org.openqa.selenium.By;
 
 public class ICSStoreCategories extends BasePage {
-    protected static By buttonAddCategory = Tools.aFromId("main_btnAddSection");
-    protected static By buttonRemoveCat = Tools.aFromId("main_btnRemoveSection");
-    private static By edits = Tools.aContains("id", "main_rgSections");
-    protected static By fieldTitle = Tools.inputFromId("main_tbSectionTitle");
-    protected static By buttonAddImage = Tools.inputFromId("main_imgbtnSelectImage");
-    protected static By buttonSaveCat = Tools.aFromId("main_lbtnApply");
-    protected static By linkBack = Tools.byFromPropertyAndValue("a", "class", "link-back");
+    protected static By buttonAddCategory = Tools.inputFromId("btnAddSection");
+    protected static By buttonRemoveCat = Tools.inputFromId("btnRemoveSection");
+    protected static By edits = Tools.aContains("id", "rgSections");
+    protected static By fieldTitle = Tools.inputFromId("tbSectionTitle");
+    protected static By buttonAddImage = Tools.inputFromId("imgbtnSelectImage");
+    protected static By buttonSaveCat = Tools.aFromId("lbtnApply");
+    protected static By linkBack;
 
     protected void assignImage(String imageName){
         click(buttonAddImage);
@@ -29,12 +29,12 @@ public class ICSStoreCategories extends BasePage {
     }
 
     private By getSelector (String catName){
-        String xp = String.format("//span [contains(@id, 'main_rgSections') and text()='%s']/parent::td/preceding-sibling::td/input[@type='checkbox']",catName);
+        String xp = String.format("//span [contains(@id, 'rgSections') and text()='%s']/parent::td/preceding-sibling::td/input[@type='checkbox']",catName);
         return By.xpath(xp);
     }
 
     private By getUpsell (String catName){
-        String xp =String.format("//span [contains(@id, 'main_rgSections') and text()='%s']/parent::td/following-sibling::td/input[contains(@id, 'cbUpsell')]", catName);
+        String xp = String.format("//span [contains(@id, 'rgSections') and text()='%s']/parent::td/following-sibling::td/input[contains(@id, 'cbUpsell')]", catName);
         return By.xpath(xp);
     }
 
@@ -43,18 +43,12 @@ public class ICSStoreCategories extends BasePage {
         return By.xpath(xp);
     }
 
-    public ICSDiningStore backToDiningStore(){
-        backToStore();
-        return Pages.diningStore();
-    }
-
     protected void backToStore (){
         Pages.icsHeader().check4Frame();
         click(linkBack);
     }
 
-
-    public ICSStoreCategories addCat (String title, String imageName){
+    protected void addCat (String title, String imageName){
         Pages.icsHeader().check4Frame();
         waitVisibility(edits);
         System.out.println("Checking for category...");
@@ -69,10 +63,9 @@ public class ICSStoreCategories extends BasePage {
         else {
             System.out.println("Exists, skipping");
         }
-        return Pages.diningCategories();
     }
 
-    public ICSStoreCategories makeUpsell (String catName){
+    protected void makeUpsell (String catName){
         System.out.println("Verifying if it is upsell");
         waitVisibility(edits);
         if (!verifyIsChecked(getUpsell(catName))){
@@ -82,10 +75,9 @@ public class ICSStoreCategories extends BasePage {
         else {
             System.out.println("It is, skipping");
         }
-        return Pages.diningCategories();
     }
 
-    public ICSStoreCategories unUpsell (String catName){
+    protected void unUpsell (String catName){
         System.out.println("Verifying if it is upsell");
         if (!verifyIsChecked(getUpsell(catName))){
             System.out.println("It's not, checking");
@@ -94,7 +86,6 @@ public class ICSStoreCategories extends BasePage {
         else {
             System.out.println("It is, skipping");
         }
-        return Pages.diningCategories();
     }
 
 

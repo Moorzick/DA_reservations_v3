@@ -1,7 +1,6 @@
 package com.test.pages;
 
 import com.test.tools.Tools;
-import org.openqa.selenium.By;
 
 public class LaundrySubMenu extends ICSStoreSubmenu{
     static {
@@ -21,7 +20,7 @@ public class LaundrySubMenu extends ICSStoreSubmenu{
     }
 
     public LaundryMenu goBackToLaundryMenu(){
-        goBacktoMenu();
+        goBackToMenu();
         return Pages.laundryMenu();
     }
 

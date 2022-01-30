@@ -38,14 +38,8 @@ private static By buttonOptionSetAdd=Tools.inputFromId("imgbtnAddOptionSet");
 
 private static By fieldDescription = Tools.byFromPropertyAndValue("textarea", "id", "tbDescription");
 
-public ICSLaundryStore addItem (String title, String price, String category, String image){
-    assignImage(image);
-    fillTitle(title);
-    fillPrice(price);
-    selectCat(category);
-    setDefaultTax();
-    set24HRSAvailable();
-    click(buttonSaveItem);
+public ICSLaundryStore addLaundryItem (String title, String price, String category, String image){
+    addSimple(title,image,price,category);
     return Pages.laundryStore();
 }
 
@@ -55,28 +49,6 @@ private void setDefaultTax (){
 
 private void set24HRSAvailable (){
     click(radiobutton24HRSYes);
-}
-
-private void setTaxable (){
-    System.out.println("Is taxable?");
-    if(!verifyIsChecked(checkboxTaxable)){
-        System.out.println("No, checking");
-        click(checkboxTaxable);
-    }
-    else {
-        System.out.println("It is already");
-    }
-}
-
-private void setUnTaxable (){
-    System.out.println("Is taxable?");
-    if (verifyIsChecked(checkboxTaxable)){
-        System.out.println("yes, unchecking");
-        click(checkboxTaxable);
-    }
-    else {
-        System.out.println("No, skipping");
-    }
 }
 
 }

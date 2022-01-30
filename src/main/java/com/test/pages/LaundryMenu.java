@@ -4,16 +4,9 @@ import com.test.tools.Tools;
 import org.openqa.selenium.By;
 
 public class LaundryMenu extends ICSStoreMenu{
-    static {
-        fieldTitle = Tools.inputFromId("txtEditName");
-        buttonAddImage = Tools.inputFromId("imgbtnSelectImage");
-        buttonSaveSection = Tools.aFromId("lbApply");
-
-        buttonAddMenu = Tools.inputFromId("btnAddSection");
-        buttonRemoveMenu = Tools.inputFromId("lbRemove");
-
+    /*static {
         linkBack = Tools.aFromHref("LaundryDefault.aspx");
-    }
+    }*/
 
     public LaundryMenu addLaundrySection(String title, String image){
         addSection(title,image);

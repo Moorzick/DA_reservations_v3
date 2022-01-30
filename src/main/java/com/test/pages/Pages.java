@@ -9,7 +9,7 @@ public class Pages extends BasePage {
     private static ICSWelcomeMenu icsWelcomeMenu;
     private static LoginPage loginPage;
     private static MainICSPage mainPage;
-    private static ICSStoreItemAdd addItemPage;
+    private static DiningItemAdd addItemPage;
     private static ICSMessaging messaging;
     private static ICSMessageDetails msgDetails;
     private static ICSHeader icsHeader;
@@ -26,9 +26,9 @@ public class Pages extends BasePage {
     private static Stores stores;
     private static ICSDiningStore diningStore;
     private static ICSStoreItemAdd diningStoreAdd;
-    private static ICSStoreCategories ICSStoreCategories;
-    private static ICSStoreMenu ICSStoreMenu;
-    private static ICSStoreSubmenu diningICSStoreSubmenu;
+    private static DiningCategories diningCategories;
+    private static DiningMenu diningMenu;
+    private static DiningSubmenu diningICSStoreSubmenu;
     private static ICSStoreMenuManager diningMenuManager;
     private static ICSLaundryStore laundryStore;
     private static LaundryCategories laundryCategories;
@@ -36,6 +36,11 @@ public class Pages extends BasePage {
     private static LaundryMenu laundryMenu;
     private static LaundrySubMenu laundrySubmenu;
     private static LaundryMenuManager laundryMenuManager;
+    private static ICSCustomStore customStore;
+    private static CustomCategories customCategories;
+    private static CustomAdd customAdd;
+    private static CustomMenu customMenu;
+    private static CustomSubmenu customSubmenu;
 
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
@@ -73,9 +78,9 @@ public class Pages extends BasePage {
         return mainPage;
     }
 
-    public static ICSStoreItemAdd addItemPage(){
+    public static DiningItemAdd addDiningItemPage(){
         if (addItemPage==null){
-            addItemPage=new ICSStoreItemAdd();
+            addItemPage=new DiningItemAdd();
         }
         return addItemPage;
     }
@@ -192,23 +197,23 @@ public class Pages extends BasePage {
         return diningStoreAdd;
     }
 
-    public static ICSStoreCategories diningCategories(){
-        if (ICSStoreCategories ==null){
-            ICSStoreCategories =new ICSStoreCategories();
+    public static DiningCategories diningCategories(){
+        if (diningCategories ==null){
+            diningCategories =new DiningCategories();
         }
-        return ICSStoreCategories;
+        return diningCategories;
     }
 
-    public static ICSStoreMenu diningMenu(){
-        if (ICSStoreMenu ==null){
-            ICSStoreMenu =new ICSStoreMenu();
+    public static DiningMenu diningMenu(){
+        if (diningMenu ==null){
+            diningMenu =new DiningMenu();
         }
-        return ICSStoreMenu;
+        return diningMenu;
     }
 
-    public static ICSStoreSubmenu diningSubmenu(){
+    public static DiningSubmenu diningSubmenu(){
         if (diningICSStoreSubmenu ==null){
-            diningICSStoreSubmenu =new ICSStoreSubmenu();
+            diningICSStoreSubmenu =new DiningSubmenu();
         }
         return diningICSStoreSubmenu;
     }
@@ -260,5 +265,40 @@ public class Pages extends BasePage {
             laundryMenuManager=new LaundryMenuManager();
         }
         return laundryMenuManager;
+    }
+
+    public static ICSCustomStore customStore(){
+        if (customStore==null){
+            customStore=new ICSCustomStore();
+        }
+        return customStore;
+    }
+
+    public static CustomCategories customCategories(){
+        if (customCategories==null){
+            customCategories=new CustomCategories();
+        }
+        return customCategories;
+    }
+
+    public static CustomAdd customAdd(){
+        if (customAdd==null){
+            customAdd=new CustomAdd();
+        }
+        return customAdd;
+    }
+
+    public static CustomMenu customMenu(){
+        if (customMenu==null){
+            customMenu=new CustomMenu();
+        }
+        return customMenu;
+    }
+
+    public static CustomSubmenu customSubmenu(){
+        if (customSubmenu==null){
+            customSubmenu=new CustomSubmenu();
+        }
+        return customSubmenu;
     }
 }
