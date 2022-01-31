@@ -5,9 +5,9 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 
 public class ICEDescriptionsScrap extends BaseTest {
-    private final String login = "dmytro.lichman@intelity.com";
-    private final String password = "Barsick5120";
-    private final String ics = "4.27.0";
+    private final String login = "admin"; //admin
+    private final String password = "2020Int3lity!"; //E7$e58DpxYYesP_eyT
+    private final String ics = "galina";
     String icsURL = String.format("https://qaweb.icemain.com/ICS/QA/%s", ics);
 
     @Test

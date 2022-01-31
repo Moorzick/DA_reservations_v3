@@ -2,6 +2,7 @@ package com.test.pages;
 
 import com.test.base.BasePage;
 import com.test.base.BaseTest;
+import com.test.tools.Tools;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,8 +23,12 @@ public class ICEDesc extends BasePage {
 
     private final By droplistGroupCNode = By.xpath("//select[@id='ddlGroup']");
     private final By fieldNodeName = By.xpath("//input[@id='textNodeName']");
+    private final By fieldSubGroup = Tools.inputFromId("textSubGroup");
     private final By fieldTextSize = By.xpath("//input[@id='textSize']");
     private final By buttonApplyNode = By.xpath("//a[@id='btnApplyNode']");
+
+    private final By fieldGroupName = Tools.inputFromId("tbGroupName");
+    private final By buttonAddGroup = Tools.inputFromId("btnAddGroup");
 
     private final By fieldSearch = By.xpath("//input[@id='tbFilterKey']");
 
@@ -142,12 +147,17 @@ public class ICEDesc extends BasePage {
     }
 
     public ICEDesc fillICEDescs (String file) throws IOException, ParseException, InterruptedException {
+        Pages.icsHeader().check4Frame();
         JSONParser parser = new JSONParser();
         JSONArray data = (JSONArray) parser.parse(new FileReader(file));
         for (int i=0; i<data.size(); i++){
             JSONObject group = (JSONObject) data.get(i);
             String groupName = group.get("groupName").toString();
             System.out.println("Got new group to process: "+groupName);
+            if (!groupExist(groupName)){
+                writeText(fieldGroupName, groupName);
+                click(buttonAddGroup);
+            }
             JSONArray nodes = (JSONArray) group.get("nodes");
             System.out.println("Switching to group...");
             getDroplist(droplistGroupSelector).selectByVisibleText(groupName);
@@ -198,14 +208,27 @@ public class ICEDesc extends BasePage {
                 System.out.println("Description is empty, filling with: "+text);
                 writeText(textField, text);
                 click(fieldSearch);
-                Thread.sleep(1000);
+                //Pages.icsHeader().checkForSuccess();
+                Thread.sleep(2000);
             }
             else {
                 System.out.println("Description is not empty, skipping");
             }
         }
         else {
-            System.out.println("Node "+nodeName+" doesn't exist, skipping...");
+            System.out.println("Node "+nodeName+" doesn't exist, adding...");
+            writeText(fieldNodeName, nodeName);
+            writeText(fieldSubGroup, subGroup);
+            writeText(fieldTextSize, "50");
+            click(buttonApplyNode);
+            //Pages.icsHeader().checkForSuccess();
+            Thread.sleep(2000);
+            fillDescription(subGroup, nodeName, text);
         }
+    }
+
+    private boolean groupExist (String group){
+        String xp = String.format("//select[@id='ddlGroupGv']/option[text()='%s']", group);
+        return verifyElementExist(By.xpath(xp));
     }
 }

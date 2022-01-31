@@ -42,6 +42,7 @@ public class Pages extends BasePage {
     private static CustomMenu customMenu;
     private static CustomSubmenu customSubmenu;
     private static CustomMenuManager customMenuManager;
+    private static DeliveryOptions deliveryOptions;
 
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
@@ -308,5 +309,12 @@ public class Pages extends BasePage {
             customMenuManager=new CustomMenuManager();
         }
         return customMenuManager;
+    }
+
+    public static DeliveryOptions deliveryOptions(){
+        if (deliveryOptions==null){
+            deliveryOptions=new DeliveryOptions();
+        }
+        return deliveryOptions;
     }
 }

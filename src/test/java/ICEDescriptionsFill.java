@@ -11,7 +11,7 @@ public class ICEDescriptionsFill extends BaseTest {
     private final String ics = "4.28.0";
     String icsURL = String.format("https://qaweb.icemain.com/ICS/QA/%s", ics);
 
-    String directoryPath = "C:\\Users\\user\\Desktop\\";
+    String directoryPath = "C:\\Users\\user\\Desktop\\ICSdata\\";
     String fileName = "ICEDescriptionsMerged.json";
     String lang = "Ukrainian2";
 

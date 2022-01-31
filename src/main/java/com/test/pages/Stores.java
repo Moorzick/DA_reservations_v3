@@ -63,5 +63,9 @@ public class Stores extends BasePage {
         return By.xpath(editXpath);
     }
 
+    public void deliveryOptions(){
+        click(buttonDeliveryOptions);
+    }
+
 
 }
