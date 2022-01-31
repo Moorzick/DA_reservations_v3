@@ -9,12 +9,12 @@ public class LaundryMenuManager extends ICSStoreMenuManager{
         itemSelector="//span[@sortexpression='ItemName' and text()='%s']/parent::td/preceding-sibling::td/input";
     }
 
-    public LaundryMenuManager addLaundryItem(String itemName){
+    public LaundryMenuManager addLaundryItem(String itemName) throws InterruptedException {
         addItem(itemName);
         return Pages.laundryMenuManager();
     }
 
-    public LaundryMenuManager addLaundryItems(String[] items){
+    public LaundryMenuManager addLaundryItems(String[] items) throws InterruptedException {
         addItems(items);
         return Pages.laundryMenuManager();
     }

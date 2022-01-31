@@ -111,7 +111,7 @@ public class BasePage {
         WebElement webElement = BaseTest.driver.findElement(elementBy);
         String checked = webElement.getAttribute("checked");
         if (checked!=null){
-            isChecked=checked.equals("checked");
+            isChecked=true;
         }
         else {
             isChecked=false;
@@ -209,7 +209,8 @@ public class BasePage {
         return element.getLocation();
     }
 
-    public void check (By checkbox){
+    public void check (By checkbox) throws InterruptedException {
+        waitVisibility(checkbox);
         if (!verifyIsChecked(checkbox)){
             System.out.println("Checkbox is not checked, checking");
             click(checkbox);
@@ -220,6 +221,7 @@ public class BasePage {
     }
 
     public void uncheck (By checkbox){
+        waitVisibility(checkbox);
         if (verifyIsChecked(checkbox)){
             System.out.println("Checkbox is not checked, unchecking");
             click(checkbox);

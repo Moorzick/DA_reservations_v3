@@ -1,5 +1,6 @@
 import com.test.base.BaseTest;
 import com.test.pages.Pages;
+import com.test.tools.Tools;
 import org.json.simple.parser.ParseException;
 import org.testng.annotations.Test;
 
@@ -19,38 +20,43 @@ public class CustomSandbox extends BaseTest {
     private String imageDirectory = "C:\\Users\\user\\Desktop\\reports\\";
     private String image = "cat_question.jpg";
 
+    private String store = "New Retail Store";
     private String imageName = "cat_question";
-    private String itemName = "НявКастом";
+    private String itemName = "НявТовар";
+    private String upsellName = "НявАпсел";
     private int itemsNumber = 6;
     private String categoryName = "НявКатегорія001";
+    private String upsellCategory = "НявКатегорія002";
     private String menuName="НявМеню001";
+    private String upsellMenu = "НявАпселМеню002";
     private String subMenuName = "НявСубМеню001";
-    private ArrayList<String> itemNames = new ArrayList<>();
 
     private final String lang = "Ukrainian2";
 
     @Test(description = "Fill the descriptions")
     public void customStuff() throws InterruptedException, IOException, ParseException {
-        for (int i=0; i<itemsNumber; i++){
-            if (0<=i && i<100){
-                itemNames.add(itemName+"00"+(i+1));
-            }
-        }
-        String [] items = new String[itemNames.size()];
-        items = itemNames.toArray(items);
+
+        String [] items = Tools.arrayPacker(itemName, itemsNumber);
+        String [] upsels = Tools.arrayPacker(upsellName, itemsNumber);
 
         openURL(icsURL);
         Pages.loginPage().authorization(login, password);
         Pages.icsWelcomeMenu().gotoContent();
         Pages.icsHeader().switchLang(lang).gotoContent();
-        Pages.icsHeader().navigateToStores().gotoCustomStore("Mini Bar").gotoCustomCategories()
-                .addCustomCat(categoryName, imageName)//.makeUpsell(categoryName)
-                .backToCustomStore().addItems(items, "20", categoryName, imageName)
+        Pages.icsHeader().navigateToStores().gotoCustomStore(store)
+                .addCustomCategory(categoryName, imageName)//.makeCustomUpsell(categoryName)
+                .addItems(items, "20", categoryName, imageName)
                 .gotoCustomMenuManager().addCustomMenu(menuName, imageName)
                 .gotoCustomMenu(menuName).addCustomSubmenu(subMenuName, imageName)
                 .goBackToCustomMenu()
                 .backToCustomStore().editCustomMenu(menuName)
                 .addItemsToMenu(items)
+                .addCustomUpsellCategory(upsellCategory, imageName)
+                .addItems(upsels, "15", upsellCategory, imageName)
+                .gotoCustomMenuManager().addCustomMenu(upsellMenu, imageName)
+                .gotoCustomMenu(upsellMenu).addCustomSubmenu(subMenuName, imageName)
+                .goBackToCustomMenu().backToCustomStore().editCustomMenu(upsellMenu)
+                .addItemsToMenu(upsels)
         ;
 
 

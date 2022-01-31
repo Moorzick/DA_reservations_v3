@@ -13,6 +13,8 @@ public class ICSCustomStore extends ICSStore{
         addItem = Tools.inputFromId("btnAddItem");
     }
 
+    private By categorieslabel = Tools.byFromPropertyAndValue("span", "id", "ItemCategoryLabel");
+
     public CustomCategories gotoCustomCategories (){
         gotoCategoryManager();
         return Pages.customCategories();
@@ -56,6 +58,32 @@ public class ICSCustomStore extends ICSStore{
     private By getMenuEdit (String menuName){
         String xp = String.format("//td[text()='%s']/following-sibling::td/a", menuName);
         return By.xpath(xp);
+    }
+
+    public ICSCustomStore addCustomCategory(String catName, String imageName){
+        Pages.icsHeader().check4Frame();
+        waitVisibility(categorieslabel);
+        if (!doesCategoryExist(catName)){
+            System.out.println("Category "+catName+" does not exist, adding...");
+            gotoCustomCategories().addCustomCat(catName, imageName).backToCustomStore();
+        }
+        else {
+            System.out.println("Category "+catName+" already exists");
+        }
+        return Pages.customStore();
+    }
+
+    public ICSCustomStore addCustomUpsellCategory(String catName, String imageName){
+        Pages.icsHeader().check4Frame();
+        waitVisibility(categorieslabel);
+        if (!doesCategoryExist(catName)){
+            System.out.println("Category "+catName+" does not exist, adding...");
+            gotoCustomCategories().addCustomCat(catName, imageName).makeCustomUpsell(catName).backToCustomStore();
+        }
+        else {
+            System.out.println("Category "+catName+" already exists");
+        }
+        return Pages.customStore();
     }
 
 }

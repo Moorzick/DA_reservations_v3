@@ -67,10 +67,12 @@ public class ICSStoreCategories extends BasePage {
 
     protected void makeUpsell (String catName){
         System.out.println("Verifying if it is upsell");
-        waitVisibility(edits);
-        if (!verifyIsChecked(getUpsell(catName))){
+        By upsellCb = getUpsell(catName);
+        waitVisibility(upsellCb);
+        if (!verifyIsChecked(upsellCb)){
             System.out.println("It's not, checking");
             click(getUpsell(catName));
+            Pages.icsHeader().checkForSuccess();
         }
         else {
             System.out.println("It is, skipping");
@@ -79,12 +81,15 @@ public class ICSStoreCategories extends BasePage {
 
     protected void unUpsell (String catName){
         System.out.println("Verifying if it is upsell");
-        if (!verifyIsChecked(getUpsell(catName))){
-            System.out.println("It's not, checking");
+        By upsellCb = getUpsell(catName);
+        waitVisibility(upsellCb);
+        if (verifyIsChecked(upsellCb)){
+            System.out.println("It is, unchecking");
             click(getUpsell(catName));
+            Pages.icsHeader().checkForSuccess();
         }
         else {
-            System.out.println("It is, skipping");
+            System.out.println("It is not, skipping");
         }
     }
 
