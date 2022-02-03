@@ -36,7 +36,7 @@ public class ICEDesc extends BasePage {
 
     private final By fieldSearch = By.xpath("//input[@id='tbFilterKey']");
 
-    private final By errorNodeExists = Tools.byFromPropertyAndValue("span", "class", "texterror");
+    private final By errorNodeExists = By.xpath("//span[@id='cvNodeName' and contains(@class, 'texterror')]");
 
 
     String directoryPath = "C:\\Users\\user\\Desktop\\";
@@ -45,6 +45,11 @@ public class ICEDesc extends BasePage {
 
     private By getNodeTextField(String nodeName) {
         String fieldXPath = String.format("//a[text()='%s']/parent::div/parent::td/following-sibling::td/div/input", nodeName);
+        return By.xpath(fieldXPath);
+    }
+
+    private By getNodeTextField(int index) {
+        String fieldXPath = String.format("//input[@id='gvItems_tbText_%d']", index);
         return By.xpath(fieldXPath);
     }
 
@@ -174,6 +179,7 @@ public class ICEDesc extends BasePage {
             if (!groupExist(groupName)) {
                 writeText(fieldGroupName, groupName);
                 click(buttonAddGroup);
+                Pages.icsHeader().checkForSuccess();
             }
             JSONArray nodes = (JSONArray) group.get("nodes");
             System.out.println("Switching to group...");
@@ -194,20 +200,8 @@ public class ICEDesc extends BasePage {
                 System.out.println("SubGroup: " + subGroup);
                 System.out.println("Node name: " + nodeName);
                 System.out.println("Text: " + text);
-                List<WebElement> currentNodes = getAllElements(this.nodes);
-                ArrayList<String> nodesText = new ArrayList<>(currentNodes.size());
-                for (int i3=0; i3<currentNodes.size(); i3++) {
-                    String currentNodeText = currentNodes.get(i3).getText();
-                    nodesText.add(i3, currentNodeText);
-                }
 
-                List<WebElement> currentSG = getAllElements(this.subGroups);
-                ArrayList<String>  subGroupsText = new ArrayList<>(currentNodes.size());
-                for (int i4=0; i4<currentSG.size(); i4++) {
-                    String currentSGText = currentSG.get(i4).getText();
-                    subGroupsText.add(i4, currentSGText);
-                }
-                fillDescription(nodesText, subGroupsText, subGroup, nodeName, text);
+                fillDescription(subGroup, nodeName, text);
                 System.out.println("--------------------------------------------");
             }
             System.out.println("============================================");
@@ -215,37 +209,42 @@ public class ICEDesc extends BasePage {
         return Pages.iDesc();
     }
 
-    private void fillDescription(ArrayList<String> currentNodesText, ArrayList<String> currentSubgroups, String subGroup, String nodeName, String text) throws InterruptedException {
-        boolean nodeExists = false;
-        int index=-1;
-        if (subGroup.equals("")) {
-            System.out.print("Node has no subGroup specified. nodeExist? ");
-            for (int i = 0; i < currentNodesText.size(); i++) {
-                if (currentNodesText.get(i).equalsIgnoreCase(nodeName)) {
-                    nodeExists = true;
-                    index = i;
-                    currentNodesText.remove(i);
-                    break;
+    private int getNodeIndex (WebElement node){
+        String id = node.getAttribute("id");
+        return Integer.valueOf(id.replaceAll("gvItems_lblNode_", ""));
+    }
+
+    private void fillDescription(String subGroup, String nodeName, String text) throws InterruptedException {
+        boolean sgExists = !subGroup.equals("");
+        List<WebElement> foundNodes = getAllElements(getNodeByName(nodeName));
+        if (foundNodes.size() != 0) {
+            if (sgExists) {
+                System.out.println("Processing node with subGroup");
+                for (int i = 0; i < foundNodes.size(); i++) {
+                    int index = getNodeIndex(foundNodes.get(i));
+                    if (getAText(getSubGroup(index)).equalsIgnoreCase(subGroup)) {
+                        fillTextField(getNodeTextField(index), text);
+                    }
                 }
+            } else {
+                System.out.println("Processing node without subGroup");
+                getNodeTextField(nodeName);
+                fillTextField(getNodeTextField(nodeName), text);
             }
         }
         else {
-            System.out.print("Node has subGroup specified: " + subGroup + ". NodeExist? ");
-            for (int i = 0; i < currentNodesText.size(); i++) {
-                if (currentNodesText.get(i).equalsIgnoreCase(nodeName) && currentSubgroups.get(i).equalsIgnoreCase(subGroup)) {
-                    currentNodesText.remove(i);
-                    currentSubgroups.remove(i);
-                    nodeExists = true;
-                    index = i;
-                    break;
-                }
-            }
-        }
-        System.out.println(nodeExists);
+            System.out.println("Node " + nodeName + " doesn't exist, adding...");
+            writeText(fieldNodeName, nodeName);
+            writeText(fieldSubGroup, subGroup);
+            writeText(fieldTextSize, "50");
+            click(buttonApplyNode);
+            Pages.icsHeader().checkForSuccess();
 
-        if (nodeExists) {
-            String id = String.format("gvItems_tbText_%s", index);
-            By textField = Tools.inputFromId(id);
+            fillTextField(getNodeTextField(nodeName), text);
+        }
+    }
+
+    private void fillTextField (By textField, String text) throws InterruptedException {
             click(textField);
             String initialValue = getFieldValue(textField);
             System.out.println("Initial value: " + initialValue);
@@ -258,122 +257,6 @@ public class ICEDesc extends BasePage {
             } else {
                 System.out.println("Description is not empty, skipping");
             }
-        } else {
-            System.out.println("Node " + nodeName + " doesn't exist, adding...");
-            writeText(fieldNodeName, nodeName);
-            writeText(fieldSubGroup, subGroup);
-            writeText(fieldTextSize, "50");
-            click(buttonApplyNode);
-            //Pages.icsHeader().checkForSuccess();
-            Thread.sleep(2000);
-            if (!verifyElementExist(errorNodeExists)) {
-                fillDescription(currentNodesText, currentSubgroups, subGroup, nodeName, text);
-            } else {
-                System.out.println("Node exists, skipping...");
-            }
-
-
-
-
-        /*int index = -1;
-        if (subGroup.equals("")) {
-            System.out.print("Node has no subGroup specified. nodeExist? ");
-            for (int i = 0; i < amount; i++) {
-                By currentNode = getNode(i);
-                if (getAText(currentNode).equalsIgnoreCase(nodeName)) {
-                    nodeExists = true;
-                    index = i;
-                    break;
-                }
-            }
-        }
-        else {
-            System.out.print("Node has subGroup specified: " + subGroup + ". NodeExist? ");
-            for (int i = 0; i < amount; i++) {
-                By currentNode = getNode(i);
-                By currentSubGroup = getSubGroup(i);
-                if (getAText(currentNode).equalsIgnoreCase(nodeName) && getAText(currentSubGroup).equalsIgnoreCase(subGroup)) {
-                    nodeExists = true;
-                    index = i;
-                    break;
-                }
-            }
-        }
-        System.out.println(nodeExists);
-        if (nodeExists) {
-            String id = String.format("gvItems_tbText_%s", index);
-            By textField = Tools.inputFromId(id);
-            click(textField);
-            String initialValue = getFieldValue(textField);
-            System.out.println("Initial value: " + initialValue);
-            if (getFieldValue(textField).equals("")) {
-                System.out.println("Description is empty, filling with: " + text);
-                writeText(textField, text);
-                click(fieldSearch);
-                //Pages.icsHeader().checkForSuccess();
-                Thread.sleep(2000);
-            } else {
-                System.out.println("Description is not empty, skipping");
-            }
-        } else {
-            System.out.println("Node " + nodeName + " doesn't exist, adding...");
-            writeText(fieldNodeName, nodeName);
-            writeText(fieldSubGroup, subGroup);
-            writeText(fieldTextSize, "50");
-            click(buttonApplyNode);
-            //Pages.icsHeader().checkForSuccess();
-            Thread.sleep(2000);
-            if (!verifyElementExist(errorNodeExists)) {
-                fillDescription(subGroup, nodeName, text);
-            } else {
-                System.out.println("Node exists, skipping...");
-            }*/
-
-            //==========================================================================
-
-/*        if (subGroup.equals("")){
-            System.out.print("Node has no subGroup specified. nodeExist? ");
-            nodeExists=verifyElementExist(getNodeByName(nodeName));
-            System.out.println(nodeExists);
-        }
-        else {
-            System.out.print("Node has subGroup specified: "+subGroup+" nodeExist? ");
-            nodeExists=verifyElementExist(getNodeByNameAndSubGroup(nodeName, subGroup));
-            System.out.println(nodeExists);
-        }
-        if (nodeExists){
-            System.out.println("Node "+nodeName+" exists, processing");
-            By textField = getNodeTextField(nodeName);
-            click(textField);
-            String initialValue = getFieldValue(textField);
-            System.out.println("Initial value: "+initialValue);
-            if (getFieldValue(textField).equals("")){
-                System.out.println("Description is empty, filling with: "+text);
-                writeText(textField, text);
-                click(fieldSearch);
-                //Pages.icsHeader().checkForSuccess();
-                Thread.sleep(2000);
-            }
-            else {
-                System.out.println("Description is not empty, skipping");
-            }
-        }
-        else {
-            System.out.println("Node "+nodeName+" doesn't exist, adding...");
-            writeText(fieldNodeName, nodeName);
-            writeText(fieldSubGroup, subGroup);
-            writeText(fieldTextSize, "50");
-            click(buttonApplyNode);
-            //Pages.icsHeader().checkForSuccess();
-            Thread.sleep(2000);
-            if (!verifyElementExist(errorNodeExists)){
-                fillDescription(subGroup, nodeName, text);
-            }
-            else {
-                System.out.println("Node exists, skipping...");
-            }
-        }*/
-        }
     }
     private boolean groupExist(String group) {
         String xp = String.format("//select[@id='ddlGroupGv']/option[text()='%s']", group);

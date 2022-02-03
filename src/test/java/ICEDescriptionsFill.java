@@ -16,7 +16,7 @@ public class ICEDescriptionsFill extends BaseTest {
     String lang = "Ukrainian2";
 
     @Test
-    public void DescrScrap() throws InterruptedException, IOException, ParseException {
+    public void DescrFill() throws InterruptedException, IOException, ParseException {
         openURL(icsURL);
         Pages.loginPage().authorization(login, password);
         Pages.icsWelcomeMenu().gotoContent();
