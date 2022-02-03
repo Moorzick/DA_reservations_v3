@@ -231,4 +231,8 @@ public class BasePage {
         }
     }
 
+    public String getAttribute (By element, String attribute){
+        return BaseTest.driver.findElement(element).getAttribute(attribute);
+    }
+
 }

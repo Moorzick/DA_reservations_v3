@@ -238,9 +238,16 @@ public class ICEDesc extends BasePage {
             writeText(fieldSubGroup, subGroup);
             writeText(fieldTextSize, "50");
             click(buttonApplyNode);
-            Pages.icsHeader().checkForSuccess();
+            String displaynone = getAttribute(errorNodeExists, "style");
+            System.out.println("Error attribute: "+displaynone);
+            if (displaynone!=null){
+                Pages.icsHeader().checkForSuccess();
+                fillTextField(getNodeTextField(nodeName), text);
+            }
+            else {
+                System.out.println("Node exists with different name");
+            }
 
-            fillTextField(getNodeTextField(nodeName), text);
         }
     }
 
