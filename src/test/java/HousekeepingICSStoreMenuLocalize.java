@@ -13,7 +13,7 @@ public class HousekeepingICSStoreMenuLocalize extends BaseTest {
     private final String ics = "4.28.0";
     String icsURL = String.format("https://qaweb.icemain.com/ICS/QA/%s", ics);
 
-    private String directory = "C:\\Users\\MSI\\Desktop\\";
+    private String directory = "C:\\Users\\user\\Desktop\\ICSdata";
     private String file = "housekeepingCards.json";
     private final String lang = "Ukrainian2";
 

@@ -43,6 +43,8 @@ public class Pages extends BasePage {
     private static CustomSubmenu customSubmenu;
     private static CustomMenuManager customMenuManager;
     private static DeliveryOptions deliveryOptions;
+    private static HousekeepingEditSimple housekeepingEditSimple;
+    private static HousekeepingEditAdvanced housekeepingEditAdvanced;
 
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
@@ -316,5 +318,19 @@ public class Pages extends BasePage {
             deliveryOptions=new DeliveryOptions();
         }
         return deliveryOptions;
+    }
+
+    public static HousekeepingEditSimple housekeepingEdit(){
+        if (housekeepingEditSimple ==null){
+            housekeepingEditSimple =new HousekeepingEditSimple();
+        }
+        return housekeepingEditSimple;
+    }
+
+    public static HousekeepingEditAdvanced housekeepingEditAdvanced(){
+        if (housekeepingEditAdvanced ==null){
+            housekeepingEditAdvanced =new HousekeepingEditAdvanced();
+        }
+        return housekeepingEditAdvanced;
     }
 }

@@ -26,6 +26,7 @@ public class Housekeeping extends BasePage {
     private static By selectNotifGroup = Tools.byFromId("select", "ddlGroup");
     private static By buttonSaveCard = Tools.aFromId("lbAddSection");
     private static By buttonImage = Tools.inputFromId("imgbtnSelectImage");
+    private static String sectionsSelector = "(//a[contains(@id,'hyEdit')])[%d]";
 
     public Housekeeping scrapCards (String file) throws InterruptedException, IOException {
         Pages.icsHeader().check4Frame();
@@ -140,6 +141,18 @@ public class Housekeeping extends BasePage {
         }
         card.put("sysFunc", getAText(selectSysFunc));
         saveCard();
+        if (sysFunc.contains("Cleaning")||sysFunc.contains("Turn Down")){
+            click(By.xpath(String.format(sectionsSelector, index)));
+            Pages.housekeepingEdit().scrapCard(card).back();
+        }
+        if (sysFunc.contains("Engineering")){
+            click(By.xpath(String.format(sectionsSelector, index)));
+            Pages.housekeepingEditAdvanced().scrapCardWItems(card).back();
+        }
+        if (sysFunc.contains("Custom")){
+            Pages.housekeepingEditAdvanced().scrapCustom(card).back();
+        }
+
         return card;
     }
 
