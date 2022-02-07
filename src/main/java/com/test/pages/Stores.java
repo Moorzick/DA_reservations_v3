@@ -25,7 +25,7 @@ public class Stores extends BasePage {
     private static By checkboxPOS = Tools.inputFromId("main_uiSendOrderToPosInput");
     private static By checkboxAutoCompl = Tools.inputFromId("main_cbAutoCompleted");
     private static By buttonDeliveryOptions = Tools.byFromPropertyAndValue("a", "class", "ics button secondary");
-    private static By buttonApply = Tools.aFromId("main_lbtnApply");
+    private static By buttonApply = Tools.inputFromId("main_lbtnApply");
 
 
     private static By getTargetStoreBy (String storeName){
@@ -57,15 +57,45 @@ public class Stores extends BasePage {
         return Pages.stores();
     }
 
+    public Stores editStore (int index){
+        Pages.icsHeader().check4Frame();
+        click(getStoreEditByIndex(index));
+        return Pages.stores();
+    }
 
     private By getStoreEditByName (String storeName){
         String editXpath= String.format("//a[text()='%s']/parent::td/following-sibling::td/a", storeName);
         return By.xpath(editXpath);
     }
 
-    public void deliveryOptions(){
-        click(buttonDeliveryOptions);
+    private By getStoreEditByIndex (int index){
+        String editXpath = String.format("(//td[@class='lnkEdit']/a)[%d]", index);
+        return By.xpath(editXpath);
     }
 
+    public DeliveryOptions deliveryOptions(){
+        waitVisibility(buttonApply);
+        click(buttonDeliveryOptions);
+        return Pages.deliveryOptions();
+    }
+
+    public int getStoresCount (){
+        Pages.icsHeader().check4Frame();
+        return getAllElementsCount(By.xpath("//td[@class='lnkEdit']"));
+    }
+
+    public boolean check4Spa (){
+        Pages.icsHeader().check4Frame();
+        waitVisibility(buttonApply);
+        boolean spa;
+        if (verifyElementExist(buttonDeliveryOptions)){
+            spa = false;
+        }
+        else {
+            System.out.println("Spa store detected, skipping");
+            spa=true;
+        }
+        return spa;
+    }
 
 }
