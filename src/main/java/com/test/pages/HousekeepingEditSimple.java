@@ -27,7 +27,9 @@ public class HousekeepingEditSimple extends BasePage {
     public HousekeepingEditSimple scrapCard (JSONObject card){
         //card.put("cardTitle", getFieldValue(fieldTitle));
         card.put("cardSubtitle", getFieldValue(fieldSubtitle));
-        card.put("lead", getFieldValue(fieldLead));
+        if(verifyElementExist(fieldLead)){
+            card.put("lead", getFieldValue(fieldLead));
+        }
         card.put("confTitle", getFieldValue(fieldConfirmTitle));
         card.put("confSubtitle", getFieldValue(fieldConfirmSubtitle));
         return Pages.housekeepingEdit();

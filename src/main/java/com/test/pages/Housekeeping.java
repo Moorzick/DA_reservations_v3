@@ -54,14 +54,25 @@ public class Housekeeping extends BasePage {
             org.json.simple.JSONObject card = (org.json.simple.JSONObject) cards.get(i);
             String title = card.get("title").toString();
             System.out.println("Working on: "+title);
-            editCard(Integer.valueOf(card.get("index").toString()));
-            if (card.get("sysFunc").toString().contains("Link\n")){
+            int index = Integer.valueOf(card.get("index").toString())
+            editCard(index);
+            String sysFunc = card.get("sysFunc").toString();
+            if (sysFunc.contains("Link\n")){
                 String link = card.get("linkURL").toString();
                 localizeCard(title, link);
             }
-            else {
+            if (sysFunc.contains("Engineering")){
                 localizeCard(title);
+                click(By.xpath(String.format(sectionsSelector, index)));
+                Pages.housekeepingEditAdvanced().fillEngineering(card).back();
             }
+
+            if (sysFunc.contains("Custom")){
+                localizeCard(title);
+                click(By.xpath(String.format(sectionsSelector, index)));
+                Pages.housekeepingEditAdvanced().fillCustom(card).back();
+            }
+
             System.out.println("-------------");
         }
         return Pages.housekeeping();
@@ -150,6 +161,7 @@ public class Housekeeping extends BasePage {
             Pages.housekeepingEditAdvanced().scrapCardWItems(card).back();
         }
         if (sysFunc.contains("Custom")){
+            click(By.xpath(String.format(sectionsSelector, index)));
             Pages.housekeepingEditAdvanced().scrapCustom(card).back();
         }
 
