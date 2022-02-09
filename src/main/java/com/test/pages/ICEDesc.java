@@ -252,6 +252,7 @@ public class ICEDesc extends BasePage {
     }
 
     private void fillTextField (By textField, String text) throws InterruptedException {
+        if (!text.equals("")){
             click(textField);
             String initialValue = getFieldValue(textField);
             System.out.println("Initial value: " + initialValue);
@@ -259,11 +260,17 @@ public class ICEDesc extends BasePage {
                 System.out.println("Description is empty, filling with: " + text);
                 writeText(textField, text);
                 click(fieldSearch);
-                //Pages.icsHeader().checkForSuccess();
+                Pages.icsHeader().checkForSuccess();
                 Thread.sleep(2000);
             } else {
                 System.out.println("Description is not empty, skipping");
             }
+        }
+        else {
+            System.out.println("Text from json is empty, skipping");
+        }
+
+
     }
     private boolean groupExist(String group) {
         String xp = String.format("//select[@id='ddlGroupGv']/option[text()='%s']", group);

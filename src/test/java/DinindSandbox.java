@@ -43,7 +43,7 @@ public class DinindSandbox extends BaseTest {
         openURL(icsURL);
         Pages.loginPage().authorization(login, password);
         Pages.icsWelcomeMenu().gotoContent();
-        Pages.icsHeader().switchLang(lang).gotoContent();
+        //Pages.icsHeader().switchLang(lang).gotoContent();
         Pages.icsHeader().navigateToStores();
         int amount = Pages.stores().getStoresCount();
         System.out.println(amount);

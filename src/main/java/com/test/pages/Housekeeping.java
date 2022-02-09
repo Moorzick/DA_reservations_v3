@@ -54,7 +54,7 @@ public class Housekeeping extends BasePage {
             org.json.simple.JSONObject card = (org.json.simple.JSONObject) cards.get(i);
             String title = card.get("title").toString();
             System.out.println("Working on: "+title);
-            int index = Integer.valueOf(card.get("index").toString())
+            int index = Integer.valueOf(card.get("index").toString());
             editCard(index);
             String sysFunc = card.get("sysFunc").toString();
             if (sysFunc.contains("Link\n")){
