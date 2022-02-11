@@ -61,17 +61,20 @@ public class Housekeeping extends BasePage {
                 String link = card.get("linkURL").toString();
                 localizeCard(title, link);
             }
-            if (sysFunc.contains("Engineering")){
+            else {
                 localizeCard(title);
-                click(By.xpath(String.format(sectionsSelector, index)));
-                Pages.housekeepingEditAdvanced().fillEngineering(card).back();
+                if (sysFunc.contains("Engineering")){
+                    click(By.xpath(String.format(sectionsSelector, index)));
+                    Pages.housekeepingEditAdvanced().fillEngineering(card).back();
+                }
+
+                if (sysFunc.contains("Custom")){
+                    click(By.xpath(String.format(sectionsSelector, index)));
+                    Pages.housekeepingEditAdvanced().fillCustom(card).back();
+                }
             }
 
-            if (sysFunc.contains("Custom")){
-                localizeCard(title);
-                click(By.xpath(String.format(sectionsSelector, index)));
-                Pages.housekeepingEditAdvanced().fillCustom(card).back();
-            }
+
 
             System.out.println("-------------");
         }

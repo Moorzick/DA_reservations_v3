@@ -65,7 +65,14 @@ public class HousekeepingEditAdvanced extends HousekeepingEditSimple{
         writeText(fieldConfirmSubtitle, card.get("confSubtitle").toString());
         org.json.simple.JSONArray items = (org.json.simple.JSONArray) card.get("items");
         for (int i=1; i<items.size(); i++){
-            writeText(By.xpath(String.format("("+selectorItems+")[%d]", i)), items.get(i).toString());
+            By targetField = By.xpath(String.format("("+selectorItems+")[%d]", i));
+            String fieldValue = items.get(i).toString();
+            if (!getFieldValue(targetField).equals(fieldValue)){
+                writeText(targetField, fieldValue);
+                click(fieldLead);
+                Pages.icsHeader().checkForSuccess();
+                verifyFieldItemValue(targetField, fieldValue);
+            }
         }
         click(buttonConfirmApply);
         Pages.icsHeader().checkForSuccess();
@@ -77,6 +84,7 @@ public class HousekeepingEditAdvanced extends HousekeepingEditSimple{
 
     public HousekeepingEditAdvanced fillCustom (org.json.simple.JSONObject card){
         String currentOption = getActiveOptionText("ddlCustomType");
+        writeText(fieldTitle,card.get("title").toString());
         writeText(fieldSubtitle,card.get("cardSubtitle").toString());
         if (verifyElementExist(fieldLead)){
             writeText(fieldLead, card.get("lead").toString());
@@ -86,7 +94,14 @@ public class HousekeepingEditAdvanced extends HousekeepingEditSimple{
         if (!currentOption.contains("Valet")){
             org.json.simple.JSONArray items = (org.json.simple.JSONArray) card.get("items");
             for (int i=1; i<items.size(); i++){
-                writeText(By.xpath(String.format("("+selectorItems+")[%d]", i)), items.get(i).toString());
+                By targetField = By.xpath(String.format("("+selectorItems+")[%d]", i));
+                String fieldValue = items.get(i).toString();
+                if (!getFieldValue(targetField).equals(fieldValue)){
+                    writeText(targetField, fieldValue);
+                    click(fieldTitle);
+                    Pages.icsHeader().checkForSuccess();
+                    verifyFieldItemValue(targetField, fieldValue);
+                }
             }
         }
         click(buttonConfirmApply);
@@ -95,5 +110,13 @@ public class HousekeepingEditAdvanced extends HousekeepingEditSimple{
         Pages.icsHeader().checkForSuccess();
 
         return Pages.housekeepingEditAdvanced();
+    }
+
+    private void verifyFieldItemValue (By targetField, String fieldValue){
+        if (!getFieldValue(targetField).equals(fieldValue)){
+            writeText(targetField, fieldValue);
+            click(fieldLead);
+            Pages.icsHeader().checkForSuccess();
+        }
     }
 }
