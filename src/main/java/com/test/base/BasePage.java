@@ -26,11 +26,19 @@ public class BasePage {
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(elementBy));
     }
 
+    public void waitVisibility(String selector) {
+        waitVisibility(By.xpath(selector));
+    }
+
     //Click Method
     public void click (By elementBy) {
         waitVisibility(elementBy);
         new Actions(BaseTest.driver).moveToElement(BaseTest.driver.findElement(elementBy)).click().build().perform();
         //BaseTest.getDriver().findElement(elementBy).click();
+    }
+
+    public void click (String selector){
+        click(By.xpath(selector));
     }
 
     public void rightClick (By elementBy){
@@ -40,11 +48,19 @@ public class BasePage {
         actions.moveToElement(targetElement).contextClick().build().perform();
     }
 
+    public void rightClick (String selector){
+        rightClick(By.xpath(selector));
+    }
+
     //Write Text
     public void writeText (By elementBy, String text) {
         waitVisibility(elementBy);
         BaseTest.getDriver().findElement(elementBy).clear();
         BaseTest.getDriver().findElement(elementBy).sendKeys(text);
+    }
+
+    public void writeText (String selector, String text) {
+        writeText(By.xpath(selector),text);
     }
 
     //Read Text
@@ -85,6 +101,10 @@ public class BasePage {
         return false;
         }
     }
+    public boolean verifyElementExist (String selector) {
+        return verifyElementExist(By.xpath(selector));
+    }
+
 
     public boolean verifyElementVisible (By elementBy){
         WebElement webElement = BaseTest.getDriver().findElement(elementBy);
@@ -106,6 +126,10 @@ public class BasePage {
         return webElement.getText();
     }
 
+    public String getAText (String selector){
+        return getAText(By.xpath(selector));
+    }
+
     public boolean verifyIsChecked (By elementBy){
         boolean isChecked;
         WebElement webElement = BaseTest.driver.findElement(elementBy);
@@ -117,6 +141,10 @@ public class BasePage {
             isChecked=false;
         }
         return isChecked;
+    }
+
+    public boolean verifyIsChecked (String selector){
+        return verifyIsChecked(By.xpath(selector));
     }
 
     public void alertAccept(){
@@ -156,6 +184,8 @@ public class BasePage {
     public int getAllElementsCount (By by){
         return BaseTest.driver.findElements(by).size();
     }
+
+
 
     public String getFieldValue (By by){
         waitVisibility(by);
@@ -220,6 +250,11 @@ public class BasePage {
         }
     }
 
+    public void check (String selector) throws InterruptedException {
+        check(By.xpath(selector));
+    }
+
+
     public void uncheck (By checkbox){
         waitVisibility(checkbox);
         if (verifyIsChecked(checkbox)){
@@ -231,8 +266,15 @@ public class BasePage {
         }
     }
 
+    public void uncheck (String selector){
+        uncheck(By.xpath(selector));
+    }
+
     public String getAttribute (By element, String attribute){
         return BaseTest.driver.findElement(element).getAttribute(attribute);
     }
 
+    public By getObjectFromSelector (String selector, Object identifier){
+        return By.xpath(String.format(selector, identifier));
+    }
 }

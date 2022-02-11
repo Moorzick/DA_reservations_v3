@@ -45,6 +45,8 @@ public class Pages extends BasePage {
     private static DeliveryOptions deliveryOptions;
     private static HousekeepingEditSimple housekeepingEditSimple;
     private static HousekeepingEditAdvanced housekeepingEditAdvanced;
+    private static LocalAttractions localAttractions;
+    private static LocalAttractionInfoPage laInfoPage;
 
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
@@ -332,5 +334,19 @@ public class Pages extends BasePage {
             housekeepingEditAdvanced =new HousekeepingEditAdvanced();
         }
         return housekeepingEditAdvanced;
+    }
+
+    public static LocalAttractions localAttractions(){
+        if (localAttractions==null){
+            localAttractions=new LocalAttractions();
+        }
+        return localAttractions;
+    }
+
+    public static LocalAttractionInfoPage localAttractionsInfoPage(){
+        if (laInfoPage==null){
+            laInfoPage =new LocalAttractionInfoPage();
+        }
+        return laInfoPage;
     }
 }
