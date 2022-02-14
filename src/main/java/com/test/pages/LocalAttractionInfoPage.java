@@ -68,5 +68,4 @@ public class LocalAttractionInfoPage extends LocalAttractions {
         return Pages.localAttractions();
     }
 
-
 }

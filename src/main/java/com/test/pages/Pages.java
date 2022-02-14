@@ -47,6 +47,7 @@ public class Pages extends BasePage {
     private static HousekeepingEditAdvanced housekeepingEditAdvanced;
     private static LocalAttractions localAttractions;
     private static LocalAttractionInfoPage laInfoPage;
+    private static LocalAttractionsLinkMenu laLinksMenu;
 
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
@@ -348,5 +349,12 @@ public class Pages extends BasePage {
             laInfoPage =new LocalAttractionInfoPage();
         }
         return laInfoPage;
+    }
+
+    public static LocalAttractionsLinkMenu localAttractionsLinkMenu(){
+        if (laLinksMenu==null){
+            laLinksMenu =new LocalAttractionsLinkMenu();
+        }
+        return laLinksMenu;
     }
 }
