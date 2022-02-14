@@ -23,6 +23,7 @@ public class BasePage {
     //Wait Wrapper Method
     public void waitVisibility(By elementBy) {
         WebDriverWait wait = new WebDriverWait(BaseTest.getDriver(), 30);
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(elementBy));
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(elementBy));
     }
 

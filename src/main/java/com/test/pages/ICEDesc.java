@@ -36,6 +36,8 @@ public class ICEDesc extends BasePage {
 
     private final By fieldSearch = By.xpath("//input[@id='tbFilterKey']");
 
+    private final String selectorGroupLabel = "(//table[@id='gvItems']//span[contains(@id, 'gvItems_lblGroup')])[%s]";
+
     private final By errorNodeExists = By.xpath("//span[@id='cvNodeName' and contains(@class, 'texterror')]");
 
 
@@ -106,8 +108,8 @@ public class ICEDesc extends BasePage {
     }
 
     public ICEDesc scrapICEDescriptions() throws IOException, InterruptedException {
-        Select groupsSelector = getDroplist(droplistGroupSelector);
         JSONArray data = new JSONArray();
+        Select groupsSelector = getDroplist(droplistGroupSelector);
         String currentGroup = groupsSelector.getAllSelectedOptions().get(0).getText();
         int optionsAmount = groupsSelector.getOptions().size();
         for (int i = 0; i < optionsAmount; i++) {
@@ -172,19 +174,25 @@ public class ICEDesc extends BasePage {
         Pages.icsHeader().check4Frame();
         JSONParser parser = new JSONParser();
         JSONArray data = (JSONArray) parser.parse(new FileReader(file));
+        int initialNodes = getAllElementsCount(nodes);
         for (int i = 0; i < data.size(); i++) {
             JSONObject group = (JSONObject) data.get(i);
             String groupName = group.get("groupName").toString();
             System.out.println("Got new group to process: " + groupName);
+            boolean newGroup = false;
             if (!groupExist(groupName)) {
                 writeText(fieldGroupName, groupName);
                 click(buttonAddGroup);
                 Pages.icsHeader().checkForSuccess();
+                newGroup=true;
             }
             JSONArray nodes = (JSONArray) group.get("nodes");
             System.out.println("Switching to group...");
             getDroplist(droplistGroupSelector).selectByVisibleText(groupName);
-            Thread.sleep(4000);
+            Thread.sleep(2000);
+            if (i!=0){
+                waitForICEDescsToLoad(i, initialNodes, groupName, newGroup);
+            }
             System.out.println("Starting processing the nodes");
             for (int i2 = 0; i2 < nodes.size(); i2++) {
                 JSONObject node = (JSONObject) nodes.get(i2);
@@ -201,9 +209,16 @@ public class ICEDesc extends BasePage {
                 System.out.println("Node name: " + nodeName);
                 System.out.println("Text: " + text);
 
-                fillDescription(subGroup, nodeName, text);
+                if (!text.equals("")){
+                    fillDescription(subGroup, nodeName, text);
+                }
+                else {
+                    System.out.println("Text is empty, skipping");
+                }
+
                 System.out.println("--------------------------------------------");
             }
+            initialNodes = getAllElementsCount(this.nodes);
             System.out.println("============================================");
         }
         return Pages.iDesc();
@@ -238,6 +253,7 @@ public class ICEDesc extends BasePage {
             writeText(fieldSubGroup, subGroup);
             writeText(fieldTextSize, "50");
             click(buttonApplyNode);
+            Thread.sleep(500);
             String displaynone = getAttribute(errorNodeExists, "style");
             System.out.println("Error attribute: "+displaynone);
             if (displaynone!=null){
@@ -272,8 +288,65 @@ public class ICEDesc extends BasePage {
 
 
     }
+
     private boolean groupExist(String group) {
         String xp = String.format("//select[@id='ddlGroupGv']/option[text()='%s']", group);
         return verifyElementExist(By.xpath(xp));
     }
+
+    private void waitForICEDescsToLoad (int index, int initialNodesAmount, String targetGroup, boolean newGroup) throws InterruptedException {
+        System.out.println("New wait run");
+        int currentNodesAmount = getAllElementsCount(nodes);
+        if (!newGroup){
+            if (index!=0){
+                System.out.println("Checking if main dropdown active equals adding ddown active...");
+                if (!verifyElementExist(droplistGroupSelector)){
+                    System.out.println("Droplist is missing...");
+                    Thread.sleep(1000);
+                    waitForICEDescsToLoad(index, initialNodesAmount, targetGroup, false);
+                }
+                if (!getActiveOptionText("ddlGroupGv").equals(getActiveOptionText("ddlGroup"))){
+                    System.out.println("Waiting for group to switch. Cuz "+getActiveOptionText("ddlGroupGv")+" equals preceding group "+getActiveOptionText("ddlGroup"));
+                    Thread.sleep(1000);
+                    System.out.println("1 second passed");
+                    waitForICEDescsToLoad(index, initialNodesAmount,targetGroup, false);
+                }
+                else {
+                    System.out.println("Equals!");
+                    System.out.println("Checking if group label is not equal to target group...");
+                    String currentGroup = getAText(By.xpath(String.format(selectorGroupLabel, "1")));
+                    System.out.println("Target group = "+targetGroup);
+                    System.out.println("Current group = "+currentGroup);
+                    if (!targetGroup.equals(currentGroup)){
+                        System.out.println("Not equal!");
+                        System.out.println("Waiting for group to switch. Cuz "+getActiveOptionText("ddlGroupGv")+" equals preceding group "+getActiveOptionText("ddlGroup"));
+                        Thread.sleep(1000);
+                        System.out.println("1 second passed");
+                        waitForICEDescsToLoad(index, initialNodesAmount, targetGroup, false);
+                    }
+                    else{
+                        System.out.println("Equal!");
+                        System.out.println("Group has switched");
+                    }
+                }
+
+                System.out.println("Checking for nodes amount");
+                if (currentNodesAmount!=initialNodesAmount){
+                    System.out.println("Waiting for nodes to load");
+                    Thread.sleep(1000);
+                    System.out.println("1 second passed");
+                    waitForICEDescsToLoad(index, currentNodesAmount, targetGroup, false);
+                }
+                else {
+                    System.out.println("Nodes has loaded");
+                }
+            }
+
+        }
+        else {
+            System.out.println("New group, no need to wait for loading");
+        }
+    }
+
+
 }
