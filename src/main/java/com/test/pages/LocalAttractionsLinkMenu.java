@@ -10,7 +10,8 @@ import org.openqa.selenium.By;
 public class LocalAttractionsLinkMenu extends LocalAttractions {
     protected static String selectorTableRow = "//tr[@id='rgSections_ctl00__%d']";
     private String selectorSectionEdit = selectorTableRow + Tools.xpFromAttributeAndValue("a", "buttontype", "Link");
-    private String selectXPFunction = Tools.xpSelectFromId("ddlSystemFunctions");
+    private String ddlSysFuncId = "ddlSystemFunctions";
+    private String selectXPFunction = Tools.xpSelectFromId(ddlSysFuncId);
 
     private By rows = Tools.byContainsPropertyWithValue("tr", "id", "rgSections_ctl00__");
 
@@ -37,8 +38,9 @@ public class LocalAttractionsLinkMenu extends LocalAttractions {
             section.put("index", i);
             editSection(i);
             scrapSection(section);
+            sectionsData.add(i, section);
         }
-
+        motherSection.put("subsections", sectionsData);
         return Pages.localAttractionsLinkMenu();
     }
 
@@ -52,9 +54,34 @@ public class LocalAttractionsLinkMenu extends LocalAttractions {
     }
 
     private void scrapSection (JSONObject section){
-        section.put("name", getFieldValue(fieldName));
-        section.put("title", getFieldValue(fieldTitle));
-
+        String name = getFieldValue(fieldName);
+        System.out.println("Link name: "+name);
+        section.put("name", name);
+        String title = getFieldValue(fieldTitle);
+        System.out.println("Link title: "+title);
+        section.put("title", title);
+        String sectionType = getSelectionOnRB();
+        System.out.println("Link type: "+sectionType);
+        section.put("type", sectionType);
+        switch (sectionType){
+            case ("Web"):{
+                section.put("link", getFieldValue(fieldURL));
+                click(buttonApply);
+                Pages.icsHeader().checkForSuccess();
+                break;
+            }
+            case ("SysFunc"):{
+                section.put("function", getActiveOptionText(ddlSysFuncId));
+                click(buttonApply);
+                Pages.icsHeader().checkForSuccess();
+                break;
+            }
+            default:{
+                click(buttonApply);
+                Pages.icsHeader().checkForSuccess();
+                break;
+            }
+        }
     }
 
     private String getSelectionOnRB (){

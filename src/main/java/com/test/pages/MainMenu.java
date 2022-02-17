@@ -24,6 +24,9 @@ public class MainMenu extends BasePage {
 
     private static By bannerSuccess = By.xpath("//span[text()='Saved Successfully']");
 
+    private static String selectorCategoryRow = "//tr[@id='ctl00_main_rgMainMenu_ctl00__%d']";
+    private static String selectorCategoryLink = selectorCategoryRow+"//a[contains(@id, 'ctl00_main_rgMainMenu')]";
+
     public MainMenu selectCard (String cardName){
         click(getCardEdit(cardName));
         return Pages.mMenu();
@@ -31,8 +34,20 @@ public class MainMenu extends BasePage {
 
     public MainMenu selectCard (int index){
         System.out.println("Selecting the card by index: "+index);
+        Pages.icsHeader().check4Frame();
         click(getCardEdit(index));
         return Pages.mMenu();
+    }
+
+    public LocalAttractions openLocalAttractions (int index){
+        System.out.println("Switching to card by index: "+index);
+        openCategory(index);
+        return Pages.localAttractions();
+    }
+
+    private void openCategory (int index){
+        Pages.icsHeader().check4Frame();
+        click(String.format(selectorCategoryLink, index));
     }
 
     private By getCardEdit (String cardName){

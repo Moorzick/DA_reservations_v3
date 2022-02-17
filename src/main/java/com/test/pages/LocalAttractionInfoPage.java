@@ -10,6 +10,7 @@ public class LocalAttractionInfoPage extends LocalAttractions {
     protected By buttonAddImage = Tools.inputFromId("imgbtnSelectImage");
     protected By buttonAddSection = Tools.inputFromId("btnAddSection");
     protected By buttonApplyBackground = Tools.aFromId("lbtnApplyBackground");
+    protected By buttonApply = Tools.aFromId("lbtnApply");
     protected By fieldSearch = Tools.inputFromId("tbFilterKey");
     protected By buttonSearch = Tools.inputFromId("imgQuery");
 
@@ -18,6 +19,8 @@ public class LocalAttractionInfoPage extends LocalAttractions {
     private By rows = Tools.byContainsPropertyWithValue("tr", "id", "rgSections_ctl00__");
 
     private By iframeEditor = Tools.byFromPropertyAndValue("iframe", "id", "Editor1_designEditor");
+
+    private By noSections = Tools.byFromPropertyAndValue("tr", "class", "rgNoRecords");
 
     private String selectorSectionName = selectorTableRow + "//span[contains(@id, 'lbldetailName')]";
     private String selectorSectionSelector = selectorTableRow + "//input[contains(@id, 'cbSelect')]";
@@ -29,22 +32,32 @@ public class LocalAttractionInfoPage extends LocalAttractions {
     }
 
     private String getEditorText (){
+        System.out.println("Switching to editor iframe");
         switch2Frame(iframeEditor);
         String text = getAText(editorBody);
+        System.out.println("Switching out of editor iframe");
         switchOutOfFrame();
+        System.out.println("Header iframe check");
+        Pages.icsHeader().check4Frame();
         return text;
     }
 
     private JSONObject scrapSectionData (JSONObject section){
-        section.put("title", getFieldValue(fieldTitle));
-        section.put("text", getEditorText());
+        String title = getFieldValue(fieldTitle);
+        System.out.println("Title = "+title);
+        section.put("title", title);
+        String editorText = getEditorText();
+        System.out.println("Editor text = "+editorText);
+        section.put("text", editorText);
         return section;
     }
 
     private void scrapSection (JSONArray sections, int index){
         JSONObject section = new JSONObject();
+        System.out.println("Working on info subsection number: "+index);
         section.put("index", index);
         section.put("isActive", verifyIsChecked(String.format(selectorSectionActivator,index)));
+        System.out.println("Editing subsection...");
         click(String.format(selectorSectionEdit, index));
         scrapSectionData(section);
         sections.add(index, section);
@@ -53,13 +66,21 @@ public class LocalAttractionInfoPage extends LocalAttractions {
     public LocalAttractionInfoPage scrapSections (JSONObject motherSection){
         JSONArray sections = new JSONArray();
         Pages.icsHeader().check4Frame();
-        int amount = getAllElementsCount(rows);
-        for (int i=0; i<amount; i++){
-            click(String.format(selectorSectionEdit, i));
-            scrapSection(sections, i);
-            click(buttonApply);
-            waitForElementToDisappear(buttonApply);
+        if (verifyElementExist(noSections)){
+            motherSection.put("subsections", null);
         }
+        else {
+            int amount = getAllElementsCount(rows);
+            for (int i=0; i<amount; i++){
+                click(String.format(selectorSectionEdit, i));
+                scrapSection(sections, i);
+                click(buttonApply);
+                waitForElementToDisappear(buttonApply);
+                Pages.icsHeader().checkForSuccess();
+            }
+            motherSection.put("subsections", sections);
+        }
+
         return Pages.localAttractionsInfoPage();
     }
 

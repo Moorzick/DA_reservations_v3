@@ -6,9 +6,14 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.By;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class LocalAttractions extends BasePage {
     protected static By edits = Tools.byFromPropertyAndValue("a", "itemstyle-cssclass", "lnkEdit");
     protected static By fieldTitle = Tools.inputFromId("tbSectionTitle");
+    protected static By fieldUrl = Tools.inputFromId("txtLink");
     protected static By buttonSelectImage = Tools.inputFromId("imgbtnSelectImage");
 
     protected static By radiobuttonInfoPage = Tools.inputFromId("rbinfo");
@@ -79,24 +84,57 @@ public class LocalAttractions extends BasePage {
         click(getObjectFromSelector(selectorCategoryLink, index));
     }
 
-    public LocalAttractions scrapSections (){
+    public LocalAttractions scrapSections (String file) throws IOException {
         JSONArray localAttractions = new JSONArray();
         int amount = getAllElementsCount(rows);
         for (int i = 0; i<amount; i++){
+            Pages.icsHeader().check4Frame();
             JSONObject category = new JSONObject();
+            System.out.println("Scrapping LA section of index: "+i);
             category.put("index", i);
             click(String.format(selectorCategoryEdit, i));
-            category.put("title", getFieldValue(fieldTitle));
+            String title = getFieldValue(fieldTitle);
+            System.out.println("Title: "+title);
+            category.put("title", title);
             String cardType = returnRadioButton();
+            System.out.println("Radiobutton: "+cardType);
             category.put("cardType", cardType);
-            click(buttonApply);
-            waitForElementToDisappear(buttonApply);
             category.put("isActive", verifyIsChecked(String.format(selectorCategoryActivator, i)));
 
-            if (cardType.equals("InfoPage")){
-                Pages.localAttractionsInfoPage().scrapSections(category).backToLA();
+            switch (cardType){
+                case ("InfoPage"):{
+                    click(buttonApply);
+                    Pages.icsHeader().checkForSuccess();
+                    gotoSection(i);
+                    Pages.localAttractionsInfoPage().scrapSections(category).backToLA();
+                    break;
+                }
+                case ("Links"):{
+                    click(buttonApply);
+                    Pages.icsHeader().checkForSuccess();
+                    gotoSection(i);
+                    Pages.localAttractionsLinkMenu().scrapSections(category).backToLA();
+                    break;
+                }
+                case ("Web"):{
+                    category.put("url", getFieldValue(fieldUrl));
+                    click(buttonApply);
+                    Pages.icsHeader().checkForSuccess();
+                    break;
+                }
+
+                default:{
+                    click(buttonApply);
+                    waitForElementToDisappear(buttonApply);
+                }
             }
+            localAttractions.add(i, category);
+            System.out.println("=====================");
         }
+
+        FileWriter fw = new FileWriter(file);
+        fw.write(localAttractions.toString().toCharArray());
+        fw.close();
 
         return Pages.localAttractions();
     }

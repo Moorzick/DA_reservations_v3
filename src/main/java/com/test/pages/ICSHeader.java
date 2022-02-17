@@ -25,7 +25,7 @@ public class ICSHeader extends BasePage {
     //private static By headerContent= By.xpath("//span[contains(text(),'Content')]");
 
     private static By bannerSuccess = By.xpath("//span[contains(text(),'Successfully')]");
-    public final By iframe = By.xpath("//iframe");
+    public final By iframe = By.xpath("//iframe[@id='ifmain']");
 
     public Stores navigateToStores () throws InterruptedException {
         switchOutOfFrame();

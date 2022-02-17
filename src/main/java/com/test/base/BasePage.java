@@ -183,6 +183,7 @@ public class BasePage {
     }
 
     public int getAllElementsCount (By by){
+        waitVisibility(by);
         return BaseTest.driver.findElements(by).size();
     }
 
