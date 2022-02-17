@@ -1,9 +1,13 @@
 package com.test.pages;
 
+import com.codeborne.selenide.Selenide;
+import com.test.base.BaseTest;
 import com.test.tools.Tools;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.By;
+
+import static com.codeborne.selenide.Selenide.$;
 
 public class LocalAttractionInfoPage extends LocalAttractions {
     protected By fieldAddSection = Tools.inputFromId("tbName");
@@ -42,6 +46,17 @@ public class LocalAttractionInfoPage extends LocalAttractions {
         return text;
     }
 
+    private String setEditorText (String text){
+        System.out.println("Switching to editor iframe");
+        switch2Frame(iframeEditor);
+        writeText(editorBody, text);
+        System.out.println("Switching out of editor iframe");
+        switchOutOfFrame();
+        System.out.println("Header iframe check");
+        Pages.icsHeader().check4Frame();
+        return text;
+    }
+
     private JSONObject scrapSectionData (JSONObject section){
         String title = getFieldValue(fieldTitle);
         System.out.println("Title = "+title);
@@ -61,6 +76,9 @@ public class LocalAttractionInfoPage extends LocalAttractions {
         click(String.format(selectorSectionEdit, index));
         scrapSectionData(section);
         sections.add(index, section);
+        click(buttonApply);
+        waitForElementToDisappear(buttonApply);
+        Pages.icsHeader().checkForSuccess();
     }
 
     public LocalAttractionInfoPage scrapSections (JSONObject motherSection){
@@ -74,9 +92,6 @@ public class LocalAttractionInfoPage extends LocalAttractions {
             for (int i=0; i<amount; i++){
                 click(String.format(selectorSectionEdit, i));
                 scrapSection(sections, i);
-                click(buttonApply);
-                waitForElementToDisappear(buttonApply);
-                Pages.icsHeader().checkForSuccess();
             }
             motherSection.put("subsections", sections);
         }
@@ -87,6 +102,30 @@ public class LocalAttractionInfoPage extends LocalAttractions {
     public LocalAttractions backToLA (){
         click(linkBack);
         return Pages.localAttractions();
+    }
+
+    public LocalAttractionInfoPage fillSections (JSONArray subsections){
+        for (int i=0; i<subsections.size(); i++){
+            JSONObject subsection = (JSONObject) subsections.get(i);
+            int index = Integer.parseInt(subsection.get("index").toString());
+            fillSubsection(index, subsection);
+        }
+
+        return Pages.localAttractionsInfoPage();
+    }
+
+    private void fillSubsection (int index, JSONObject subsection){
+        click(String.format(selectorSectionEdit, index));
+        String title = subsection.get("title").toString();
+        System.out.println("LA Info page, subsection title: "+title);
+        writeText(fieldTitle, title);
+        String text = subsection.get("text").toString();
+        System.out.println("LA Info page, subsection text: \n"+ text);
+        if (!text.equals("")){
+            setEditorText(text);
+        }
+        click(buttonApply);
+        Pages.icsHeader().checkForSuccess();
     }
 
 }

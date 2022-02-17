@@ -4,11 +4,13 @@ import com.test.base.BasePage;
 import com.test.tools.Tools;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class LocalAttractions extends BasePage {
     protected static By edits = Tools.byFromPropertyAndValue("a", "itemstyle-cssclass", "lnkEdit");
@@ -57,7 +59,7 @@ public class LocalAttractions extends BasePage {
     }
 
     protected void editCategory (int index){
-        click(getObjectFromSelector(selectorEdit, index));
+        click(String.format(selectorCategoryEdit, index));
     }
 
     protected String returnRadioButton (){
@@ -70,9 +72,16 @@ public class LocalAttractions extends BasePage {
     }
 
     private void fillCard (JSONObject card){
+        System.out.println("Filling title...");
         writeText(fieldTitle, card.get("title").toString());
+        if (card.get("cardType").toString().equals("Web")){
+            String url = card.get("url").toString();
+            System.out.println("Local Attraction, card url = "+url);
+            writeText(fieldUrl, url);
+        }
+        System.out.println("Saving changes...");
         click(buttonApply);
-        waitForElementToDisappear(buttonApply);
+        Pages.icsHeader().checkForSuccess();
     }
 
     public MainMenu back(){
@@ -138,5 +147,43 @@ public class LocalAttractions extends BasePage {
 
         return Pages.localAttractions();
     }
+
+    public LocalAttractions fillLocalAttractions (String file) throws ParseException, IOException {
+        String json = new String(Files.readAllBytes(Paths.get(file)));
+        JSONArray data = (JSONArray) new JSONParser().parse(json);
+        for (int i=0; i<data.size(); i++){
+            JSONObject section = (JSONObject) data.get(i);
+            int index =Integer.parseInt(section.get("index").toString());
+            editCategory(index);
+            fillCard(section);
+            String cardType = section.get("cardType").toString();
+            switch (cardType){
+                case "InfoPage":{
+                    Object subsections = section.get("subsections");
+                    if (subsections!=null){
+                        click(String.format(selectorCategoryLink,index));
+                        Pages.localAttractionsInfoPage().fillSections((JSONArray) subsections).backToLA();
+                    }
+                    else {
+                        System.out.println("No subsections detected");
+                    }
+                    break;
+                }
+                case "Links":{
+                    Object subsections = section.get("subsections");
+                    if (subsections!=null){
+                        click(String.format(selectorCategoryLink,index));
+                        Pages.localAttractionsLinkMenu().fillSubsections((JSONArray) subsections).backToLA();
+                    }
+                    break;
+                }
+                default:{
+                    break;
+                }
+            }
+        }
+        return Pages.localAttractions();
+    }
+
 
 }

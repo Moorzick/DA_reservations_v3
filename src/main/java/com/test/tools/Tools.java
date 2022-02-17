@@ -57,6 +57,8 @@ public class Tools {
     public static String xpAFromId (String id) {return xpFromId("a", id);}
     public static String xpAContainsId (String idPiece) {return xpContainsId("a", idPiece);}
 
+    public static By textareaFromId (String id) {return byFromId("textarea", id);}
+
     public static By selectFromId(String id) {
         return byFromId("select", id);
     }

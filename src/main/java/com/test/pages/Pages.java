@@ -48,6 +48,7 @@ public class Pages extends BasePage {
     private static LocalAttractions localAttractions;
     private static LocalAttractionInfoPage laInfoPage;
     private static LocalAttractionsLinkMenu laLinksMenu;
+    private static Transportation transportation;
 
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
@@ -356,5 +357,12 @@ public class Pages extends BasePage {
             laLinksMenu =new LocalAttractionsLinkMenu();
         }
         return laLinksMenu;
+    }
+
+    public static Transportation transportation(){
+        if (transportation==null){
+            transportation =new Transportation();
+        }
+        return transportation;
     }
 }

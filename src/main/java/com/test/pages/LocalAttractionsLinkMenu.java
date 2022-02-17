@@ -46,6 +46,7 @@ public class LocalAttractionsLinkMenu extends LocalAttractions {
 
     public LocalAttractions backToLA(){
         BaseTest.driver.navigate().back();
+        Pages.icsHeader().check4Frame();
         return Pages.localAttractions();
     }
 
@@ -98,6 +99,32 @@ public class LocalAttractionsLinkMenu extends LocalAttractions {
             }
         }
         return option;
+    }
+
+    public LocalAttractionsLinkMenu fillSubsections (JSONArray subsections){
+        for (int i=0; i<subsections.size(); i++){
+            JSONObject subsection = (JSONObject) subsections.get(i);
+            int index = Integer.parseInt(subsection.get("index").toString());
+            fillSubsection(index, subsection);
+        }
+        return Pages.localAttractionsLinkMenu();
+    }
+
+    private void fillSubsection (int index, JSONObject subsection){
+        click(String.format(selectorSectionEdit, index));
+        String name = subsection.get("name").toString();
+        System.out.println("LA Link Menu, card name: "+name);
+        writeText(fieldName, name);
+        String title = subsection.get("title").toString();
+        System.out.println("LA Link Menu, card title: "+title);
+        writeText(fieldTitle, title);
+        if (subsection.get("type").toString().equals("Web")){
+            String url = subsection.get("link").toString();
+            System.out.println("LA Ling Menu, card URL: "+url);
+            writeText(fieldURL, url);
+        }
+        click(buttonApply);
+        Pages.icsHeader().checkForSuccess();
     }
 
 

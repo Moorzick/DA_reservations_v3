@@ -18,6 +18,7 @@ public class ICSHeader extends BasePage {
     private static By contentMainMenu= By.xpath("//a[@data-iframe-height='Main Menu']");
     private static By contentHousekeeping = contentMenuItem("Housekeeping");
     private static By contentMediaLibrary = contentMenuItem("Media Library");
+    private static By contentTransportation = contentMenuItem("Transportation");
 
 
     private static By droplistLang = By.xpath("//select[@id='ddLanguage']");
@@ -107,6 +108,15 @@ public class ICSHeader extends BasePage {
         click(headerContent);
         System.out.println("Clicking 'Housekeeping'");
         click(contentHousekeeping);
+        return Pages.housekeeping();
+    }
+
+    public Housekeeping navigateToTransportation (){
+        switchOutOfFrame();
+        System.out.println("Clicking 'Content'");
+        click(headerContent);
+        System.out.println("Clicking 'Transportation'");
+        click(contentTransportation);
         return Pages.housekeeping();
     }
 
