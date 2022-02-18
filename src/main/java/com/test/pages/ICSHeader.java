@@ -72,7 +72,7 @@ public class ICSHeader extends BasePage {
         return Pages.misc();
     }
 
-    public MainMenu navigateToMainMenu () throws InterruptedException {
+    public MainMenu navigateToMainMenu () {
         switchOutOfFrame();
         System.out.println("Clicking 'Content'");
         click(headerContent);

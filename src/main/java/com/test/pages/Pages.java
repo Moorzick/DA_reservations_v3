@@ -49,6 +49,12 @@ public class Pages extends BasePage {
     private static LocalAttractionInfoPage laInfoPage;
     private static LocalAttractionsLinkMenu laLinksMenu;
     private static Transportation transportation;
+    private static TransportationGround transportationGround;
+    private static TransportationRequest transportationRequest;
+    private static TransportationGroundLinksMenu transportationGroundLinksMenu;
+    private static TransportationCustomRequest transportationCustomRequest;
+    private static TransportationAir transportationAir;
+    private static TransportationAirlines transportationAirlines;
 
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
@@ -364,5 +370,47 @@ public class Pages extends BasePage {
             transportation =new Transportation();
         }
         return transportation;
+    }
+
+    public static TransportationRequest transportationRequest(){
+        if (transportationRequest==null){
+            transportationRequest =new TransportationRequest();
+        }
+        return transportationRequest;
+    }
+
+    public static TransportationGround transportationGround(){
+        if (transportationGround==null){
+            transportationGround =new TransportationGround();
+        }
+        return transportationGround;
+    }
+
+    public static TransportationGroundLinksMenu transportationGroundLinksMenu(){
+        if (transportationGroundLinksMenu==null){
+            transportationGroundLinksMenu =new TransportationGroundLinksMenu();
+        }
+        return transportationGroundLinksMenu;
+    }
+
+    public static TransportationCustomRequest transportationCustomRequest(){
+        if (transportationCustomRequest==null){
+            transportationCustomRequest =new TransportationCustomRequest();
+        }
+        return transportationCustomRequest;
+    }
+
+    public static TransportationAir transportationAir(){
+        if (transportationAir==null){
+            transportationAir =new TransportationAir();
+        }
+        return transportationAir;
+    }
+
+    public static TransportationAirlines transportationAirlines(){
+        if (transportationAirlines==null){
+            transportationAirlines =new TransportationAirlines();
+        }
+        return transportationAirlines;
     }
 }

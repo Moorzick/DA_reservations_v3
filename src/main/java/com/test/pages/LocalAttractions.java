@@ -1,10 +1,8 @@
 package com.test.pages;
 
-import com.test.base.BasePage;
 import com.test.tools.Tools;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 
@@ -12,11 +10,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class LocalAttractions extends BasePage {
-    protected static By edits = Tools.byFromPropertyAndValue("a", "itemstyle-cssclass", "lnkEdit");
-    protected static By fieldTitle = Tools.inputFromId("tbSectionTitle");
+public class LocalAttractions extends ICSMenu {
+
     protected static By fieldUrl = Tools.inputFromId("txtLink");
-    protected static By buttonSelectImage = Tools.inputFromId("imgbtnSelectImage");
 
     protected static By radiobuttonInfoPage = Tools.inputFromId("rbinfo");
     protected static By radiobuttonWeb = Tools.inputFromId("rbwebsite");
@@ -24,8 +20,6 @@ public class LocalAttractions extends BasePage {
     protected static By radiobuttonVideo = Tools.inputFromId("rbvideo");
     protected static By rows = Tools.byContainsPropertyWithValue("tr", "id", "rgSections_ctl00__");
 
-    protected static By buttonApply = Tools.aFromId("lbApply");
-    protected static By linkBack = Tools.aContains("text()", "Back");
 
     protected static By buttonNew = Tools.inputFromId("btnNew");
     protected static By buttonRemove = Tools.inputFromId("lbRemoveSection");
@@ -38,29 +32,6 @@ public class LocalAttractions extends BasePage {
     protected static String selectorCategoryEdit = selectorTableRow+"//a[@buttontype='Link']";
     protected static String selectorCategoryLink = selectorTableRow+"//a[contains(@id, 'hyEdit')]";
 
-
-
-    protected int getSectionIndex (String sectionName){
-        By row = By.xpath(String.format(selectorRowByName,sectionName));
-        String rowId = getAttribute(row,"id");
-        return Integer.parseInt(rowId.replaceAll("rgSections_ctl00__", ""));
-    }
-
-    protected void selectCategory (int index) throws InterruptedException {
-        check(By.xpath(String.format(selectorCategorySelector, index)));
-    }
-
-    protected void activateCategory (int index) throws InterruptedException {
-        check(getObjectFromSelector(selectorCategoryActivator,index));
-    }
-
-    protected void deActivateCategory (int index){
-        uncheck(String.format(selectorCategoryActivator,index));
-    }
-
-    protected void editCategory (int index){
-        click(String.format(selectorCategoryEdit, index));
-    }
 
     protected String returnRadioButton (){
         String value="null";
@@ -122,7 +93,7 @@ public class LocalAttractions extends BasePage {
                     click(buttonApply);
                     Pages.icsHeader().checkForSuccess();
                     gotoSection(i);
-                    Pages.localAttractionsLinkMenu().scrapSections(category).backToLA();
+                    Pages.localAttractionsLinkMenu().scrapLASections(category).backToLA();
                     break;
                 }
                 case ("Web"):{
@@ -137,7 +108,7 @@ public class LocalAttractions extends BasePage {
                     waitForElementToDisappear(buttonApply);
                 }
             }
-            localAttractions.add(i, category);
+            localAttractions.put(i, category);
             System.out.println("=====================");
         }
 
@@ -150,8 +121,8 @@ public class LocalAttractions extends BasePage {
 
     public LocalAttractions fillLocalAttractions (String file) throws ParseException, IOException {
         String json = new String(Files.readAllBytes(Paths.get(file)));
-        JSONArray data = (JSONArray) new JSONParser().parse(json);
-        for (int i=0; i<data.size(); i++){
+        JSONArray data = new JSONArray(json);
+        for (int i=0; i<data.length(); i++){
             JSONObject section = (JSONObject) data.get(i);
             int index =Integer.parseInt(section.get("index").toString());
             editCategory(index);
@@ -173,7 +144,7 @@ public class LocalAttractions extends BasePage {
                     Object subsections = section.get("subsections");
                     if (subsections!=null){
                         click(String.format(selectorCategoryLink,index));
-                        Pages.localAttractionsLinkMenu().fillSubsections((JSONArray) subsections).backToLA();
+                        Pages.localAttractionsLinkMenu().fillLASubsections((JSONArray) subsections).backToLA();
                     }
                     break;
                 }
@@ -184,6 +155,5 @@ public class LocalAttractions extends BasePage {
         }
         return Pages.localAttractions();
     }
-
 
 }

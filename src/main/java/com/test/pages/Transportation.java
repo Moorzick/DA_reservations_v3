@@ -2,8 +2,8 @@ package com.test.pages;
 
 import com.test.base.BasePage;
 import com.test.tools.Tools;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.openqa.selenium.By;
 
 public class Transportation extends BasePage {
@@ -27,6 +27,11 @@ public class Transportation extends BasePage {
         JSONObject airData = new JSONObject();
         click(xpGTEdit);
         scrapCard(groundData);
+        gotoGround().scrapGroundTransportation(groundData).back();
+
+
+
+
 
         return Pages.transportation();
     }
@@ -42,12 +47,21 @@ public class Transportation extends BasePage {
         Pages.icsHeader().checkForSuccess();
     }
 
-    private void gotoGround (){
+    public TransportationGround gotoGround (){
         click(xpGT);
+        return Pages.transportationGround();
     }
 
-    private void gotoAir (){
+    public void gotoAir (){
         click(xpAir);
     }
+
+    public MainMenu back() {
+        Pages.icsHeader().navigateToMainMenu();
+        return Pages.mMenu();
+    }
+
+
+
 
 }

@@ -3,8 +3,8 @@ package com.test.pages;
 import com.codeborne.selenide.Selenide;
 import com.test.base.BaseTest;
 import com.test.tools.Tools;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Selenide.$;
@@ -75,7 +75,7 @@ public class LocalAttractionInfoPage extends LocalAttractions {
         System.out.println("Editing subsection...");
         click(String.format(selectorSectionEdit, index));
         scrapSectionData(section);
-        sections.add(index, section);
+        sections.put(index, section);
         click(buttonApply);
         waitForElementToDisappear(buttonApply);
         Pages.icsHeader().checkForSuccess();
@@ -85,7 +85,7 @@ public class LocalAttractionInfoPage extends LocalAttractions {
         JSONArray sections = new JSONArray();
         Pages.icsHeader().check4Frame();
         if (verifyElementExist(noSections)){
-            motherSection.put("subsections", null);
+            motherSection.put("subsections", java.util.Optional.ofNullable(null));
         }
         else {
             int amount = getAllElementsCount(rows);
@@ -105,7 +105,7 @@ public class LocalAttractionInfoPage extends LocalAttractions {
     }
 
     public LocalAttractionInfoPage fillSections (JSONArray subsections){
-        for (int i=0; i<subsections.size(); i++){
+        for (int i=0; i<subsections.length(); i++){
             JSONObject subsection = (JSONObject) subsections.get(i);
             int index = Integer.parseInt(subsection.get("index").toString());
             fillSubsection(index, subsection);

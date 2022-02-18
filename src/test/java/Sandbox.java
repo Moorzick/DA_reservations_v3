@@ -29,11 +29,8 @@ public class Sandbox extends BaseTest {
         openURL(icsURL);
         Pages.loginPage().authorization(login, password);
         Pages.icsWelcomeMenu().gotoContent();
-        Pages.icsHeader().switchLang(lang).gotoContent();
-        Pages.mMenu().openLocalAttractions(2)
-                //.scrapSections(directory+file);
-                .fillLocalAttractions(directory+file);
-
+        //Pages.icsHeader().switchLang(lang).gotoContent();
+        Pages.mMenu().openTransportation(4);
 
         Thread.sleep(10000);
     }

@@ -45,6 +45,12 @@ public class MainMenu extends BasePage {
         return Pages.localAttractions();
     }
 
+    public Transportation openTransportation (int index){
+        System.out.println("Switching to card by index: "+index);
+        openCategory(index);
+        return Pages.transportation();
+    }
+
     private void openCategory (int index){
         Pages.icsHeader().check4Frame();
         click(String.format(selectorCategoryLink, index));
