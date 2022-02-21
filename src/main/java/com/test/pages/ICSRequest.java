@@ -47,4 +47,11 @@ public class ICSRequest extends BasePage {
         motherCard.put("rTitle", title).put("rSubtitle", subtitle).put("confTitle", confTitle).put("confSubtitle", confSubtitle);
     }
 
+    protected void fillBasicRequestFields (JSONObject motherCard){
+        writeText(fieldTitle, motherCard.getString("rTitle"));
+        writeText(fieldSubtitle, motherCard.getString("rSubtitle"));
+        writeText(fieldConfirmTitle, motherCard.getString("confTitle"));
+        writeText(fieldConfirmSubtitle, motherCard.getString("confSubtitle"));
+    }
+
 }

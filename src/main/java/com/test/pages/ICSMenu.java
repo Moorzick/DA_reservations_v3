@@ -48,11 +48,15 @@ public class ICSMenu extends BasePage {
     }
 
     protected void activateCategory (int index) throws InterruptedException {
-        check(getObjectFromSelector(selectorCategoryActivator,index));
+        check(getActivator(index));
+    }
+
+    protected By getActivator (int index){
+        return getObjectFromSelector(selectorCategoryActivator,index);
     }
 
     protected void deActivateCategory (int index){
-        uncheck(String.format(selectorCategoryActivator,index));
+        uncheck(getActivator(index));
     }
 
     protected void editCategory (int index){
@@ -65,6 +69,15 @@ public class ICSMenu extends BasePage {
 
     protected int getRowsCount (){
         return getAllElementsCount(sectionRows);
+    }
+
+    protected void saveCard(){
+        click(buttonApply);
+        Pages.icsHeader().checkForSuccess();
+    }
+
+    protected void goBack(){
+        click(linkBack);
     }
 
 }

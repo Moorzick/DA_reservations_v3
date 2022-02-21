@@ -55,6 +55,7 @@ public class Pages extends BasePage {
     private static TransportationCustomRequest transportationCustomRequest;
     private static TransportationAir transportationAir;
     private static TransportationAirlines transportationAirlines;
+    private static TransportationFlightInfo transportationFlightInfo;
 
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
@@ -412,5 +413,12 @@ public class Pages extends BasePage {
             transportationAirlines =new TransportationAirlines();
         }
         return transportationAirlines;
+    }
+
+    public static TransportationFlightInfo transportationFlightInfo(){
+        if (transportationFlightInfo==null){
+            transportationFlightInfo =new TransportationFlightInfo();
+        }
+        return transportationFlightInfo;
     }
 }

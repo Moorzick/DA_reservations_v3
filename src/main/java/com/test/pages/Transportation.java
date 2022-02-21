@@ -6,6 +6,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class Transportation extends BasePage {
     private static String xpGroundTransportaionRow = Tools.xpFromAttributeAndValue("tr", "id", "rgSections_ctl00__0");
     private static String xpAirlineInfo = Tools.xpFromAttributeAndValue("tr", "id", "rgSections_ctl00__1");
@@ -21,17 +26,21 @@ public class Transportation extends BasePage {
     private static By textareaDescription = Tools.textareaFromId("tbDescription");
     private static By buttonApply = Tools.aFromId("lbAddSection");
 
-    public Transportation scrapTransportation (String file){
+    public Transportation scrapTransportation (String file) throws IOException {
         JSONArray transportationData = new JSONArray();
         JSONObject groundData = new JSONObject();
         JSONObject airData = new JSONObject();
         click(xpGTEdit);
         scrapCard(groundData);
         gotoGround().scrapGroundTransportation(groundData).back();
+        click(xpAirEdit);
+        scrapCard(airData);
+        gotoAir().scrapAirTrans(airData).back();
+        transportationData.put(0, groundData).put(1, airData);
 
-
-
-
+        FileWriter fw = new FileWriter(file);
+        fw.write(transportationData.toString().toCharArray());
+        fw.close();
 
         return Pages.transportation();
     }
@@ -52,13 +61,39 @@ public class Transportation extends BasePage {
         return Pages.transportationGround();
     }
 
-    public void gotoAir (){
+    public TransportationAir gotoAir (){
         click(xpAir);
+        return Pages.transportationAir();
     }
 
     public MainMenu back() {
         Pages.icsHeader().navigateToMainMenu();
         return Pages.mMenu();
+    }
+
+    public Transportation fillTransportation (String file) throws IOException {
+        JSONArray transportationData = new JSONArray(new String(Files.readAllBytes(Paths.get(file))));
+        JSONObject groundTrans = transportationData.getJSONObject(0);
+        JSONObject airTrans = transportationData.getJSONObject(1);
+
+        click(xpGTEdit);
+        fillCard(groundTrans);
+        Pages.transportationGround().fillCards(groundTrans.getJSONArray("groundTrans")).back();
+
+
+
+        return Pages.transportation();
+    }
+
+    private void fillCard (JSONObject card){
+        String title = card.getString("title");
+        System.out.println("Filling Ground transportation title: "+title);
+        writeText(fieldTitle, title);
+        String description = card.getString("description");
+        System.out.println("Filling ground transportation description: "+description);
+        writeText(textareaDescription, description);
+        click(buttonApply);
+        Pages.icsHeader().checkForSuccess();
     }
 
 

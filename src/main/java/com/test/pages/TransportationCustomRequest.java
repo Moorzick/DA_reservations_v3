@@ -14,5 +14,10 @@ public class TransportationCustomRequest extends ICSCustomRequest {
         return Pages.transportation().gotoGround();
     }
 
+    public TransportationCustomRequest fillCustomTrans (JSONObject motherCard){
+        fillCustom(motherCard);
+        return Pages.transportationCustomRequest();
+    }
+
 
 }

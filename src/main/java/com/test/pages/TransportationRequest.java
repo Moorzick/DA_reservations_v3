@@ -14,4 +14,15 @@ public class TransportationRequest extends ICSRequest{
         click(linkBack);
         return Pages.transportationGround();
     }
+
+    public TransportationRequest fillGTranspRequest (JSONObject card){
+        System.out.println("Filling transportation request...");
+        fillBasicRequestFields(card);
+        click(buttonConfirmApply);
+        Pages.icsHeader().checkForSuccess();
+        click(buttonTitleApply);
+        Pages.icsHeader().checkForSuccess();
+        return Pages.transportationRequest();
+    }
+
 }

@@ -72,8 +72,53 @@ public class TransportationGround extends ICSMenu {
         Pages.icsHeader().checkForSuccess();
     }
 
+    private void fillCard (JSONObject card){
+        String function = card.getString("function");
+        writeText(fieldTitle, card.getString("title"));
+        if (function.equals("Link")){
+            writeText(fieldURL, card.getString("link"));
+        }
+        click(buttonApply);
+        Pages.icsHeader().checkForSuccess();
+    }
+
     public Transportation back(){
         click(linkBack);
         return Pages.transportation();
+    }
+
+    public TransportationGround fillCards (JSONArray cards){
+        for (int i=0; i<cards.length(); i++){
+            JSONObject card = cards.getJSONObject(i);
+            int index = card.getInt("index");
+            editCategory(index);
+            fillCard(card);
+
+            String function = card.getString("function");
+            if(!function.equals("Custom")) {
+                if (!function.contains("Link")){
+                    if (!function.equals("Video")){
+                        gotoSection(i);
+                        Pages.transportationRequest().fillGTranspRequest(card).back();
+                    }
+                }
+                else {
+                    if(function.equals("Links Menu")){
+                        gotoSection(i);
+                        Pages.transportationGroundLinksMenu().fillLinksMenu(card.getJSONArray("subsections")).back();
+                    }
+                }
+            }
+            else {
+                gotoSection(i);
+                Pages.transportationCustomRequest().fillCustomTrans(card).back();
+            }
+
+            gotoSection(index);
+            Pages.transportationRequest().fillGTranspRequest(card).back();
+
+        }
+
+        return Pages.transportationGround();
     }
 }

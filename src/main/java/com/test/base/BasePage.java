@@ -202,6 +202,10 @@ public class BasePage {
         return value;
     }
 
+    public String getFieldValue (String selector, int index){
+        return getFieldValue(By.xpath(String.format(selector, index)));
+    }
+
     public String getActiveOptionText (String selectId){
         String xpath = String.format("//select[@id='%s']/option[@selected='selected']", selectId);
         return getAText(By.xpath(xpath));
