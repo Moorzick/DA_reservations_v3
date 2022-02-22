@@ -98,25 +98,21 @@ public class TransportationGround extends ICSMenu {
             if(!function.equals("Custom")) {
                 if (!function.contains("Link")){
                     if (!function.equals("Video")){
-                        gotoSection(i);
+                        gotoSection(index);
                         Pages.transportationRequest().fillGTranspRequest(card).back();
                     }
                 }
                 else {
                     if(function.equals("Links Menu")){
-                        gotoSection(i);
+                        gotoSection(index);
                         Pages.transportationGroundLinksMenu().fillLinksMenu(card.getJSONArray("subsections")).back();
                     }
                 }
             }
             else {
-                gotoSection(i);
+                gotoSection(index);
                 Pages.transportationCustomRequest().fillCustomTrans(card).back();
             }
-
-            gotoSection(index);
-            Pages.transportationRequest().fillGTranspRequest(card).back();
-
         }
 
         return Pages.transportationGround();

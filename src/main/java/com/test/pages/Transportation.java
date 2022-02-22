@@ -78,9 +78,13 @@ public class Transportation extends BasePage {
 
         click(xpGTEdit);
         fillCard(groundTrans);
+        gotoGround();
         Pages.transportationGround().fillCards(groundTrans.getJSONArray("groundTrans")).back();
 
-
+        click(xpAirEdit);
+        fillCard(airTrans);
+        gotoAir();
+        Pages.transportationAir().fillAirTrans(airTrans.getJSONArray("subsections")).back();
 
         return Pages.transportation();
     }

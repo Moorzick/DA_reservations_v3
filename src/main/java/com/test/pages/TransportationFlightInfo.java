@@ -10,6 +10,7 @@ public class TransportationFlightInfo extends BasePage {
     private String selectorAirCode = "//span[@id='gvAirport_lbAirportCode_%d']";
     private String selectorAirport = "//span[@id='gvAirport_lbAirportName_%d']";
     private String selectorIsDefault = "//input[@id='gvAirport_rbdefault_%d']";
+    private String selectorAirportEdit = "//a[contains(@href, 'Edit$%d')]";
 
     private By radiobuttons = Tools.byContainsPropertyWithValue("input", "id", "gvAirport_rbdefault_");
 
@@ -42,6 +43,30 @@ public class TransportationFlightInfo extends BasePage {
         }
         flightInfo.put("airports", airports);
         return Pages.transportationFlightInfo();
+    }
+
+    public TransportationFlightInfo fillAirports (JSONObject flightInfo){
+        JSONArray airports = flightInfo.getJSONArray("airports");
+        for (int i=0; i<airports.length(); i++){
+            JSONObject airport = airports.getJSONObject(i);
+            click(String.format(selectorAirportEdit, i));
+            fillAirport(airport);
+        }
+        flightInfo.put("airports", airports);
+        return Pages.transportationFlightInfo();
+    }
+
+    private void fillAirport (JSONObject airport){
+        String code = airport.getString("code");
+        System.out.println("Filling airport code: "+code);
+        writeText(fieldAirCode, code);
+
+        String airportTitle = airport.getString("airport");
+        System.out.println("Filling airport title: "+airportTitle);
+        writeText(fieldAirport, airportTitle);
+
+        click(buttonApply);
+        Pages.icsHeader().checkForSuccess();
     }
 
     public TransportationAir back(){

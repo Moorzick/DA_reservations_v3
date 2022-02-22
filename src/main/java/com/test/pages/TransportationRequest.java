@@ -1,8 +1,13 @@
 package com.test.pages;
 
+import com.test.tools.Tools;
 import org.json.JSONObject;
 
 public class TransportationRequest extends ICSRequest{
+    static {
+        buttonConfirmApply = Tools.aFromId("lbConfirmApply");
+        buttonTitleApply = Tools.aFromId("lbApplyTitle");
+    }
 
     public TransportationRequest scrapGTranspRequest (JSONObject card){
         System.out.println("Getting request info...");

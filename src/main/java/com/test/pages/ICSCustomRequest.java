@@ -8,6 +8,9 @@ import org.openqa.selenium.By;
 
 public class ICSCustomRequest extends ICSRequest {
 
+    private By buttonConfirmApply = Tools.aFromId("lbtnConfirmApply");
+    private By buttonTitleApply = Tools.aFromId("lbTitleApply");
+
     protected String idSelectCustom = "ddlCustomType";
 
     //Misc+Concierge
@@ -95,7 +98,15 @@ public class ICSCustomRequest extends ICSRequest {
         for (int i=0; i<fields.length(); i++){
             String fieldValue = fields.getString(i);
             System.out.println("Multifield value: "+fieldValue);
-            writeText(String.format(selectorItemName,i), fieldValue);
+            if (!getFieldValue(selectorItemName, i).equals(fieldValue)){
+                writeText(String.format(selectorItemName,i), fieldValue);
+                click(fieldTitle);
+                Pages.icsHeader().checkForSuccess();
+            }
+            else {
+                System.out.println("Field already has correct value");
+            }
+
         }
     }
 

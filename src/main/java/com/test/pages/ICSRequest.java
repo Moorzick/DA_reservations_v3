@@ -48,7 +48,9 @@ public class ICSRequest extends BasePage {
     }
 
     protected void fillBasicRequestFields (JSONObject motherCard){
-        writeText(fieldTitle, motherCard.getString("rTitle"));
+        if (getFieldValue(fieldTitle).equals("")){
+            writeText(fieldTitle, motherCard.getString("rTitle"));
+        }
         writeText(fieldSubtitle, motherCard.getString("rSubtitle"));
         writeText(fieldConfirmTitle, motherCard.getString("confTitle"));
         writeText(fieldConfirmSubtitle, motherCard.getString("confSubtitle"));

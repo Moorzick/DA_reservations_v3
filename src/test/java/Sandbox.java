@@ -29,9 +29,10 @@ public class Sandbox extends BaseTest {
         openURL(icsURL);
         Pages.loginPage().authorization(login, password);
         Pages.icsWelcomeMenu().gotoContent();
-        //Pages.icsHeader().switchLang(lang).gotoContent();
-        Pages.mMenu().openTransportation(4).scrapTransportation(directory+file);
+        Pages.icsHeader().switchLang(lang).gotoContent();
+        Pages.mMenu().openTransportation(4).fillTransportation(directory+file);
 
+        System.out.println("Completion wait");
         Thread.sleep(10000);
     }
 }

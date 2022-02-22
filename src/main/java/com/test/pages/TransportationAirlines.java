@@ -21,6 +21,20 @@ public class TransportationAirlines extends ICSMenu{
         saveCardHandler();
     }
 
+    private void fillCard (JSONObject card){
+        String title = card.getString("title");
+        System.out.println("Airline card title: "+title);
+        writeText(fieldTitle, title);
+
+        String link = card.getString("link");
+        System.out.println("Airline card link: "+link);
+        writeText(fieldURL, link);
+
+        click(this.buttonApply);
+        //Pages.icsHeader().checkForSuccess();
+        saveCardHandler();
+    }
+
     public TransportationAirlines scrapCards (JSONObject motherCard){
         JSONArray cards = new JSONArray();
         for (int i=0; i<getRowsCount(); i++){
@@ -31,6 +45,16 @@ public class TransportationAirlines extends ICSMenu{
             cards.put(i, card);
         }
         motherCard.put("airlines", cards);
+        return Pages.transportationAirlines();
+    }
+
+    public TransportationAirlines fillCards (JSONObject motherCard){
+        JSONArray cards = motherCard.getJSONArray("airlines");
+        for (int i=0; i<cards.length(); i++){
+            JSONObject card = cards.getJSONObject(i);
+            click(String.format(selectorCategoryEdit, i));
+            fillCard(card);
+        }
         return Pages.transportationAirlines();
     }
 
