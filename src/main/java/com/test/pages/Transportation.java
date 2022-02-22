@@ -71,8 +71,8 @@ public class Transportation extends BasePage {
         return Pages.mMenu();
     }
 
-    public Transportation fillTransportation (String file) throws IOException {
-        JSONArray transportationData = new JSONArray(new String(Files.readAllBytes(Paths.get(file))));
+    public Transportation fillTransportation (String transportationJsonFile) throws IOException {
+        JSONArray transportationData = new JSONArray(new String(Files.readAllBytes(Paths.get(transportationJsonFile))));
         JSONObject groundTrans = transportationData.getJSONObject(0);
         JSONObject airTrans = transportationData.getJSONObject(1);
 

@@ -51,6 +51,12 @@ public class MainMenu extends BasePage {
         return Pages.transportation();
     }
 
+    public Hotel_Information gotoHotelInfo (int index){
+        System.out.println("Switching to card by index: "+index);
+        openCategory(index);
+        return Pages.hotelInfo();
+    }
+
     private void openCategory (int index){
         Pages.icsHeader().check4Frame();
         click(String.format(selectorCategoryLink, index));

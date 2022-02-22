@@ -56,6 +56,7 @@ public class Pages extends BasePage {
     private static TransportationAir transportationAir;
     private static TransportationAirlines transportationAirlines;
     private static TransportationFlightInfo transportationFlightInfo;
+    private static Hotel_Information hotelInfo;
 
 
     public static ICSAdvancedConfigs icsAdvancedConfigs (){
@@ -420,5 +421,12 @@ public class Pages extends BasePage {
             transportationFlightInfo =new TransportationFlightInfo();
         }
         return transportationFlightInfo;
+    }
+
+    public static Hotel_Information hotelInfo(){
+        if(hotelInfo==null){
+            hotelInfo=new Hotel_Information();
+        }
+        return hotelInfo;
     }
 }

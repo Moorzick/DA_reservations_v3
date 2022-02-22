@@ -86,7 +86,7 @@ public class LocalAttractions extends ICSMenu {
                     click(buttonApply);
                     Pages.icsHeader().checkForSuccess();
                     gotoSection(i);
-                    Pages.localAttractionsInfoPage().scrapSections(category).backToLA();
+                    Pages.localAttractionsInfoPage().scrapLASections(category).backToLA();
                     break;
                 }
                 case ("Links"):{
@@ -133,7 +133,7 @@ public class LocalAttractions extends ICSMenu {
                     Object subsections = section.get("subsections");
                     if (subsections!=null){
                         click(String.format(selectorCategoryLink,index));
-                        Pages.localAttractionsInfoPage().fillSections((JSONArray) subsections).backToLA();
+                        Pages.localAttractionsInfoPage().fillLASections((JSONArray) subsections).backToLA();
                     }
                     else {
                         System.out.println("No subsections detected");

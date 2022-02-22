@@ -13,7 +13,7 @@ public class Sandbox extends BaseTest {
     String icsURL = String.format("https://qaweb.icemain.com/ICS/QA/%s", ics);
 
     private String directory = "C:\\Users\\user\\Desktop\\ICSData\\";
-    private String file = "transportationDataUA.json";
+    private String file = "hotelInfo.json";
 
     private String imageDirectory = "C:\\Users\\user\\Desktop\\reports\\";
     private String image = "cat_question.jpg";
@@ -30,7 +30,7 @@ public class Sandbox extends BaseTest {
         Pages.loginPage().authorization(login, password);
         Pages.icsWelcomeMenu().gotoContent();
         Pages.icsHeader().switchLang(lang).gotoContent();
-        Pages.mMenu().openTransportation(4).fillTransportation(directory+file);
+        Pages.mMenu().gotoHotelInfo(5).fillHISections(directory+file);
 
         System.out.println("Completion wait");
         Thread.sleep(10000);
