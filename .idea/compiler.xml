@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="BICS" />
         <module name="ICS" />
+        <module name="DA reservation v2" />
         <module name="BICS_Ice_desc" />
         <module name="Schneider_swagger" />
         <module name="DA reservations" />

@@ -5,6 +5,11 @@ import com.test.tools.Tools;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.HashMap;
+import java.util.Locale;
+
 public class LoginPage extends BasePage {
 
 
@@ -15,17 +20,14 @@ public class LoginPage extends BasePage {
     private final By signInButton = By.xpath("//input[@type='submit']");
     private final By buttonSignIn = Tools.inputFromId("btnLogin");
 
-    public void authorization(String login, String password) {
-        if (verifyElementExist(loginField)){
+    private void authorization(String login, String password) {
             writeText(loginField, login);
             writeText(passwordField, password);
             click(signInButton);
-        }
-        else {
-            writeText(fieldLoginOld, login);
-            writeText(fieldPassword, password);
-            click(buttonSignIn);
-        }
         System.out.println("Signed in");
+    }
+    public DA authorize (String login, String password){
+        authorization(login,password);
+        return Pages.da();
     }
 }

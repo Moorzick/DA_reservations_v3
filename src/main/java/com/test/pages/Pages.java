@@ -4,90 +4,90 @@ import com.test.base.BasePage;
 
 public class Pages extends BasePage {
 
-    private static ICSAdvancedConfigs icsAdvancedConfigs;
-    private static ICSHotelSetup icsHotelSetup;
-    private static ICSWelcomeMenu icsWelcomeMenu;
     private static LoginPage loginPage;
-    private static MainICSPage mainPage;
-    private static DiningItemAdd addItemPage;
-    private static ICSMessaging messaging;
-    private static ICSMessageDetails msgDetails;
-    private static ICSHeader icsHeader;
-    private static SystemFunctions systemFunctions;
-    private static Misc misc;
-    private static LanguageSetup langSetup;
-    private static Language lang;
-    private static MainMenu mMenu;
-    private static ICEDesc iDesc;
-    private static Housekeeping housekeeping;
-    private static MediaLibrary mediaLibrary;
-    private static ImageLibrary imageLibrary;
-    private static ImageLibraryAdd imageLibraryAdd;
-    private static Stores stores;
-    private static ICSDiningStore diningStore;
-    private static ICSStoreItemAdd diningStoreAdd;
-    private static DiningCategories diningCategories;
-    private static DiningMenu diningMenu;
-    private static DiningSubmenu diningICSStoreSubmenu;
-    private static ICSStoreMenuManager diningMenuManager;
-    private static ICSLaundryStore laundryStore;
-    private static LaundryCategories laundryCategories;
-    private static LaundryAdd laundryAdd;
-    private static LaundryMenu laundryMenu;
-    private static LaundrySubMenu laundrySubmenu;
-    private static LaundryMenuManager laundryMenuManager;
-    private static ICSCustomStore customStore;
-    private static CustomCategories customCategories;
-    private static CustomAdd customAdd;
-    private static CustomMenu customMenu;
-    private static CustomSubmenu customSubmenu;
-    private static CustomMenuManager customMenuManager;
-    private static DeliveryOptions deliveryOptions;
-    private static HousekeepingEditSimple housekeepingEditSimple;
-    private static HousekeepingEditAdvanced housekeepingEditAdvanced;
-    private static LocalAttractions localAttractions;
-    private static LocalAttractionInfoPage laInfoPage;
-    private static LocalAttractionsLinkMenu laLinksMenu;
-    private static Transportation transportation;
-    private static TransportationGround transportationGround;
-    private static TransportationRequest transportationRequest;
-    private static TransportationGroundLinksMenu transportationGroundLinksMenu;
-    private static TransportationCustomRequest transportationCustomRequest;
-    private static TransportationAir transportationAir;
-    private static TransportationAirlines transportationAirlines;
-    private static TransportationFlightInfo transportationFlightInfo;
-    private static Hotel_Information hotelInfo;
+    private static DA da;
+    private static DAaffiliate daAffiliate;
+    private static MockPMS mockPMS;
+//    private static MainICSPage mainPage;
+//    private static DiningItemAdd addItemPage;
+//    private static ICSMessaging messaging;
+//    private static ICSMessageDetails msgDetails;
+//    private static ICSHeader icsHeader;
+//    private static SystemFunctions systemFunctions;
+//    private static Misc misc;
+//    private static LanguageSetup langSetup;
+//    private static Language lang;
+//    private static MainMenu mMenu;
+//    private static ICEDesc iDesc;
+//    private static Housekeeping housekeeping;
+//    private static MediaLibrary mediaLibrary;
+//    private static ImageLibrary imageLibrary;
+//    private static ImageLibraryAdd imageLibraryAdd;
+//    private static Stores stores;
+//    private static ICSDiningStore diningStore;
+//    private static ICSStoreItemAdd diningStoreAdd;
+//    private static DiningCategories diningCategories;
+//    private static DiningMenu diningMenu;
+//    private static DiningSubmenu diningICSStoreSubmenu;
+//    private static ICSStoreMenuManager diningMenuManager;
+//    private static ICSLaundryStore laundryStore;
+//    private static LaundryCategories laundryCategories;
+//    private static LaundryAdd laundryAdd;
+//    private static LaundryMenu laundryMenu;
+//    private static LaundrySubMenu laundrySubmenu;
+//    private static LaundryMenuManager laundryMenuManager;
+//    private static ICSCustomStore customStore;
+//    private static CustomCategories customCategories;
+//    private static CustomAdd customAdd;
+//    private static CustomMenu customMenu;
+//    private static CustomSubmenu customSubmenu;
+//    private static CustomMenuManager customMenuManager;
+//    private static DeliveryOptions deliveryOptions;
+//    private static HousekeepingEditSimple housekeepingEditSimple;
+//    private static HousekeepingEditAdvanced housekeepingEditAdvanced;
+//    private static LocalAttractions localAttractions;
+//    private static LocalAttractionInfoPage laInfoPage;
+//    private static LocalAttractionsLinkMenu laLinksMenu;
+//    private static Transportation transportation;
+//    private static TransportationGround transportationGround;
+//    private static TransportationRequest transportationRequest;
+//    private static TransportationGroundLinksMenu transportationGroundLinksMenu;
+//    private static TransportationCustomRequest transportationCustomRequest;
+//    private static TransportationAir transportationAir;
+//    private static TransportationAirlines transportationAirlines;
+//    private static TransportationFlightInfo transportationFlightInfo;
+//    private static Hotel_Information hotelInfo;
 
 
-    public static ICSAdvancedConfigs icsAdvancedConfigs (){
-        if (icsAdvancedConfigs==null){
-            icsAdvancedConfigs = new ICSAdvancedConfigs();
-        }
-        return icsAdvancedConfigs;
-    }
-
-    public static ICSHotelSetup icsHotelSetup (){
-        if (icsHotelSetup==null){
-            icsHotelSetup = new ICSHotelSetup();
-        }
-        return icsHotelSetup;
-    }
-
-    public static ICSWelcomeMenu icsWelcomeMenu (){
-        if (icsWelcomeMenu==null){
-            icsWelcomeMenu = new ICSWelcomeMenu();
-        }
-        return icsWelcomeMenu;
-    }
-
-    public static LoginPage loginPage(){
-        if (loginPage==null){
-            loginPage=new LoginPage();
+    public static LoginPage loginPage (){
+        if (loginPage ==null){
+            loginPage = new LoginPage();
         }
         return loginPage;
     }
 
-    public static MainICSPage mainICSPage (){
+    public static DA da (){
+        if (da ==null){
+            da = new DA();
+        }
+        return da;
+    }
+
+    public static DAaffiliate dAaffiliate(){
+        if (daAffiliate ==null){
+            daAffiliate = new DAaffiliate();
+        }
+        return daAffiliate;
+    }
+
+    public static MockPMS mockPMS(){
+        if (mockPMS==null){
+            mockPMS=new MockPMS();
+        }
+        return mockPMS;
+    }
+
+    /*public static MainICSPage mainICSPage (){
         if (mainPage==null){
             mainPage=new MainICSPage();
         }
@@ -428,5 +428,5 @@ public class Pages extends BasePage {
             hotelInfo=new Hotel_Information();
         }
         return hotelInfo;
-    }
+    }*/
 }

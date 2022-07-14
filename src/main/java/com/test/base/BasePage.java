@@ -31,11 +31,21 @@ public class BasePage {
         waitVisibility(By.xpath(selector));
     }
 
+    public void waitVisibility(WebElement element) {
+        WebDriverWait wait = new WebDriverWait(BaseTest.getDriver(), 30);
+        wait.until(ExpectedConditions.visibilityOfAllElements(element));
+    }
+
     //Click Method
     public void click (By elementBy) {
         waitVisibility(elementBy);
         new Actions(BaseTest.driver).moveToElement(BaseTest.driver.findElement(elementBy)).click().build().perform();
         //BaseTest.getDriver().findElement(elementBy).click();
+    }
+
+    public void click (WebElement element) {
+        waitVisibility(element);
+        new Actions(BaseTest.driver).moveToElement(element).click().build().perform();
     }
 
     public void click (String selector){
@@ -51,6 +61,12 @@ public class BasePage {
 
     public void rightClick (String selector){
         rightClick(By.xpath(selector));
+    }
+
+    public void rightClick (WebElement element){
+        waitVisibility(element);
+        Actions actions = new Actions(BaseTest.getDriver());
+        actions.moveToElement(element).contextClick().build().perform();
     }
 
     //Write Text
@@ -182,6 +198,12 @@ public class BasePage {
         return elementsSet;
     }
 
+    public List<WebElement> getAllElements (String selector){
+        By by = By.xpath(selector);
+        List<WebElement> elementsSet = BaseTest.driver.findElements(by);
+        return elementsSet;
+    }
+
     public int getAllElementsCount (By by){
         waitVisibility(by);
         return BaseTest.driver.findElements(by).size();
@@ -282,5 +304,9 @@ public class BasePage {
 
     public By getObjectFromSelector (String selector, Object identifier){
         return By.xpath(String.format(selector, identifier));
+    }
+
+    public String getCurrentUrl (){
+        return BaseTest.driver.getCurrentUrl();
     }
 }

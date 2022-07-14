@@ -1,5 +1,7 @@
 package com.test.tools;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
@@ -8,7 +10,7 @@ import java.util.ArrayList;
 
 public class Tools {
 
-    public static By byFromPropertyAndValue(String item, String property, String value) {
+    public static @NotNull By byFromPropertyAndValue(String item, String property, String value) {
         String xpath = String.format("//%s[@%s='%s']", item, property, value);
         return By.xpath(xpath);
     }
@@ -17,7 +19,7 @@ public class Tools {
         return String.format("//%s[@%s='%s']", item, attribute, value);
     }
 
-    public static By byContainsPropertyWithValue(String item, String property, String value) {
+    public static @NotNull By byContainsPropertyWithValue(String item, @NotNull String property, String value) {
         String xpath;
         if (property.equals("text()")){
             xpath=String.format("//%s[contains(%s, '%s')]", item, property, value);
@@ -28,7 +30,7 @@ public class Tools {
         return By.xpath(xpath);
     }
 
-    public static String xpContainsAttributeWithValue (String item, String attribute, String value){
+    public static String xpContainsAttributeWithValue (String item, @NotNull String attribute, String value){
         String xpath;
         if (attribute.equals("text()")){
             xpath=String.format("//%s[contains(%s, '%s')]", item, attribute, value);
@@ -39,27 +41,27 @@ public class Tools {
         return xpath;
     }
 
-    public static By byFromId(String item, String value) {
+    public static @NotNull By byFromId(String item, String value) {
         return byFromPropertyAndValue(item, "id", value);
     }
     public static String xpFromId (String item, String value) {return  xpFromAttributeAndValue(item, "id", value);}
     public static String xpContainsId (String item, String idPiece) {return xpContainsAttributeWithValue(item, "id", idPiece);}
 
-    public static By inputFromId(String id) {
+    public static @NotNull By inputFromId(String id) {
         return byFromId("input", id);
     }
     public static String xpInputFromId (String id) {return xpFromId("input", id); }
     public static String xpInputContainsId (String id) {return xpContainsId("input", id);}
 
-    public static By aFromId(String id) {
+    public static @NotNull By aFromId(String id) {
         return byFromId("a", id);
     }
     public static String xpAFromId (String id) {return xpFromId("a", id);}
     public static String xpAContainsId (String idPiece) {return xpContainsId("a", idPiece);}
 
-    public static By textareaFromId (String id) {return byFromId("textarea", id);}
+    public static @NotNull By textareaFromId (String id) {return byFromId("textarea", id);}
 
-    public static By selectFromId(String id) {
+    public static @NotNull By selectFromId(String id) {
         return byFromId("select", id);
     }
     public static String xpSelectFromId (String id) {return  xpFromId("select", id);}
@@ -67,7 +69,8 @@ public class Tools {
     public static String xpSpanContainsId (String idPiece) {return  xpContainsId("span", idPiece);}
     public static String xpTRContainsId (String idPiece) {return  xpContainsId("tr", idPiece);}
 
-    public static JSONArray jsonArrayClearNulls(JSONArray ja) {
+    @Contract("_ -> param1")
+    public static JSONArray jsonArrayClearNulls(@NotNull JSONArray ja) {
         for (int i = 0; i < ja.toList().size(); i++) {
             Object obj = ja.get(i);
             if (obj.equals(null)) {
@@ -77,15 +80,19 @@ public class Tools {
         return ja;
     }
 
-    public static By aFromHref(String href) {
+    public static @NotNull By aFromHref(String href) {
         return byFromPropertyAndValue("a", "href", href);
     }
 
-    public static By aContains(String property, String value) {
+    public static @NotNull By aContains(String property, String value) {
         return byContainsPropertyWithValue("a", property, value);
     }
 
-    public static String[] arrayPacker (String itemName, int itemsNumber){
+    public static @NotNull By aContainsText(String value) {
+        return byContainsPropertyWithValue("a", "text()", value);
+    }
+
+    public static String @NotNull [] arrayPacker (String itemName, int itemsNumber){
         ArrayList<String> itemNames = new ArrayList<>();
         for(int i = 0;i<itemsNumber;i++)
     {
