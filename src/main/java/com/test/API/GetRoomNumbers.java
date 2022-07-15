@@ -7,7 +7,7 @@ import static io.restassured.RestAssured.given;
 
 public class GetRoomNumbers {
 
-    public ArrayList<HashMap<String, String>> getRooms (String env, String token, String affiliateID){
+    public ArrayList<HashMap<String, String>> get(String env, String token, String affiliateID){
         ArrayList<Object> array = given()
                 .auth()
                 .oauth2(token)

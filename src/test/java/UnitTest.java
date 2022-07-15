@@ -1,44 +1,24 @@
 import com.test.API.AuthProd;
 import com.test.API.AuthStg;
 import com.test.API.Calls;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 
 public class UnitTest {
     private final String stgAPI = "https://api.keyprstg.com/v1";
     private final String prodAPI = "https://api.keyprprod.com/v1";
 
     public static void main(String[] args) throws IOException, ParseException {
-        System.out.println(Calls.getRoomNumbers().getRooms("https://api.keyprprod.com/v1", AuthProd.getToken(), "aca8351d-61a1-4e04-9d88-3988ecf5c13f"));
-
-    }
-
-    public static JSONObject checkGroupExist(String groupname, JSONArray jsonArray){
-        JSONObject jsonToReturn=null;
-        for (int i=0; i<jsonArray.size(); i++){
-            JSONObject subject = (JSONObject) jsonArray.get(i);
-            String subjectGroup=subject.get("groupName").toString();
-            if (subjectGroup.equals(groupname)){
-                i=jsonArray.size();
-                jsonToReturn=subject;
-            }
-        }
-        return jsonToReturn;
-    }
-
-    public static boolean checkNodeExist (String nodeName, String nodeSubgroup, JSONArray nodesTarget){
-        boolean exist = false;
-        for (int i=0; i<nodesTarget.size(); i++){
-            JSONObject node = (JSONObject) nodesTarget.get(i);
-            if (node.get("name").equals(nodeName) && node.get("subGroup").equals(nodeSubgroup)){
-                exist=true;
-                i= nodesTarget.size();
-            }
-        }
-        return exist;
+        //LocalDate newDate = LocalDate.parse("2022-07-11T21:00:01Z", DateTimeFormatter.ISO_ZONED_DATE_TIME);
+        Calls.patchReservation().patch("https://api.keyprprod.com/v1/", AuthProd.getToken(), "aca8351d-61a1-4e04-9d88-3988ecf5c13f", "7d9df54b-c423-48d9-ac35-ab2979105027", "62c6ecfe60f9cc570807f6cc", "2022-07-14T03:00:00Z");
     }
 
 }

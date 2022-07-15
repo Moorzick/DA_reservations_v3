@@ -373,12 +373,12 @@ public class MockPMS extends BasePage {
         }
         System.out.println("Removing occupied rooms from the existing list");
         System.out.println("Occupied rooms: "+roomNumbersOccupied);
-        rooms.removeAll(roomNumbersOccupied);
-        System.out.println("Available rooms list:\n"+rooms);
         ArrayList<String> vacantRooms = new ArrayList<>();
         for (int i=0; i<rooms.size(); i++){
             vacantRooms.add(rooms.get(i).get("number"));
         }
+        System.out.println("Available rooms list:\n"+vacantRooms);
+        vacantRooms.removeAll(roomNumbersOccupied);
         System.out.println("Returning: "+vacantRooms);
         System.out.println("[/getVacantRooms]");
         return vacantRooms;
@@ -420,7 +420,14 @@ public class MockPMS extends BasePage {
         writeText(fieldRoomNumber, roomNumber);
         click(buttonSaveRoom);
         if (!successChecker()){
-            assignRoom(vacantRoomNumbers);
+            for (String room : vacantRoomNumbers){
+                System.out.println("Trying to assign: "+ room);
+                writeText(fieldRoomNumber, room);
+                click(buttonSaveRoom);
+                if (successChecker()){
+                    break;
+                }
+            }
         }
         System.out.println("[/assignRoom]");
     }
@@ -468,7 +475,6 @@ public class MockPMS extends BasePage {
         boolean keepOthers = Boolean.parseBoolean(parameters.get("keep_others").toString());
         boolean assignRoom = Boolean.parseBoolean(parameters.get("assign_room").toString());
         boolean idVerification = Boolean.parseBoolean(parameters.get("idVerification").toString());
-        boolean hurdle = Boolean.parseBoolean(parameters.get("hurdle").toString());
 
         String reservationID = "not_required";
 
@@ -488,6 +494,7 @@ public class MockPMS extends BasePage {
                 if (assignRoom){
                     assignRoomInitiator(reservationData, parameters, resId);
                 }
+                System.out.println("idVErification: "+idVerification);
                 if (idVerification){
                     reservationID=resId;
                 }

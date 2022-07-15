@@ -1,14 +1,20 @@
 package com.test.tools;
 
+import com.test.API.Calls;
 import com.test.pages.Pages;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class FlowController {
-    private boolean idVerification = true;
+    private boolean idVerification = false;
     private boolean idVerificationHurdle = true;
     private boolean CC = true;
     private String reservationType = "check_in ready";
@@ -21,11 +27,10 @@ public class FlowController {
         System.out.println("Reservation will be created with next parameters:");
 //--------------------------------------------------------------------------
         if (parameters.get("idVerification")==null){
-            idVerification = true;
+            idVerification = false;
         }
         else {
             String  tempVer = parameters.get("idVerification").toString();
-            System.out.println("tempver: "+tempVer);
             idVerification = Boolean.parseBoolean(tempVer);
         }
         System.out.println("idVerifiacation: "+idVerification);
@@ -35,7 +40,6 @@ public class FlowController {
         }
         else {
             String tempHur = parameters.get("idVerification").toString();
-            System.out.println("tempHur "+tempHur);
             idVerificationHurdle = Boolean.parseBoolean(tempHur);
         }
         System.out.println("idVerificationHurdle "+idVerificationHurdle);
@@ -45,7 +49,6 @@ public class FlowController {
         }
         else {
             String tempCC = parameters.get("CC").toString();
-            System.out.println("tempCC "+ tempCC);
             idVerificationHurdle = Boolean.parseBoolean(tempCC);
         }
         System.out.println("CC on file "+CC);
@@ -55,7 +58,6 @@ public class FlowController {
         }
         else {
             String tempRes = parameters.get("reservation_type").toString();
-            System.out.println("tempRes "+ tempRes);
             reservationType = tempRes;
         }
         System.out.println("Reservation type "+reservationType);
@@ -65,17 +67,15 @@ public class FlowController {
         }
         else {
             String tempKO = parameters.get("keep_others").toString();
-            System.out.println("keepothers "+ tempKO);
             idVerificationHurdle = Boolean.parseBoolean(tempKO);
         }
-        System.out.println("CC on file "+CC);
+        System.out.println("keep_others on file "+keepOthers);
 //--------------------------------------------------------------------------
         if (parameters.get("assign_room")==null){
             assignRoom = true;
         }
         else {
             String tempAR = parameters.get("assign_room").toString();
-            System.out.println("assign_room "+ tempAR);
             assignRoom = Boolean.parseBoolean(tempAR);
         }
         System.out.println("assign_room "+assignRoom);
@@ -85,7 +85,6 @@ public class FlowController {
         }
         else {
             String tempHK = parameters.get("has_key").toString();
-            System.out.println("has_key "+ tempHK);
             hasMobileKey = Boolean.parseBoolean(tempHK);
         }
         System.out.println("has_key "+hasMobileKey);
@@ -106,16 +105,16 @@ public class FlowController {
                 else {
                     reservationData.remove("CC");
                 }
-                String reservationPMSId= Pages.mockPMS().processReservation(parameters, reservationData);
+                String reservationPMSId = Pages.mockPMS().processReservation(parameters, reservationData);
+                System.out.println("reservation pms id: "+reservationPMSId);
                 if (!reservationPMSId.equals("not_required")){
-
+                    patchTheIdVerification(parameters, reservationData, reservationPMSId);
                 }
                 cycle(parameters, reservationData,creditCard);
                 break;
                 }
             case "2": {
                 changer(parameters, reservationData, creditCard);
-                cycle(parameters, reservationData, creditCard);
                 break;
             }
             case "=":{
@@ -197,7 +196,11 @@ public class FlowController {
                 else {
                     reservationData.remove("CC");
                 }
-                Pages.mockPMS().processReservation(parameters, reservationData);
+                String reservationPMSId = Pages.mockPMS().processReservation(parameters, reservationData);
+                System.out.println("reservation pms id: "+reservationPMSId);
+                if (!reservationPMSId.equals("not_required")){
+                    patchTheIdVerification(parameters, reservationData, reservationPMSId);
+                }
                 cycle(parameters, reservationData, creditCard);
                 break;
             }
@@ -221,5 +224,42 @@ public class FlowController {
         parameters.put("has_key", hasMobileKey);
     }
 
+    private void patchTheIdVerification (HashMap<String, Object> parameters, HashMap<String, String> reservationData, String reservationPMSId) throws IOException {
+        System.out.println("Import your reservation now! Type + when ready");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        if (br.readLine().equals("+")){
+            LinkedHashMap<String, Object> reservation = Calls.getReservation().get(parameters.get("env").toString(),
+                    parameters.get("token").toString(),
+                    parameters.get("affiliate").toString(),
+                    reservationPMSId);
+            String reservationApiID=reservation.get("id").toString();
+            String check_in_date = ((LinkedHashMap<String, Object>) reservation.get("attributes")).get("checkin_date").toString();
+            LocalDateTime check_in=LocalDateTime.parse(check_in_date, DateTimeFormatter.ISO_ZONED_DATE_TIME);
+            String passedTimestamp = "initial_value";
+            if (Boolean.parseBoolean(parameters.get("hurdle").toString())){
+                passedTimestamp=check_in.minus(25, ChronoUnit.HOURS).format(DateTimeFormatter.ISO_DATE_TIME)+"Z";
+            }
+            else {
+                passedTimestamp=check_in.minus(6, ChronoUnit.HOURS).format(DateTimeFormatter.ISO_DATE_TIME)+"Z";
+            }
+            int patchRC = Calls.patchReservation().patch(parameters.get("env").toString(),
+                    parameters.get("token").toString(),
+                    parameters.get("affiliate").toString(),
+                    reservationApiID,
+                    reservationData.get("interview"),
+                    passedTimestamp);
+            if (patchRC==200){
+                System.out.println("Reservation was patched successfully");
+            }
+            else {
+                System.out.println("Something went wrong: "+patchRC);
+            }
+        }
+        else {
+            patchTheIdVerification(parameters, reservationData, reservationPMSId);
+        }
+
+
+    }
 
 }

@@ -2,7 +2,6 @@ import com.test.API.AuthProd;
 import com.test.API.AuthStg;
 import com.test.API.Calls;
 import com.test.base.BaseTest;
-import com.test.pages.LoginPage;
 import com.test.pages.Pages;
 import com.test.tools.FlowController;
 import org.testng.annotations.Test;
@@ -11,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class DA_reservation_w_CC_idVerified extends BaseTest {
+public class mockPMSAutomated extends BaseTest {
     private final String login = "dmytro.lichman@intelity.com";
     private final String password = "Barsick5120";
 
@@ -56,7 +55,7 @@ public class DA_reservation_w_CC_idVerified extends BaseTest {
                 .getAffiliateId();
         System.out.println(affiliateID);
         Pages.dAaffiliate().launchMockPMS();
-        ArrayList<HashMap<String, String>> rooms = Calls.getRoomNumbers().getRooms(currentEnv, token, affiliateID);
+        ArrayList<HashMap<String, String>> rooms = Calls.getRoomNumbers().get(currentEnv, token, affiliateID);
         HashMap<String, String> reservationData = new HashMap<>();
         reservationData.put("name", resName);
         reservationData.put("resEmail", resEmail);
@@ -66,6 +65,9 @@ public class DA_reservation_w_CC_idVerified extends BaseTest {
 
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("rooms", rooms);
+        parameters.put("env", currentEnv);
+        parameters.put("token", token);
+        parameters.put("affiliate", affiliateID);
         FlowController flow = new FlowController();
         flow.cycle(parameters, reservationData, CC);
         Thread.sleep(5000);
