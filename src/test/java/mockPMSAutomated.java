@@ -14,7 +14,7 @@ public class mockPMSAutomated extends BaseTest {
     private final String login = "dmytro.lichman@intelity.com";
     private final String password = "Barsick5120";
 
-    private final String env = "prod"; //"prod", "stg"
+    private final String env = "stg"; //"prod", "stg"
 
     private final String daProdUrl = "https://da.keyprprod.com";
     private final String daStgUrl = "https://da.keyprstg.com";
@@ -23,9 +23,9 @@ public class mockPMSAutomated extends BaseTest {
     private final String stgAPI = "https://api.keyprstg.com/v1";
     private final String prodAPI = "https://api.keyprprod.com/v1";
 
-    private final String affiliate = "Intelity Hotel"; //"QA Base"
+    private final String affiliate = "QA Base"; //"QA Base" Intelity Hotel
     private final String resName="Dmytro Lichman";
-    private final String resEmail="testingrandomemail48+002@gmail.com"; //dmytro.lichman@intelity.com, cysinuje@ema-sofia.eu, testingrandomemail48@gmail.com
+    private final String resEmail="testingrandomemail48@gmail.com"; //dmytro.lichman@intelity.com, cysinuje@ema-sofia.eu, testingrandomemail48@gmail.com
     private final String phoneNumber = "+3806877640928";
     private final String CC = "4111111111111111";
     private final String room = "101";
@@ -62,16 +62,13 @@ public class mockPMSAutomated extends BaseTest {
         reservationData.put("phone", phoneNumber);
         reservationData.put("interview", interviewID);
         reservationData.put("room", room);
+        reservationData.put("creditCard", CC);
 
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("rooms", rooms);
         parameters.put("env", currentEnv);
         parameters.put("token", token);
         parameters.put("affiliate", affiliateID);
-        FlowController flow = new FlowController();
-        flow.cycle(parameters, reservationData, CC);
-        Thread.sleep(5000);
-
+        new FlowController().cycle(parameters, reservationData, CC);
     }
-
 }

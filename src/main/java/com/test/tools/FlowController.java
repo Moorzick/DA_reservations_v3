@@ -24,7 +24,7 @@ public class FlowController {
 
     public void cycle (HashMap<String, Object> parameters, HashMap<String, String> reservationData, String creditCard) throws IOException, InterruptedException {
         System.out.println("==================================================");
-        System.out.println("Reservation will be created with next parameters:");
+        System.out.println("Reservation will be created with following parameters:");
 //--------------------------------------------------------------------------
         if (parameters.get("idVerification")==null){
             idVerification = false;
@@ -33,7 +33,6 @@ public class FlowController {
             String  tempVer = parameters.get("idVerification").toString();
             idVerification = Boolean.parseBoolean(tempVer);
         }
-        System.out.println("idVerifiacation: "+idVerification);
 //--------------------------------------------------------------------------
         if (parameters.get("hurdle")==null){
             idVerificationHurdle = true;
@@ -42,7 +41,6 @@ public class FlowController {
             String tempHur = parameters.get("idVerification").toString();
             idVerificationHurdle = Boolean.parseBoolean(tempHur);
         }
-        System.out.println("idVerificationHurdle "+idVerificationHurdle);
 //--------------------------------------------------------------------------
         if (parameters.get("CC")==null){
             CC = true;
@@ -51,7 +49,6 @@ public class FlowController {
             String tempCC = parameters.get("CC").toString();
             idVerificationHurdle = Boolean.parseBoolean(tempCC);
         }
-        System.out.println("CC on file "+CC);
 //--------------------------------------------------------------------------
         if (parameters.get("reservation_type")==null){
             reservationType = "check_in ready";
@@ -60,7 +57,6 @@ public class FlowController {
             String tempRes = parameters.get("reservation_type").toString();
             reservationType = tempRes;
         }
-        System.out.println("Reservation type "+reservationType);
 //--------------------------------------------------------------------------
         if (parameters.get("keep_others")==null){
             keepOthers = false;
@@ -69,7 +65,6 @@ public class FlowController {
             String tempKO = parameters.get("keep_others").toString();
             idVerificationHurdle = Boolean.parseBoolean(tempKO);
         }
-        System.out.println("keep_others on file "+keepOthers);
 //--------------------------------------------------------------------------
         if (parameters.get("assign_room")==null){
             assignRoom = true;
@@ -78,7 +73,6 @@ public class FlowController {
             String tempAR = parameters.get("assign_room").toString();
             assignRoom = Boolean.parseBoolean(tempAR);
         }
-        System.out.println("assign_room "+assignRoom);
 //--------------------------------------------------------------------------
         if (parameters.get("has_key")==null){
             hasMobileKey = true;
@@ -87,8 +81,14 @@ public class FlowController {
             String tempHK = parameters.get("has_key").toString();
             hasMobileKey = Boolean.parseBoolean(tempHK);
         }
-        System.out.println("has_key "+hasMobileKey);
 //--------------------------------------------------------------------------
+        System.out.println("1: Reservation type. Current value: "+reservationType);
+        System.out.println("2: ID verification. Current value: "+idVerification);
+        System.out.println("3: ID hurdle. Current value: "+idVerificationHurdle);
+        System.out.println("4: CC usage. Current value: "+CC);
+        System.out.println("5: Keep others. Current value: "+keepOthers);
+        System.out.println("6: Assign room. Current value: "+assignRoom);
+        System.out.println("7: Should have mobile key. Current value: "+hasMobileKey);
         System.out.println("---------------------------------------------------");
         System.out.println("Confirm parameters and proceed: 1");
         System.out.println("Change parameters: 2");
@@ -118,7 +118,11 @@ public class FlowController {
                 break;
             }
             case "=":{
-                System.out.println("Exiting");
+                System.out.print("Exiting");
+                for (int i=0; i<5; i++){
+                    System.out.print(".");
+                    Thread.sleep(1000);
+                }
                 break;
             }
             default:{
@@ -136,6 +140,7 @@ public class FlowController {
         System.out.println("4: CC usage. Current value: "+CC);
         System.out.println("5: Keep others. Current value: "+keepOthers);
         System.out.println("6: Assign room. Current value: "+assignRoom);
+        System.out.println("7: Should have mobile key. Current value: "+hasMobileKey);
         System.out.println("+: Confirm");
         System.out.println("=: Cancel");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -185,6 +190,11 @@ public class FlowController {
             }
             case "6":{
                 assignRoom=!assignRoom;
+                changer(parameters, reservationData, creditCard);
+                break;
+            }
+            case "7":{
+                hasMobileKey=!hasMobileKey;
                 changer(parameters, reservationData, creditCard);
                 break;
             }
@@ -258,8 +268,6 @@ public class FlowController {
         else {
             patchTheIdVerification(parameters, reservationData, reservationPMSId);
         }
-
-
     }
 
 }

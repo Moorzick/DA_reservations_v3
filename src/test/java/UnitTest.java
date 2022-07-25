@@ -1,7 +1,6 @@
 import com.test.API.AuthProd;
 import com.test.API.AuthStg;
 import com.test.API.Calls;
-import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -16,7 +15,7 @@ public class UnitTest {
     private final String stgAPI = "https://api.keyprstg.com/v1";
     private final String prodAPI = "https://api.keyprprod.com/v1";
 
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException {
         //LocalDate newDate = LocalDate.parse("2022-07-11T21:00:01Z", DateTimeFormatter.ISO_ZONED_DATE_TIME);
         Calls.patchReservation().patch("https://api.keyprprod.com/v1/", AuthProd.getToken(), "aca8351d-61a1-4e04-9d88-3988ecf5c13f", "7d9df54b-c423-48d9-ac35-ab2979105027", "62c6ecfe60f9cc570807f6cc", "2022-07-14T03:00:00Z");
     }

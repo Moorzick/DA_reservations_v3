@@ -17,7 +17,7 @@ public class DAaffiliate extends BasePage {
     }
 
     public String getAffiliateId (){
-        waitVisibility(editAffiliateButton);
+        waitFor(editAffiliateButton);
         return getCurrentUrl().split("/")[getCurrentUrl().split("/").length-1];
     }
 

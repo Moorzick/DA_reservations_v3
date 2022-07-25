@@ -18,7 +18,7 @@ public class DA extends BasePage {
 
 
     private void affListLoadingWait () throws InterruptedException {
-        waitVisibility(affListLoadingIndicator);
+        waitFor(affListLoadingIndicator);
         while (verifyElementExist(affListLoadingIndicator)){
             Thread.sleep(3000);
         }
@@ -31,7 +31,7 @@ public class DA extends BasePage {
     public DAaffiliate changeAffiliate (String affiliate) throws InterruptedException {
         click(buttonAffiliates);
         affListLoadingWait();
-        waitVisibility(affiliateItem);
+        waitForAll(affiliateItem);
         writeText(fieldSearch, affiliate);
         click(getTargetPropertyBy(affiliate));
         return Pages.dAaffiliate();

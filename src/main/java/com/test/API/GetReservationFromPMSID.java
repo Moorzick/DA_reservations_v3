@@ -5,7 +5,7 @@ import java.util.*;
 
 import static io.restassured.RestAssured.given;
 
-public class GetReservation {
+public class GetReservationFromPMSID {
     public LinkedHashMap<String, Object> get(String env, String token, String affiliateID, String reservationPMSId){
         LinkedHashMap<String, Object> reservation = new LinkedHashMap<>();
         String url = env+"/affiliates/"+affiliateID+"/reservations";

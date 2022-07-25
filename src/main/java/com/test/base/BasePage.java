@@ -1,5 +1,9 @@
 package com.test.base;
 
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
@@ -8,44 +12,102 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
 
 import java.lang.reflect.GenericArrayType;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.codeborne.selenide.Selenide.*;
+
 public class BasePage {
     //public WebDriver driver;
-    public WebDriverWait wait = new WebDriverWait(BaseTest.driver, 30000);
+    private final WebDriverWait wait = new WebDriverWait(WebDriverRunner.getWebDriver(), 30);
+    private final int timeoutSeconds = 30;
 
 
 
     //Wait Wrapper Method
-    public void waitVisibility(By elementBy) {
-        WebDriverWait wait = new WebDriverWait(BaseTest.getDriver(), 30);
+    public void waitForAll(By elementBy) throws InterruptedException {
+        //WebDriverWait wait = new WebDriverWait(BaseTest.getDriver(), 30);
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(elementBy));
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(elementBy));
     }
 
-    public void waitVisibility(String selector) {
-        waitVisibility(By.xpath(selector));
+    public void waitVisibility(String selector) throws InterruptedException {
+        waitForAll(By.xpath(selector));
     }
 
-    public void waitVisibility(WebElement element) {
-        WebDriverWait wait = new WebDriverWait(BaseTest.getDriver(), 30);
-        wait.until(ExpectedConditions.visibilityOfAllElements(element));
+    public void waitFor (SelenideElement element){
+        element.should(Condition.appear, Duration.ofSeconds(30));
+    }
+
+    public void waitFor (String selector){
+        waitFor($(By.xpath(selector)));
+    }
+
+    public void waitFor (By by){
+        waitFor($(by));
+    }
+
+    public boolean waitForOptional (By elementBy) throws InterruptedException {
+        int initialValue = getAllElementsCount(elementBy);
+        boolean change = false;
+        if (initialValue!=0){
+            return true;
+        }
+        else {
+            int tries = 15;
+            int i=0;
+            boolean end = false;
+            while (!change && i<tries){
+                Thread.sleep(200);
+                System.out.print("Checking for any change.");
+                int newCount = getAllElementsCount(elementBy);
+                System.out.print(" i="+i);
+                System.out.print(" change="+change);
+                System.out.print(" initial value="+initialValue);
+                System.out.println(" end="+end);
+                i++;
+                if (newCount!=initialValue){
+                    System.out.println("number of elements has been changed");
+                    change=true;
+                    initialValue=newCount;
+                    while (!end){
+                        if (initialValue!=getAllElementsCount(elementBy)){
+                            System.out.println("waiting for ending of the update");
+                            Thread.sleep(200);
+                        }
+                        else {
+                            System.out.println("Update completed");
+                            end=true;
+                        }
+                    }
+                }
+            }
+            if (end){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
     }
 
     //Click Method
     public void click (By elementBy) {
-        waitVisibility(elementBy);
-        new Actions(BaseTest.driver).moveToElement(BaseTest.driver.findElement(elementBy)).click().build().perform();
+        SelenideElement element = $(elementBy);
+        waitFor(element);
+        $(elementBy).click();
         //BaseTest.getDriver().findElement(elementBy).click();
     }
 
     public void click (WebElement element) {
-        waitVisibility(element);
-        new Actions(BaseTest.driver).moveToElement(element).click().build().perform();
+        $(element).click();
+    }
+
+    public void click (SelenideElement element){
+        element.click();
     }
 
     public void click (String selector){
@@ -53,94 +115,56 @@ public class BasePage {
     }
 
     public void rightClick (By elementBy){
-        waitVisibility(elementBy);
-        Actions actions = new Actions(BaseTest.getDriver());
-        WebElement targetElement = BaseTest.driver.findElement(elementBy);
-        actions.moveToElement(targetElement).contextClick().build().perform();
+        rightClick($(elementBy));
+    }
+
+    public void rightClick (SelenideElement element){
+        element.contextClick();
     }
 
     public void rightClick (String selector){
-        rightClick(By.xpath(selector));
+        rightClick($(By.xpath(selector)));
     }
 
     public void rightClick (WebElement element){
-        waitVisibility(element);
-        Actions actions = new Actions(BaseTest.getDriver());
-        actions.moveToElement(element).contextClick().build().perform();
+        rightClick($(element));
     }
 
     //Write Text
     public void writeText (By elementBy, String text) {
-        waitVisibility(elementBy);
-        BaseTest.getDriver().findElement(elementBy).clear();
-        BaseTest.getDriver().findElement(elementBy).sendKeys(text);
+        $(elementBy).should(Condition.appear, Duration.ofSeconds(timeoutSeconds)).clear();
+                $(elementBy).sendKeys(text);
     }
 
     public void writeText (String selector, String text) {
         writeText(By.xpath(selector),text);
     }
 
-    //Read Text
-    public String readText (By elementBy) {
-        waitVisibility(elementBy);
-        return BaseTest.getDriver().findElement(elementBy).getText();
-    }
-
-    //Assert
-    public void assertEquals (By elementBy, String expectedText) {
-        waitVisibility(elementBy);
-        Assert.assertEquals(readText(elementBy), expectedText);
-
-    }
-
     public void hoverAbove (By elementBy) {
-        waitVisibility(elementBy);
-        WebElement target = BaseTest.getDriver().findElement(elementBy);
-        Actions actions = new Actions(BaseTest.getDriver());
-        actions.moveToElement(target);
+        actions().moveToElement($(elementBy)).build().perform();
     }
 
     public void switch2Frame (By elementBy) {
-        waitVisibility(elementBy);
-        WebElement target = BaseTest.getDriver().findElement(elementBy);
-        BaseTest.getDriver().switchTo().frame(target);
+        switchTo().frame($(elementBy));
     }
 
     public void switchOutOfFrame () {
-        BaseTest.getDriver().switchTo().parentFrame();
+        switchTo().parentFrame();
     }
 
     public boolean verifyElementExist (By elementBy) {
-    if (!BaseTest.getDriver().findElements(elementBy).isEmpty()){
-        return true;
-    }
-    else {
-        return false;
-        }
+        return $(elementBy).is(Condition.exist);
     }
     public boolean verifyElementExist (String selector) {
         return verifyElementExist(By.xpath(selector));
     }
 
-
     public boolean verifyElementVisible (By elementBy){
-        WebElement webElement = BaseTest.getDriver().findElement(elementBy);
-        System.out.println(String.format("Checking if %s is enabled", elementBy.toString()));
-        if (webElement.isEnabled())
-        {
-            System.out.println("Enabled");
-            return true;
-        }
-        else {
-            System.out.println("Disabled");
-            return false;
-        }
+        return $(elementBy).is(Condition.visible);
     }
 
     public String getAText(By elementBy){
-        waitVisibility(elementBy);
-        WebElement webElement = BaseTest.getDriver().findElement(elementBy);
-        return webElement.getText();
+        return $(elementBy).shouldHave(Condition.appear).getText();
     }
 
     public String getAText (String selector){
@@ -149,8 +173,7 @@ public class BasePage {
 
     public boolean verifyIsChecked (By elementBy){
         boolean isChecked;
-        WebElement webElement = BaseTest.driver.findElement(elementBy);
-        String checked = webElement.getAttribute("checked");
+        String checked = $(elementBy).getAttribute("checked");
         if (checked!=null){
             isChecked=true;
         }
@@ -165,56 +188,45 @@ public class BasePage {
     }
 
     public void alertAccept(){
-        BaseTest.driver.switchTo().alert().accept();
+        switchTo().alert().accept();
     }
 
     public void alertDecline(){
-        BaseTest.driver.switchTo().alert().dismiss();
+        switchTo().alert().dismiss();
+    }
+
+    public void waitForElementToDisappear (SelenideElement element){
+        element.should(Condition.disappear, Duration.ofSeconds(timeoutSeconds));
     }
 
     public void waitForElementToDisappear (By by){
-        wait.until(ExpectedConditions.invisibilityOf(BaseTest.driver.findElement(by)));
+       waitForElementToDisappear($(by));
     }
 
-    public void droplistSelectByName (By droplistBy, String optionName){
-        waitVisibility(droplistBy);
-        Select droplist = new Select(BaseTest.driver.findElement(droplistBy));
-        droplist.selectByVisibleText(optionName);
+    public void dlSelectByName (By droplistBy, String optionName){
+        $(droplistBy).selectOptionContainingText(optionName);
     }
 
-    public void droplistSelectByIndex (By droplistBy, int index){
-        waitVisibility(droplistBy);
-        Select droplist = new Select(BaseTest.driver.findElement(droplistBy));
-        droplist.selectByIndex(index);
+    public void dlSelectByIndex (By droplistBy, int index){
+        $(droplistBy).selectOption(index);
     }
 
-    public Select getDroplist (By droplistBy){
-        waitVisibility(droplistBy);
-        return new Select(BaseTest.driver.findElement(droplistBy));
+    public ElementsCollection getAllElements (By by){
+        return $$(by);
     }
 
-    public List<WebElement> getAllElements (By by){
-        List<WebElement> elementsSet = BaseTest.driver.findElements(by);
-        return elementsSet;
-    }
-
-    public List<WebElement> getAllElements (String selector){
-        By by = By.xpath(selector);
-        List<WebElement> elementsSet = BaseTest.driver.findElements(by);
-        return elementsSet;
+    public ElementsCollection getAllElements (String selector){
+        return $$(By.xpath(selector));
     }
 
     public int getAllElementsCount (By by){
-        waitVisibility(by);
-        return BaseTest.driver.findElements(by).size();
+        return $$(by).size();
     }
 
-
-
     public String getFieldValue (By by){
-        waitVisibility(by);
+        $(by).should(Condition.appear);
         String value;
-        String retrievedValue = BaseTest.driver.findElement(by).getAttribute("value");
+        String retrievedValue = $(by).getAttribute("value");
         if (retrievedValue!=null){
             value=retrievedValue;
         }
@@ -233,23 +245,15 @@ public class BasePage {
         return getAText(By.xpath(xpath));
     }
 
-    public void sendKeys (By elementBy, String charSequence){
-        BaseTest.driver.findElement(elementBy).sendKeys(charSequence);
-    }
-
     public void dragNdrop (By source, By target){
-        WebElement elementSource = BaseTest.driver.findElement(source);
-        WebElement elementTarget = BaseTest.driver.findElement(target);
-        new Actions(BaseTest.driver).dragAndDrop(elementSource, elementTarget).perform();
+        actions().dragAndDrop($(source), $(target)).build().perform();
     }
 
     public void dragNdropWShifting (By source, By target){
-        WebElement elementSource = BaseTest.driver.findElement(source);
-        WebElement elementTarget = BaseTest.driver.findElement(target);
-        Point sourcePoint = elementSource.getLocation();
+        Point sourcePoint = $(source).getLocation();
         System.out.println("sourceX: "+sourcePoint.getX());
         System.out.println("sourceY: "+sourcePoint.getY());
-        Point targetPoint = elementTarget.getLocation();
+        Point targetPoint = $(target).getLocation();
         int targetX = targetPoint.getX();
         int targetY = targetPoint.getY();
         System.out.println("targetX: "+targetX);
@@ -259,19 +263,15 @@ public class BasePage {
         int newX = targetX+shiftX;
         int newY = targetY+shiftY;
         System.out.println("dnd");
-        new Actions(BaseTest.driver).dragAndDropBy(elementSource, newX, newY).perform();
+        actions().dragAndDropBy($(source), newX, newY).build().perform();
     }
 
-    public Point getCoordinates (By by){
-        WebElement element = BaseTest.driver.findElement(by);
-        return element.getLocation();
-    }
 
     public void check (By checkbox) throws InterruptedException {
-        waitVisibility(checkbox);
-        if (!verifyIsChecked(checkbox)){
+        SelenideElement cb = $(checkbox);
+        if(!cb.is(Condition.checked)) {
             System.out.println("Checkbox is not checked, checking");
-            click(checkbox);
+            click(cb);
         }
         else {
             System.out.println("Checkbox is already checked, skipping");
@@ -284,8 +284,9 @@ public class BasePage {
 
 
     public void uncheck (By checkbox){
-        waitVisibility(checkbox);
-        if (verifyIsChecked(checkbox)){
+        SelenideElement cb = $(checkbox);
+        waitFor(cb);
+        if (cb.is(Condition.checked)){
             System.out.println("Checkbox is not checked, unchecking");
             click(checkbox);
         }
@@ -299,14 +300,10 @@ public class BasePage {
     }
 
     public String getAttribute (By element, String attribute){
-        return BaseTest.driver.findElement(element).getAttribute(attribute);
-    }
-
-    public By getObjectFromSelector (String selector, Object identifier){
-        return By.xpath(String.format(selector, identifier));
+        return $(element).getAttribute(attribute);
     }
 
     public String getCurrentUrl (){
-        return BaseTest.driver.getCurrentUrl();
+        return WebDriverRunner.url();
     }
 }

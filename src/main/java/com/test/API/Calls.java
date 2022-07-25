@@ -2,7 +2,7 @@ package com.test.API;
 
 public class Calls {
     public static GetRoomNumbers getRoomNumbers;
-    public static GetReservation getReservation;
+    public static GetReservationFromPMSID getReservationFromPMSID;
     public static PatchReservation patchReservation;
 
     public static GetRoomNumbers getRoomNumbers(){
@@ -12,11 +12,11 @@ public class Calls {
         return getRoomNumbers;
     }
 
-    public static GetReservation getReservation(){
-        if (getReservation ==null){
-            getReservation =new GetReservation();
+    public static GetReservationFromPMSID getReservation(){
+        if (getReservationFromPMSID ==null){
+            getReservationFromPMSID =new GetReservationFromPMSID();
         }
-        return getReservation;
+        return getReservationFromPMSID;
     }
 
     public static PatchReservation patchReservation(){

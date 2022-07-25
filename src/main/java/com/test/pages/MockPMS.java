@@ -1,7 +1,8 @@
 package com.test.pages;
 
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import com.test.base.BasePage;
-import com.test.base.BaseTest;
 import com.test.tools.Tools;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -13,19 +14,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import static com.codeborne.selenide.Selenide.refresh;
+
 public class MockPMS extends BasePage {
 
-    private By reservationItem = By.xpath("//tr[@ng-click='select(res)']");
-    private By buttonAddNew = By.xpath("//button[@ng-click='addNew()']");
+    private final By reservationItem = By.xpath("//tr[@ng-click='select(res)']");
+    private final By buttonAddNew = By.xpath("//button[@ng-click='addNew()']");
 
-    private By fieldResName =By.xpath("//input[@ng-model='newRes.FullName']");
-    private By fieldResEmail=By.xpath("//input[@ng-model='newRes.GuestEmail']");
-    private By fieldPhone = By.xpath("//input[@ng-model='newRes.Phone']");
-    private By fieldCC = By.xpath("//input[@ng-model='newRes.CreditCard']");
+    private final By fieldResName =By.xpath("//input[@ng-model='newRes.FullName']");
+    private final By fieldResEmail=By.xpath("//input[@ng-model='newRes.GuestEmail']");
+    private final By fieldPhone = By.xpath("//input[@ng-model='newRes.Phone']");
+    private final By fieldCC = By.xpath("//input[@ng-model='newRes.CreditCard']");
+    private final By fieldSearch = By.xpath("//input[@ng-model='search']");
 
-    private By buttonArrivalMonth = By.xpath("//label[text()='Arrival']/following-sibling::div//button[contains(@id, 'datepicker')]");
-    private String selectorArrivalMonthButton = "//label[text()='Arrival']/following-sibling::div//span[text()='%s']/parent::button";
-    private String selectorArrivalDayButton = "//label[text()='Arrival']/following-sibling::div//span[@class!='ng-binding text-muted' and text()='%s']";
+    private final By buttonArrivalMonth = By.xpath("//label[text()='Arrival']/following-sibling::div//button[contains(@id, 'datepicker')]");
+    private final String selectorArrivalMonthButton = "//label[text()='Arrival']/following-sibling::div//span[text()='%s']/parent::button";
+    private final String selectorArrivalDayButton = "//label[text()='Arrival']/following-sibling::div//span[@class!='ng-binding text-muted' and text()='%s']";
 
     private By buttonDepMonth = By.xpath("//label[text()='Departure']/following-sibling::div//button[contains(@id, 'datepicker')]");
     private String selectorDepMonthButton = "//label[text()='Departure']/following-sibling::div//span[text()='%s']/parent::button";
@@ -50,25 +54,22 @@ public class MockPMS extends BasePage {
     private By menuItemCancel = By.xpath("//a[@ng-click='cancel(meta.contextmenu.item)']");
     private By menuItemCheckout = By.xpath("//a[@ng-click='checkout(meta.contextmenu.item)']");
 
+    private String currendReservationPMSid = "not_required";
+    private HashMap<String, Object> parameters = null;
+    private HashMap<String, String>reservationData=null;
 
 
-    private List<WebElement> searchForTargetReservations (String email){
+
+
+    private ElementsCollection searchForTargetReservations (String email){
         return getAllElements(String.format(selectorResByEmail,email));
     }
 
-    private boolean hasReservationsBooked (String email){
-        waitVisibility(buttonAddNew);
-        boolean hasBooked = true;
-        if (searchForTargetReservations(email).size()==0){
-            hasBooked=false;
-        }
-        return hasBooked;
-    }
 
-    private void refresh (){
-        BaseTest.driver.navigate().refresh();
-        waitVisibility(By.xpath("//table[@contextmenu-container='meta.contextmenu']/tbody"));
-        waitVisibility(buttonAddNew);
+    private void refreshPMS(){
+        refresh();
+        waitFor(By.xpath("//table[@contextmenu-container='meta.contextmenu']/tbody"));
+        waitFor(buttonAddNew);
         System.out.println("Refresh wait completed");
     }
 
@@ -89,41 +90,44 @@ public class MockPMS extends BasePage {
         return stringDay;
     }
 
-    private HashMap<String, String> putStayDates(LocalDate arrDate, LocalDate depDate, HashMap<String, String> resData){
-        resData.put("arrDay", getDay(arrDate));
-        resData.put("arrMonth", getMonth(arrDate));
-        resData.put("arrYear", getYear(arrDate));
-        resData.put("depDay", getDay(depDate));
-        resData.put("depMonth", getMonth(depDate));
-        resData.put("depYear", getYear(depDate));
-        return resData;
+    private void putStayDates(LocalDate arrDate, LocalDate depDate){
+        reservationData.put("arrDay", getDay(arrDate));
+        reservationData.put("arrMonth", getMonth(arrDate));
+        reservationData.put("arrYear", getYear(arrDate));
+        reservationData.put("depDay", getDay(depDate));
+        reservationData.put("depMonth", getMonth(depDate));
+        reservationData.put("depYear", getYear(depDate));
     }
 
 
-    private void createReservation (HashMap <String, String> data) throws InterruptedException {
+    private void createReservation () throws InterruptedException {
         System.out.println("[createReservation]");
         int initialResAmount = getAllElementsCount(reservationItem);
         click(buttonAddNew);
-        writeText(fieldResName, data.get("name"));
-        writeText(fieldResEmail, data.get("resEmail"));
+        writeText(fieldResName, reservationData.get("name"));
+        String email = reservationData.get("resEmail");
+        writeText(fieldResEmail, email);
         click(buttonArrivalMonth);
-        click(String.format(selectorArrivalMonthButton, data.get("arrMonth")));
-        click(String.format(selectorArrivalDayButton, data.get("arrDay")));
+        click(String.format(selectorArrivalMonthButton, reservationData.get("arrMonth")));
+        click(String.format(selectorArrivalDayButton, reservationData.get("arrDay")));
         click(buttonDepMonth);
-        click(String.format(selectorDepMonthButton, data.get("depMonth")));
-        click(String.format(selectorDepDayButton, data.get("depDay")));
+        click(String.format(selectorDepMonthButton, reservationData.get("depMonth")));
+        click(String.format(selectorDepDayButton, reservationData.get("depDay")));
 
-        String phone = data.get("phone");
+        String phone = reservationData.get("phone");
         if (phone!=null){
             writeText(fieldPhone, phone);
         }
 
-        String CC = data.get("CC");
+        String CC = reservationData.get("creditCard");
         if (CC!=null){
             writeText(fieldCC, CC);
         }
         click(buttonSaveRes);
-        successChecker();
+        if (successChecker().equals("failed")){
+            //checkIfReservastionNumberChanged(initialResAmount, email);
+            System.out.println("success checker failed");
+        }
         System.out.println("[/createReservation]");
     }
 
@@ -143,125 +147,102 @@ public class MockPMS extends BasePage {
 
     //private void assignRoom (int room)
 
-    private ArrayList<String> checkInReady (HashMap<String, String> resData) throws InterruptedException {
+    private void checkInReady () throws InterruptedException {
         System.out.println("[checkInReady(noCC)]");
         LocalDate arrival = LocalDate.now();
         LocalDate departure = arrival.plusDays(1);
-        putStayDates(arrival, departure, resData);
-        ArrayList<String> previousResIDs = getReservationIDs(resData.get("resEmail"));
-        resData.remove("CC");
-        createReservation(resData);
-        ArrayList<String> newResIds = getNewlyCreatedReservationIDs(resData.get("resEmail"), previousResIDs);
-        System.out.println("Created new reservations:\n"+newResIds);
+        putStayDates(arrival, departure);
+        ArrayList<String> previousResIDs = getReservationIDs(reservationData.get("resEmail"));
+        reservationData.remove("creditCard");
+        createReservation();
+        currendReservationPMSid = getNewlyCreatedReservationIDs(reservationData.get("resEmail"), previousResIDs).get(0);
+        System.out.println("Created new reservations:\n"+currendReservationPMSid);
         System.out.println("[/checkInReady(noCC)]");
-        return newResIds;
     }
 
-    private ArrayList<String> checkInReady (HashMap<String, String> resData, String CC) throws InterruptedException {
+    private void checkInReadyWCC () throws InterruptedException {
         System.out.println("[checkInReady(wCC)]");
         LocalDate arrival = LocalDate.now();
         LocalDate departure = arrival.plusDays(1);
-        putStayDates(arrival, departure, resData);
-        ArrayList<String> previousResIDs = getReservationIDs(resData.get("resEmail"));
-        createReservation(resData);
-        ArrayList<String> newResIds = getNewlyCreatedReservationIDs(resData.get("resEmail"), previousResIDs);
-        System.out.println("Created new reservations:\n"+newResIds);
-        System.out.println("[/checkInReady(wCC)]");
-        return newResIds;
+        putStayDates(arrival, departure);
+        ArrayList<String> previousResIDs = getReservationIDs(reservationData.get("resEmail"));
+        createReservation();
+        currendReservationPMSid = getNewlyCreatedReservationIDs(reservationData.get("resEmail"), previousResIDs).get(0);
+        System.out.println("Created new reservations:\n"+currendReservationPMSid);
     }
 
-    private ArrayList<String> upcoming (HashMap<String, String> resData) throws InterruptedException {
+    private void upcoming() throws InterruptedException {
         System.out.println("[upcoming(noCC)]");
         LocalDate arrival = LocalDate.now().plusDays(1);
         LocalDate departure = arrival.plusDays(1);
-        putStayDates(arrival, departure, resData);
-        ArrayList<String> previousResIDs = getReservationIDs(resData.get("resEmail"));
-        createReservation(resData);
-        ArrayList<String> newResIds = getNewlyCreatedReservationIDs(resData.get("resEmail"), previousResIDs);
-        System.out.println("Created new reservations:\n"+newResIds);
+        putStayDates(arrival, departure);
+        ArrayList<String> previousResIDs = getReservationIDs(reservationData.get("resEmail"));
+        reservationData.remove("creditCard");
+        createReservation();
+        currendReservationPMSid = getNewlyCreatedReservationIDs(reservationData.get("resEmail"), previousResIDs).get(0);
+        System.out.println("Created new reservations:\n"+currendReservationPMSid);
         System.out.println("[/upcoming(wCC)]");
-        return newResIds;
     }
 
-    private ArrayList<String> upcoming (HashMap<String, String> resData, String CC) throws InterruptedException {
+    private void upcomingWCC () throws InterruptedException {
         System.out.println("[upcoming(wCC)]");
         LocalDate arrival = LocalDate.now().plusDays(1);
         LocalDate departure = arrival.plusDays(1);
-        putStayDates(arrival, departure, resData);
-        ArrayList<String> previousResIDs = getReservationIDs(resData.get("resEmail"));
-        resData.put("CC", CC);
-        createReservation(resData);
-        ArrayList<String> newResIds = getNewlyCreatedReservationIDs(resData.get("resEmail"), previousResIDs);
-        System.out.println("Created new reservations:\n"+newResIds);
+        putStayDates(arrival, departure);
+        ArrayList<String> previousResIDs = getReservationIDs(reservationData.get("resEmail"));
+        createReservation();
+        currendReservationPMSid = getNewlyCreatedReservationIDs(reservationData.get("resEmail"), previousResIDs).get(0);
+        System.out.println("Created new reservations:\n"+currendReservationPMSid);
         System.out.println("[/upcoming(wCC)]");
-        return newResIds;
     }
 
-    private ArrayList<String> checkedIn (HashMap<String, String> resData, HashMap<String, Object> params) throws InterruptedException {
+    private void checkedIn () throws InterruptedException {
         System.out.println("[checkedIn(noCC)]");
         LocalDate arrival = LocalDate.now().plusDays(1);
         LocalDate departure = arrival.plusDays(1);
-        putStayDates(arrival, departure, resData);
-        ArrayList<String> previousResIDs = getReservationIDs(resData.get("resEmail"));
-        createReservation(resData);
-        ArrayList<String> newResIds = getNewlyCreatedReservationIDs(resData.get("resEmail"), previousResIDs);
-        System.out.println("Created new reservations:\n"+newResIds);
-        assignRoomInitiator(resData, params, newResIds.get(0));
-        checkIn(newResIds.get(0));
+        putStayDates(arrival, departure);
+        ArrayList<String> previousResIDs = getReservationIDs(reservationData.get("resEmail"));
+        reservationData.remove("creditCard");
+        createReservation();
+        currendReservationPMSid = getNewlyCreatedReservationIDs(reservationData.get("resEmail"), previousResIDs).get(0);
+        System.out.println("Created new reservations:\n"+currendReservationPMSid);
+        assignRoomInitiator();
+        checkIn(currendReservationPMSid);
         System.out.println("[/checkedIn(wCC)]");
-        return newResIds;
     }
 
-    private ArrayList<String> checkedIn (HashMap<String, String> resData, HashMap<String, Object> params, String CC) throws InterruptedException {
+    private void checkedInWCC () throws InterruptedException {
         System.out.println("[checkedIn(wCC)]");
         LocalDate arrival = LocalDate.now().plusDays(1);
         LocalDate departure = arrival.plusDays(1);
-        putStayDates(arrival, departure, resData);
-        ArrayList<String> previousResIDs = getReservationIDs(resData.get("resEmail"));
-        resData.put("CC", CC);
-        createReservation(resData);
-        ArrayList<String> newResIds = getNewlyCreatedReservationIDs(resData.get("resEmail"), previousResIDs);
-        System.out.println("Created new reservations:\n"+newResIds);
-        assignRoomInitiator(resData, params, newResIds.get(0));
-        checkIn(newResIds.get(0));
+        putStayDates(arrival, departure);
+        ArrayList<String> previousResIDs = getReservationIDs(reservationData.get("resEmail"));
+        createReservation();
+        currendReservationPMSid = getNewlyCreatedReservationIDs(reservationData.get("resEmail"), previousResIDs).get(0);
+        System.out.println("Created new reservations:\n"+currendReservationPMSid);
+        assignRoomInitiator();
+        checkIn(currendReservationPMSid);
         System.out.println("[/checkedIn(wCC)]");
-        return newResIds;
     }
 
-    private ArrayList<String> checkOutReady (HashMap<String, String> resData, HashMap<String, Object> params) throws InterruptedException {
-        System.out.println("[checkedIn(noCC)]");
-        LocalDate arrival = LocalDate.now().plusDays(1);
-        LocalDate departure = arrival.plusDays(1);
-        putStayDates(arrival, departure, resData);
-        ArrayList<String> previousResIDs = getReservationIDs(resData.get("resEmail"));
-        createReservation(resData);
-        ArrayList<String> newResIds = getNewlyCreatedReservationIDs(resData.get("resEmail"), previousResIDs);
-        System.out.println("Created new reservations:\n"+newResIds);
-        assignRoomInitiator(resData, params, newResIds.get(0));
-        checkIn(newResIds.get(0));
-        System.out.println("[/checkedIn(wCC)]");
-        return newResIds;
-    }
 
-    private ArrayList<String> checkOutReady (HashMap<String, String> resData, HashMap<String, Object> params, String CC) throws InterruptedException {
-        System.out.println("[checkedIn(wCC)]");
+    private void checkOutReady () throws InterruptedException {
+        System.out.println("[checkOutReady]");
         LocalDate arrival = LocalDate.now().minusDays(1);
         LocalDate departure = LocalDate.now();
-        putStayDates(arrival, departure, resData);
-        ArrayList<String> previousResIDs = getReservationIDs(resData.get("resEmail"));
-        resData.put("CC", CC);
-        createReservation(resData);
-        ArrayList<String> newResIds = getNewlyCreatedReservationIDs(resData.get("resEmail"), previousResIDs);
-        System.out.println("Created new reservations:\n"+newResIds);
-        assignRoomInitiator(resData, params, newResIds.get(0));
-        checkIn(newResIds.get(0));
-        System.out.println("[/checkedIn(wCC)]");
-        return newResIds;
+        putStayDates(arrival, departure);
+        ArrayList<String> previousResIDs = getReservationIDs(reservationData.get("resEmail"));
+        createReservation();
+        currendReservationPMSid = getNewlyCreatedReservationIDs(reservationData.get("resEmail"), previousResIDs).get(0);
+        System.out.println("Created new reservations:\n"+currendReservationPMSid);
+        assignRoomInitiator();
+        checkIn(currendReservationPMSid);
+        System.out.println("[/checkOutReady]");
     }
 
     private ArrayList<String> getReservationIDs (String email){
         System.out.println("[getReservationIDs(email)]");
-        List<WebElement> reservations = getAllElements(String.format(selectorResByEmail, email));
+        ElementsCollection reservations = getAllElements(String.format(selectorResByEmail, email));
         ArrayList<String> reservationIDs = new ArrayList<>();
         for (WebElement reservation : reservations) {
             click(reservation);
@@ -271,6 +252,7 @@ public class MockPMS extends BasePage {
         System.out.println("[/getReservationIDs()]");
         return reservationIDs;
     }
+
 
     private ArrayList<String> getReservationIDs (List<WebElement> reservations){
         System.out.println("[getReservationIDs(webelement list)]");
@@ -287,7 +269,7 @@ public class MockPMS extends BasePage {
     private void selectReservationByResID (String targetReservationID){
         System.out.println("[selectReservationByResID]");
         System.out.println("targetReservationID: "+targetReservationID);
-        List<WebElement> allReservations = getAllElements(reservationItem);
+        ElementsCollection allReservations = getAllElements(reservationItem);
         for (WebElement reservation: allReservations){
             click(reservation);
             String currentResID=getAText(valueReservationID);
@@ -300,8 +282,9 @@ public class MockPMS extends BasePage {
         System.out.println("[/selectReservationByResID]");
     }
 
-    private ArrayList<String> getNewlyCreatedReservationIDs (String email, ArrayList<String> previousListOfResIDs){
+    private ArrayList<String> getNewlyCreatedReservationIDs (String email, ArrayList<String> previousListOfResIDs) throws InterruptedException {
         System.out.println("[getNewlyCreatedReservationIDs]");
+        waitForOptional(reservationItem);
         ArrayList<String> currentResIDs = getReservationIDs(email);
         System.out.println("Current list of resIDs:\n"+currentResIDs);
         System.out.println("Removing previous list of resIDs");
@@ -311,49 +294,76 @@ public class MockPMS extends BasePage {
         return currentResIDs;
     }
 
-    private void purge (String email) throws InterruptedException {
-        System.out.println("Purge --->");
-        refresh();
-        Thread.sleep(2000);
-        System.out.println("Searching for email: "+email);
-        List<WebElement> targetReservations = searchForTargetReservations(email);
-        System.out.println("Reservations found: "+targetReservations.size());
-        if (targetReservations.size()!=0){
-            for (WebElement targetReservation : targetReservations) {
-                rightClick(targetReservation);
+    private boolean checkIfReservastionNumberChanged (int previousReservationsNum, String email) throws InterruptedException {
+        int currentResNumber = searchForTargetReservations(email).size();
+        int wait = 3000;
+        Thread.sleep(wait);
+        if (currentResNumber!=0){
+            return previousReservationsNum != currentResNumber;
+        }
+        else {
+            return true;
+        }
 
-                if (verifyElementExist(menuItemCancel)) {
-                    Thread.sleep(500);
-                    System.out.println("Cancel menu exists, clicking");
-                    click(menuItemCancel);
-                    successChecker();
-                } else {
-                    System.out.println("Cancel doesn't exist");
-                    if (verifyElementExist(menuItemCheckout)) {
-                        Thread.sleep(500);
-                        System.out.println("Checkout exists");
-                        click(menuItemCheckout);
-                        successChecker();
-                    }
-                }
-            }
+    }
+
+    private void purgeWrapper() throws InterruptedException {
+        System.out.println("Purge --->");
+        refreshPMS();
+        if (waitForOptional(reservationItem)){
+            System.out.println("purging");
+            purge();
         }
         System.out.println(">--Purge");
     }
 
-    private ArrayList<String> getVacantRooms (HashMap<String, Object> parameters){
+    private void purge() throws InterruptedException {
+        String email = this.reservationData.get("resEmail");
+        System.out.println("Searching for email: "+email);
+        ArrayList<String> resIds = getReservationIDs(email);
+        for (String reservationID: resIds){
+            ElementsCollection allReservations = getAllElements(reservationItem);
+            System.out.println("Current amount of all reservations: "+allReservations.size());
+            for (SelenideElement reservation: allReservations){
+                click(reservation);
+                String currentResID=getAText(valueReservationID);
+                System.out.println("comparing existing resID: "+currentResID);
+                if (currentResID.equals(reservationID)){
+                    System.out.println("Match found, breaking");
+                    rightClick(reservation);
+                    if (verifyElementExist(menuItemCancel)) {
+                        Thread.sleep(500);
+                        System.out.println("Cancel menu exists, clicking");
+                        click(menuItemCancel);
+                        waitForElementToDisappear(reservation);
+                    } else {
+                        System.out.println("Cancel doesn't exist");
+                        if (verifyElementExist(menuItemCheckout)) {
+                            Thread.sleep(500);
+                            System.out.println("Checkout exists");
+                            click(menuItemCheckout);
+                            waitForElementToDisappear(reservation);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    private ArrayList<String> getVacantRooms (){
         System.out.println("[getVacantRooms]");
         ArrayList<HashMap<String, String>> rooms = (ArrayList<HashMap<String, String>>)parameters.get("rooms");
         System.out.println("Got rooms from parameters:\n"+rooms);
         boolean hasKey = Boolean.parseBoolean(parameters.get("has_key").toString());
         System.out.println("has_key: "+hasKey);
-        List<WebElement> roomNumbersElements = getAllElements(valueRoomNumber);
+        ElementsCollection roomNumbersElements = getAllElements(valueRoomNumber);
         ArrayList<String> roomNumbersOccupied = new ArrayList<>();
         System.out.println("Getting occupied room numbers...");
-        for (int i=0; i<roomNumbersElements.size(); i++){
-            String number = roomNumbersElements.get(i).getText();
-            System.out.println("Found number: \""+number+"\"");
-            if (!number.equals("")){
+        for (SelenideElement roomNumbersElement : roomNumbersElements) {
+            String number = roomNumbersElement.getText();
+            System.out.println("Found number: \"" + number + "\"");
+            if (!number.equals("")) {
                 System.out.println("Number not empty, adding to the list");
                 roomNumbersOccupied.add(number);
             }
@@ -374,8 +384,8 @@ public class MockPMS extends BasePage {
         System.out.println("Removing occupied rooms from the existing list");
         System.out.println("Occupied rooms: "+roomNumbersOccupied);
         ArrayList<String> vacantRooms = new ArrayList<>();
-        for (int i=0; i<rooms.size(); i++){
-            vacantRooms.add(rooms.get(i).get("number"));
+        for (HashMap<String, String> room : rooms) {
+            vacantRooms.add(room.get("number"));
         }
         System.out.println("Available rooms list:\n"+vacantRooms);
         vacantRooms.removeAll(roomNumbersOccupied);
@@ -384,29 +394,36 @@ public class MockPMS extends BasePage {
         return vacantRooms;
     }
 
-    private void assignRoomHandler (HashMap<String, Object> parameters, String resId) throws InterruptedException {
+    private void assignRoomHandler () throws InterruptedException {
         System.out.println("[assignRoomHandler]");
-        selectReservationByResID(resId);
-        assignRoom(getVacantRooms(parameters));
+        selectReservationByResID(currendReservationPMSid);
+        assignRoom(getVacantRooms());
         System.out.println("[/assignRoomHandler]");
     }
 
-    private void assignRoomHandler (String room, String resId, HashMap<String, Object> parameters) throws InterruptedException {
+    private void assignRoomHandler (String room) throws InterruptedException {
         System.out.println("[assignRoomHandler]");
-        selectReservationByResID(resId);
-        assignRoom(room, getVacantRooms(parameters));
+        selectReservationByResID(currendReservationPMSid);
+        ArrayList<String> vacantRooms = getVacantRooms();
+        if (vacantRooms.contains(room)){
+            assignRoom(room, vacantRooms);
+        }
+        else {
+            assignRoom(vacantRooms);
+        }
         System.out.println("[/assignRoomHandler]");
     }
 
     private void assignRoom (ArrayList<String> vacantRoomNumbers) throws InterruptedException {
         System.out.println("[assignRoom]");
-        Thread.sleep(2000);
+        //Thread.sleep(2000);
         click(buttonAssignRoom);
         for (String roomNumber: vacantRoomNumbers){
             System.out.println("Trying to assign: "+roomNumber);
             writeText(fieldRoomNumber, roomNumber);
             click(buttonSaveRoom);
-            if (successChecker()){
+            String result = successChecker();
+            if (result.equals("true")){
                 break;
             }
         }
@@ -415,16 +432,16 @@ public class MockPMS extends BasePage {
 
     private void assignRoom (String roomNumber, ArrayList<String> vacantRoomNumbers) throws InterruptedException {
         System.out.println("[assignRoom]");
-        Thread.sleep(2000);
+        //Thread.sleep(2000);
         click(buttonAssignRoom);
         writeText(fieldRoomNumber, roomNumber);
         click(buttonSaveRoom);
-        if (!successChecker()){
+        if (!successChecker().equals("true")){
             for (String room : vacantRoomNumbers){
                 System.out.println("Trying to assign: "+ room);
                 writeText(fieldRoomNumber, room);
                 click(buttonSaveRoom);
-                if (successChecker()){
+                if (successChecker().equals("true")){
                     break;
                 }
             }
@@ -432,12 +449,12 @@ public class MockPMS extends BasePage {
         System.out.println("[/assignRoom]");
     }
 
-    private boolean successChecker() throws InterruptedException {
+    private String successChecker() throws InterruptedException {
         System.out.println("[successChecker]");
-        boolean success=false;
+        String success="false";
         if (verifyElementExist(bannerSuccessAssign)){
             System.out.println("Success!");
-            success=true;
+            success="true";
             waitForElementToDisappear(bannerSuccessAssign);
         }
         else {
@@ -447,93 +464,113 @@ public class MockPMS extends BasePage {
             }
             else {
                 Thread.sleep(500);
-                success= successChecker();
+                success= successChecker(0);
             }
         }
         System.out.println("[/successChecker]");
         return success;
     }
 
-    private void assignRoomInitiator (HashMap<String, String> reservationData, HashMap<String, Object> parameters, String resId) throws InterruptedException {
+    private String successChecker(int tries) throws InterruptedException {
+        System.out.println("[successChecker with tries]");
+        int maxTries = 10;
+        String success="false";
+        if (verifyElementExist(bannerSuccessAssign)){
+            System.out.println("Success!");
+            success="true";
+            waitForElementToDisappear(bannerSuccessAssign);
+        }
+        else {
+            if (verifyElementExist(bannerFailedAssign)){
+                System.out.println("Failed");
+                waitForElementToDisappear(bannerFailedAssign);
+            }
+            else {
+                Thread.sleep(500);
+                if (tries<maxTries){
+                    tries++;
+                    success= successChecker(tries);
+                }
+                else {
+                    success="failed";
+                }
+            }
+        }
+        System.out.println("[/successChecker]");
+        return success;
+    }
+
+    private void assignRoomInitiator () throws InterruptedException {
         String room = reservationData.get("room");
         System.out.println("Having room from reservation data: "+room);
         if (room==null){
             System.out.println("Room is null, so assigning something else");
-            assignRoomHandler(parameters, resId);
+            assignRoomHandler();
         }
         else {
             System.out.println("Room is not null, trying to assign");
-            assignRoomHandler(room, resId, parameters);
+            assignRoomHandler(room);
         }
     }
 
-
-
-
     public String processReservation (HashMap<String, Object> parameters, HashMap<String, String>reservationData) throws InterruptedException {
-        boolean ccOnFile = Boolean.parseBoolean(parameters.get("CC").toString());
-        boolean keepOthers = Boolean.parseBoolean(parameters.get("keep_others").toString());
-        boolean assignRoom = Boolean.parseBoolean(parameters.get("assign_room").toString());
-        boolean idVerification = Boolean.parseBoolean(parameters.get("idVerification").toString());
+        this.parameters = parameters;
+        this.reservationData=reservationData;
+        boolean ccOnFile = Boolean.parseBoolean(this.parameters.get("CC").toString());
+        boolean keepOthers = Boolean.parseBoolean(this.parameters.get("keep_others").toString());
+        boolean assignRoom = Boolean.parseBoolean(this.parameters.get("assign_room").toString());
+        boolean idVerification = Boolean.parseBoolean(this.parameters.get("idVerification").toString());
 
         String reservationID = "not_required";
 
         if (!keepOthers){
-            purge(reservationData.get("resEmail"));
+            purgeWrapper();
         }
 
-        switch (parameters.get("reservation_type").toString()) {
+        switch (this.parameters.get("reservation_type").toString()) {
             case "check_in ready":{
                 String resId = "none";
                 if (ccOnFile){
-                    resId = checkInReady(reservationData, reservationData.get("CC")).get(0);
+                    checkInReadyWCC();
                 }
                 else {
-                    resId = checkInReady(reservationData).get(0);
+                    checkInReady();
                 }
                 if (assignRoom){
-                    assignRoomInitiator(reservationData, parameters, resId);
+                    assignRoomInitiator();
                 }
-                System.out.println("idVErification: "+idVerification);
+                System.out.println("idVerification: "+idVerification);
                 if (idVerification){
-                    reservationID=resId;
+                    reservationID=currendReservationPMSid;
                 }
                 break;
             }
             case "future":{
-                String resId = "none";
                 if (ccOnFile){
-                    resId = upcoming(reservationData, reservationData.get("CC")).get(0);
+                    upcomingWCC();
                 }
                 else {
-                    resId = upcoming(reservationData).get(0);
+                    upcoming();
                 }
                 if (assignRoom){
-                    assignRoomInitiator(reservationData, parameters, resId);
+                    assignRoomInitiator();
                 }
                 if (idVerification){
-                    reservationID=resId;
+                    reservationID=currendReservationPMSid;
                 }
                 break;
             }
             case "checked_in":{
-                String resId = "none";
                 if (ccOnFile){
-                    resId = checkedIn(reservationData, parameters, reservationData.get("CC")).get(0);
+                    checkedInWCC();
                 }
                 else {
-                    resId = checkedIn(reservationData, parameters).get(0);
+                    checkedIn();
                 }
                 break;
             }
             case "check_out ready":{
-                String resId = "none";
-                if (ccOnFile){
-                    resId = checkOutReady(reservationData, parameters, reservationData.get("CC")).get(0);
-                }
-                else {
-                    resId = checkOutReady(reservationData, parameters).get(0);
-                }
+                checkOutReady();
                 break;
             }
         }
