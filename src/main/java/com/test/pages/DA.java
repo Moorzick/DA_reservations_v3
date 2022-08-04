@@ -17,11 +17,9 @@ public class DA extends BasePage {
     private final By affListLoadingIndicator = By.xpath("//div[@class='affiliates-loading-text']");
 
 
-    private void affListLoadingWait () throws InterruptedException {
+    private void affListLoadingWait () {
         waitFor(affListLoadingIndicator);
-        while (verifyElementExist(affListLoadingIndicator)){
-            Thread.sleep(3000);
-        }
+        waitForElementToDisappear(affListLoadingIndicator);
     }
 
     private By getTargetPropertyBy (String propertyName){

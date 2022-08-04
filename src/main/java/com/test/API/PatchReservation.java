@@ -29,12 +29,14 @@ public class PatchReservation {
                 .put("id", reservationID)
                 .put("attributes", attributes);
         body.put("data", data);
-        System.out.println(body);
+        String endpoint = env+"/affiliates/"+ affiliateID+"/reservations/"+reservationID;
+        System.out.print("HTTP PATCH --> "+endpoint);
+        System.out.println("\tWith payload of: "+body);
         Response response = given()
                 .auth().oauth2(token)
                 .contentType("application/vnd.api+json")
                 .body(body.toString())
-                .patch(env+"/affiliates/"+ affiliateID+"/reservations/"+reservationID);
+                .patch(endpoint);
         System.out.println(response.getStatusCode());
         System.out.println(response.getBody().asString());
 

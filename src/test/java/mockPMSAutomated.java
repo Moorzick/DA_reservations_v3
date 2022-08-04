@@ -2,6 +2,8 @@ import com.test.API.AuthProd;
 import com.test.API.AuthStg;
 import com.test.API.Calls;
 import com.test.base.BaseTest;
+import com.test.objects.APIData;
+import com.test.objects.Reservation;
 import com.test.pages.Pages;
 import com.test.tools.FlowController;
 import org.testng.annotations.Test;
@@ -32,7 +34,7 @@ public class mockPMSAutomated extends BaseTest {
 
     private final String interviewID = "62c85193c5ef82b6eb56c67b";
 
-    @Test(description = "prod res wcc and id ver")
+    @Test(description = "making it easy")
     public void prodReservationWCCplusID() throws InterruptedException, IOException {
         String token="starting_value";
         String currentEnv = "";
@@ -47,6 +49,14 @@ public class mockPMSAutomated extends BaseTest {
                 openURL(daProdUrl);
                 token = AuthProd.getToken();
                 currentEnv=prodAPI;
+                break;
+            }
+            default:{
+                System.out.println("Defaulting to stg");
+                openURL(daStgUrl);
+                token = AuthStg.getToken();
+                currentEnv=stgAPI;
+                break;
             }
         }
         String affiliateID = Pages.loginPage()
@@ -55,20 +65,18 @@ public class mockPMSAutomated extends BaseTest {
                 .getAffiliateId();
         System.out.println(affiliateID);
         Pages.dAaffiliate().launchMockPMS();
-        ArrayList<HashMap<String, String>> rooms = Calls.getRoomNumbers().get(currentEnv, token, affiliateID);
-        HashMap<String, String> reservationData = new HashMap<>();
-        reservationData.put("name", resName);
-        reservationData.put("resEmail", resEmail);
-        reservationData.put("phone", phoneNumber);
-        reservationData.put("interview", interviewID);
-        reservationData.put("room", room);
-        reservationData.put("creditCard", CC);
 
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("rooms", rooms);
-        parameters.put("env", currentEnv);
-        parameters.put("token", token);
-        parameters.put("affiliate", affiliateID);
-        new FlowController().cycle(parameters, reservationData, CC);
+        APIData.rooms=Calls.getRoomNumbers().get(currentEnv, token, affiliateID);
+        APIData.env=currentEnv;
+        APIData.token=token;
+        APIData.affiliateID=affiliateID;
+
+        Reservation.name=resName;
+        Reservation.email=resEmail;
+        Reservation.phone=phoneNumber;
+        Reservation.interview=interviewID;
+        Reservation.room=room;
+        Reservation.creditCard=CC;
+        new FlowController().cycle(CC);
     }
 }
