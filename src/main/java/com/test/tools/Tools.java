@@ -22,7 +22,7 @@ public class Tools {
     public static @NotNull By byContainsPropertyWithValue(String item, @NotNull String property, String value) {
         String xpath;
         if (property.equals("text()")){
-            xpath=String.format("//%s[contains(%s, '%s')]", item, property, value);
+            xpath=String.format("//%s[contains(%s, \"%s\")]", item, property, value);
         }
         else {
             xpath = String.format("//%s[contains(@%s, '%s')]", item, property, value);

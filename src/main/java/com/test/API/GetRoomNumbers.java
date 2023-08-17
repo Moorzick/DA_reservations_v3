@@ -15,13 +15,14 @@ public class GetRoomNumbers {
                 .then()
                 .extract().response()
                 .jsonPath().getJsonObject("data");
-        System.out.println(array);
+        //System.out.println(array);
         ArrayList<HashMap<String, String>> rooms = new ArrayList<>();
         for (int i=0; i<array.size(); i++){
             HashMap<String, String> room = new HashMap<>();
             HashMap<Object, Object> location = ((HashMap<Object, Object>) array.get(i));
             HashMap<Object, Object> attributes = (HashMap<Object, Object>) location.get("attributes");
-            room.put("number", attributes.get("name").toString());
+            //System.out.println(attributes);
+            room.put("number", attributes.get("external_id").toString());
             Object lockType =attributes.get("lock_type");
             if (lockType!=null){
                 room.put("lock", lockType.toString());

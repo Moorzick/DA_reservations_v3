@@ -98,20 +98,21 @@ public class BasePage {
     public void click (By elementBy) {
         SelenideElement element = $(elementBy);
         waitFor(element);
-        $(elementBy).click();
+        click(element);
         //BaseTest.getDriver().findElement(elementBy).click();
     }
 
     public void click (WebElement element) {
-        $(element).click();
+        click($(element));
     }
 
     public void click (SelenideElement element){
+        scrollTo(element);
         element.click();
     }
 
     public void click (String selector){
-        click(By.xpath(selector));
+        click($(By.xpath(selector)));
     }
 
     public void rightClick (By elementBy){
@@ -305,5 +306,9 @@ public class BasePage {
 
     public String getCurrentUrl (){
         return WebDriverRunner.url();
+    }
+
+    public void scrollTo (SelenideElement element){
+        element.scrollIntoView("{behavior: \"instant\", block: \"center\", inline: \"center\"}");
     }
 }
